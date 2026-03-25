@@ -1,0 +1,8 @@
+name: self-improvement
+version: "1.0"
+domain: common
+tags: [self-improvement, learning, errors, feedback, memory]
+description: "自我进化技能，记录错误和反馈实现持续改进"
+trigger: "/learn"
+adapter: universal
+requires: []
