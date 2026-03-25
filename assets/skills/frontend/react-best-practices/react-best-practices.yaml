@@ -3,6 +3,12 @@ version: "1.0"
 domain: frontend
 tags: [react, best-practices, hooks, performance]
 description: "React 最佳实践指南，包含 Hooks 使用、性能优化、组件设计模式"
-trigger: "/react-best"
-adapter: claude-code
+trigger: "/danny-react-best"
+adapter: universal
 requires: []
+supported_tools:
+  - claude-code
+  - codex
+  - openclaw
+  - cursor
+  - opencode

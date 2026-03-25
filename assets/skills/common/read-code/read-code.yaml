@@ -3,6 +3,12 @@ version: "1.0"
 domain: common
 tags: [reading, understanding, analysis]
 description: "标准化代码阅读理解流程，帮助 AI 快速理解代码结构和逻辑"
-trigger: "/read"
+trigger: "/danny-read"
 adapter: universal
 requires: []
+supported_tools:
+  - claude-code
+  - codex
+  - openclaw
+  - cursor
+  - opencode
