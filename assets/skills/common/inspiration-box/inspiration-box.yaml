@@ -1,0 +1,8 @@
+name: inspiration-box
+version: "1.0"
+domain: common
+tags: [inspiration, idea, creativity, brainstorm, capture]
+description: "灵感收集与管理技能，快速捕获、转化的团队创意资产"
+trigger: "/idea"
+adapter: universal
+requires: []
