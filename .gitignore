@@ -1,5 +1,6 @@
 node_modules/
-lib/
+lib/*.js
+lib/*.d.ts
 *.js
 *.d.ts
 .DS_Store
