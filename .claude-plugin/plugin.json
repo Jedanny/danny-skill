@@ -1,0 +1,10 @@
+{
+  "name": "danny-skill",
+  "description": "Team AI Skills Hub - Cross-tool AI asset sharing platform for knowledge distillation and team collaboration",
+  "version": "1.0.0",
+  "author": {
+    "name": "danny-skill maintainers"
+  },
+  "license": "MIT",
+  "keywords": ["skills", "knowledge-distillation", "team", "collaboration", "workflows"]
+}

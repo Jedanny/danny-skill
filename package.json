@@ -2,12 +2,11 @@
   "name": "danny-skill",
   "version": "1.0.0",
   "description": "Team AI Skills Hub - Cross-tool AI asset sharing platform",
-  "main": "lib/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "lint": "tsc --noEmit"
+    "validate": "pnpm test",
+    "install:claude": "./scripts/install.sh --tool claude-code"
   },
   "keywords": [
     "claude-code",
@@ -21,12 +20,8 @@
   "license": "MIT",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@types/node": "^20.10.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.3.0"
-  },
-  "dependencies": {
-    "yaml": "^2.3.0"
   }
 }

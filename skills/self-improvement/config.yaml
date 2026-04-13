@@ -1,0 +1,15 @@
+learning:
+  enabled: true
+  auto_capture: false
+  storage_path: "docs/learnings"
+  review_interval: "weekly"
+
+capture:
+  error: true
+  correction: true
+  success: true
+  pattern: true
+
+retention:
+  max_entries: 1000
+  archive_after_days: 90
