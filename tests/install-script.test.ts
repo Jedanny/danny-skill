@@ -38,6 +38,26 @@ describe('install script', () => {
     expect(existsSync(join(copiedSkill, 'SKILL.md'))).toBe(true);
   });
 
+  test('links Codex project-scope skills under .codex/skills', () => {
+    execFileSync('./scripts/install.sh', ['--yes', '--tool', 'codex', '--scope', 'project', '--replace'], {
+      cwd: process.cwd(),
+      stdio: 'pipe',
+    });
+
+    const linkedSkill = join(process.cwd(), '.codex', 'skills', 'design-style');
+    expect(lstatSync(linkedSkill).isSymbolicLink()).toBe(true);
+    expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'design-style'));
+  });
+
+  test('rejects project scope for non-Codex tools', () => {
+    expect(() =>
+      execFileSync('./scripts/install.sh', ['--yes', '--tool', 'claude-code', '--scope', 'project'], {
+        cwd: process.cwd(),
+        stdio: 'pipe',
+      }),
+    ).toThrow();
+  });
+
   test('dry-run reports planned writes without copying skills', () => {
     const root = tempRoot();
     const output = execFileSync(

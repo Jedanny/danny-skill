@@ -45,6 +45,12 @@ pnpm test
 ./scripts/install.sh --tool codex --mode copy --yes
 ```
 
+oh-my-codex 项目级技能可链接到 `.codex/skills/`：
+
+```bash
+./scripts/install.sh --tool codex --scope project --yes
+```
+
 安全预览安装路径：
 
 ```bash

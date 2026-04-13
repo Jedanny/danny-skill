@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .omx/
+.codex/skills/
 *.js
 *.d.ts
 .DS_Store

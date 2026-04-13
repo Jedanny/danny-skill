@@ -18,6 +18,16 @@ By default, this links all `skills/*/` directories into:
 
 Restart Codex after installation so skills are rediscovered.
 
+## Project Scope for oh-my-codex
+
+oh-my-codex scans project skills from `.codex/skills/`. To make this repository expose its skills in project scope, link the canonical skills into `.codex/skills/`:
+
+```bash
+./scripts/install.sh --tool codex --scope project --yes
+```
+
+Generated `.codex/skills/` links are ignored by git; keep editing canonical files under `skills/`.
+
 If a previous copy-based install already exists, replace it with links:
 
 ```bash
@@ -47,9 +57,9 @@ If your environment cannot create symlinks, use copy mode:
 ./scripts/install.sh --tool codex --mode copy --yes
 ```
 
-## Advanced Native Discovery
+## Legacy Native Discovery
 
-Some Codex setups also discover skills through `~/.agents/skills/`. In that case, keep the repository cloned and link the canonical skills directory:
+Some non-OMX or legacy Codex setups may discover skills through `~/.agents/skills/`. oh-my-codex treats that path as legacy because it can duplicate `${CODEX_HOME:-~/.codex}/skills`. Use it only when your Codex setup specifically requires it:
 
 ```bash
 mkdir -p ~/.agents/skills

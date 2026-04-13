@@ -12,6 +12,7 @@ TARGET_TOOL="detected"
 TARGET_ROOT="$HOME"
 INSTALL_MODE="link"
 REPLACE_EXISTING="false"
+INSTALL_SCOPE="user"
 
 usage() {
     cat <<'USAGE'
@@ -23,6 +24,7 @@ Options:
   --mode <link|copy>                Install by symlink/junction or copy (default: link)
   --copy                            Shortcut for --mode copy
   --replace                         Replace existing skill paths before installing
+  --scope <user|project>            Install to user scope or Codex project scope (default: user)
   --tool <claude-code|codex|cursor|opencode|all>
                                      Install for one tool or every supported tool
   --target-root <path>              Use this root instead of $HOME
@@ -55,6 +57,14 @@ while [ "$#" -gt 0 ]; do
         --replace)
             REPLACE_EXISTING="true"
             shift
+            ;;
+        --scope)
+            if [ "$#" -lt 2 ]; then
+                echo "Missing value for --scope" >&2
+                exit 1
+            fi
+            INSTALL_SCOPE="$2"
+            shift 2
             ;;
         --tool)
             if [ "$#" -lt 2 ]; then
@@ -94,18 +104,44 @@ case "$INSTALL_MODE" in
         ;;
 esac
 
+case "$INSTALL_SCOPE" in
+    user|project)
+        ;;
+    *)
+        echo "Unsupported install scope: $INSTALL_SCOPE" >&2
+        usage >&2
+        exit 1
+        ;;
+esac
+
 destination_for_tool() {
     case "$1" in
         claude-code)
+            if [ "$INSTALL_SCOPE" = "project" ]; then
+                echo "Project scope is only supported for codex" >&2
+                exit 1
+            fi
             echo "$TARGET_ROOT/.claude/skills"
             ;;
         codex)
-            echo "$TARGET_ROOT/.codex/skills"
+            if [ "$INSTALL_SCOPE" = "project" ]; then
+                echo "$PROJECT_ROOT/.codex/skills"
+            else
+                echo "$TARGET_ROOT/.codex/skills"
+            fi
             ;;
         cursor)
+            if [ "$INSTALL_SCOPE" = "project" ]; then
+                echo "Project scope is only supported for codex" >&2
+                exit 1
+            fi
             echo "$TARGET_ROOT/.cursor/skills"
             ;;
         opencode)
+            if [ "$INSTALL_SCOPE" = "project" ]; then
+                echo "Project scope is only supported for codex" >&2
+                exit 1
+            fi
             echo "$TARGET_ROOT/.opencode/plugins"
             ;;
         *)
@@ -245,6 +281,10 @@ echo ""
 
 case "$TARGET_TOOL" in
     all)
+        if [ "$INSTALL_SCOPE" = "project" ]; then
+            echo "Project scope is only supported with --tool codex" >&2
+            exit 1
+        fi
         for tool in claude-code codex cursor opencode; do
             install_tool "$tool"
         done
