@@ -45,11 +45,12 @@ pnpm test
 ./scripts/install.sh --tool codex --mode copy --yes
 ```
 
-Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 和 `.agents/skills/`：
+Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 和 `.agents/skills/`。Cursor 官方项目规则和命令可链接到 `.cursor/rules/` 与 `.cursor/commands/`：
 
 ```bash
 ./scripts/install.sh --tool claude-code --scope project --yes
 ./scripts/install.sh --tool codex --scope project --yes
+./scripts/install.sh --tool cursor --scope project --yes
 ```
 
 安全预览安装路径：

@@ -60,9 +60,23 @@ describe('install script', () => {
     expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'design-style'));
   });
 
+  test('links Cursor project-scope rules and commands using official directories', () => {
+    execFileSync('./scripts/install.sh', ['--yes', '--tool', 'cursor', '--scope', 'project', '--replace'], {
+      cwd: process.cwd(),
+      stdio: 'pipe',
+    });
+
+    const linkedRule = join(process.cwd(), '.cursor', 'rules', 'design-style.mdc');
+    const linkedCommand = join(process.cwd(), '.cursor', 'commands', 'list-designs.md');
+    expect(lstatSync(linkedRule).isSymbolicLink()).toBe(true);
+    expect(readlinkSync(linkedRule)).toBe(join(process.cwd(), 'skills', 'design-style', 'SKILL.md'));
+    expect(lstatSync(linkedCommand).isSymbolicLink()).toBe(true);
+    expect(readlinkSync(linkedCommand)).toBe(join(process.cwd(), 'commands', 'list-designs.md'));
+  });
+
   test('rejects project scope for tools without official project skill paths', () => {
     expect(() =>
-      execFileSync('./scripts/install.sh', ['--yes', '--tool', 'cursor', '--scope', 'project'], {
+      execFileSync('./scripts/install.sh', ['--yes', '--tool', 'opencode', '--scope', 'project'], {
         cwd: process.cwd(),
         stdio: 'pipe',
       }),

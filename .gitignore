@@ -4,6 +4,8 @@ dist/
 .agents/skills/
 .claude/skills/
 .codex/skills/
+.cursor/rules/
+.cursor/commands/
 *.js
 *.d.ts
 .DS_Store

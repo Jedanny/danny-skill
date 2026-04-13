@@ -139,7 +139,7 @@ destination_for_tool() {
             ;;
         opencode)
             if [ "$INSTALL_SCOPE" = "project" ]; then
-                echo "Project scope is only supported for claude-code and codex" >&2
+                echo "Project scope is only supported for claude-code, codex, and cursor" >&2
                 exit 1
             fi
             echo "$TARGET_ROOT/.opencode/plugins"
@@ -235,12 +235,87 @@ install_skills_to() {
 
 install_tool() {
     local tool="$1"
+
+    if [ "$tool" = "cursor" ] && [ "$INSTALL_SCOPE" = "project" ]; then
+        install_cursor_project
+        return 0
+    fi
+
     local destination
     destination="$(destination_for_tool "$tool")"
 
     echo "Installing skills for $tool using $INSTALL_MODE mode..."
     install_skills_to "$destination"
     echo "  $tool skills path: $destination"
+}
+
+install_file_asset() {
+    local source="$1"
+    local target="$2"
+    local item_name
+    item_name="$(basename "$target")"
+
+    if [ "$DRY_RUN" = "true" ]; then
+        if [ "$REPLACE_EXISTING" = "true" ]; then
+            echo "DRY RUN: would replace $target"
+        fi
+        if [ "$INSTALL_MODE" = "link" ]; then
+            echo "DRY RUN: would link $source to $target"
+        else
+            echo "DRY RUN: would copy $source to $target"
+        fi
+        return 0
+    fi
+
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        if [ "$REPLACE_EXISTING" = "true" ]; then
+            rm -rf "$target"
+        elif [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+            echo "  Linked: $item_name"
+            return 0
+        else
+            echo "  Skipped existing $target (use --replace to overwrite)" >&2
+            return 0
+        fi
+    fi
+
+    if [ "$INSTALL_MODE" = "link" ]; then
+        create_directory_link "$source" "$target"
+        echo "  Linked: $item_name"
+    else
+        cp "$source" "$target"
+        echo "  Copied: $item_name"
+    fi
+}
+
+install_cursor_project() {
+    local rules_dir="$PROJECT_ROOT/.cursor/rules"
+    local commands_dir="$PROJECT_ROOT/.cursor/commands"
+
+    echo "Installing Cursor project rules and commands using $INSTALL_MODE mode..."
+    if [ "$DRY_RUN" = "true" ]; then
+        echo "DRY RUN: would create $rules_dir"
+        echo "DRY RUN: would create $commands_dir"
+    else
+        mkdir -p "$rules_dir" "$commands_dir"
+    fi
+
+    for skill in "$PROJECT_ROOT/skills"/*; do
+        if [ -d "$skill" ]; then
+            local skill_name
+            skill_name="$(basename "$skill")"
+            install_file_asset "$skill/SKILL.md" "$rules_dir/$skill_name.mdc"
+        fi
+    done
+
+    for command_doc in "$PROJECT_ROOT/commands"/*.md; do
+        if [ -f "$command_doc" ]; then
+            install_file_asset "$command_doc" "$commands_dir/$(basename "$command_doc")"
+        fi
+    done
+
+    echo "  cursor rules path: $rules_dir"
+    echo "  cursor commands path: $commands_dir"
 }
 
 tool_detected() {
@@ -282,7 +357,7 @@ echo ""
 case "$TARGET_TOOL" in
     all)
         if [ "$INSTALL_SCOPE" = "project" ]; then
-            echo "Project scope is only supported with --tool claude-code or --tool codex" >&2
+            echo "Project scope is only supported with one explicit tool" >&2
             exit 1
         fi
         for tool in claude-code codex cursor opencode; do

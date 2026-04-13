@@ -34,4 +34,11 @@ describe('plugin manifests', () => {
       ]),
     );
   });
+
+  test('Cursor install docs describe official project rules and commands', () => {
+    const installDoc = readFileSync(join(process.cwd(), '.cursor-plugin', 'INSTALL.md'), 'utf8');
+
+    expect(installDoc).toContain('.cursor/rules');
+    expect(installDoc).toContain('.cursor/commands');
+  });
 });
