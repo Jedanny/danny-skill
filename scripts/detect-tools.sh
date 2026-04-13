@@ -11,8 +11,18 @@ detect_claude_code() {
     fi
 }
 
+detect_codex() {
+    if [ -d "$HOME/.codex" ] || command -v codex &> /dev/null; then
+        echo "codex:found"
+        return 0
+    else
+        echo "codex:not-found"
+        return 1
+    fi
+}
+
 detect_cursor() {
-    if [ -d "$HOME/AppData/Local/Cursor" ] || [ -d "/Applications/Cursor.app" ]; then
+    if [ -d "$HOME/.cursor" ] || [ -d "$HOME/AppData/Local/Cursor" ] || [ -d "/Applications/Cursor.app" ] || command -v cursor &> /dev/null; then
         echo "cursor:found"
         return 0
     else
@@ -36,6 +46,7 @@ echo "Detecting AI coding tools..."
 echo "---"
 
 detect_claude_code
+detect_codex
 detect_cursor
 detect_opencode
 

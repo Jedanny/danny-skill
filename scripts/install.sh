@@ -1,125 +1,187 @@
 #!/bin/bash
-# install.sh - danny-skill 安装脚本
+# install.sh - danny-skill installer
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+AUTO_INSTALL="false"
+DRY_RUN="false"
+TARGET_TOOL="detected"
+TARGET_ROOT="$HOME"
+
+usage() {
+    cat <<'USAGE'
+Usage: ./scripts/install.sh [options]
+
+Options:
+  -y, --yes                         Run without interactive prompts
+  --dry-run                         Print planned writes without copying
+  --tool <claude-code|codex|cursor|opencode|all>
+                                     Install for one tool or every supported tool
+  --target-root <path>              Use this root instead of $HOME
+  -h, --help                        Show this help
+USAGE
+}
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -y|--yes)
+            AUTO_INSTALL="true"
+            shift
+            ;;
+        --dry-run)
+            DRY_RUN="true"
+            shift
+            ;;
+        --tool)
+            if [ "$#" -lt 2 ]; then
+                echo "Missing value for --tool" >&2
+                exit 1
+            fi
+            TARGET_TOOL="$2"
+            shift 2
+            ;;
+        --target-root)
+            if [ "$#" -lt 2 ]; then
+                echo "Missing value for --target-root" >&2
+                exit 1
+            fi
+            TARGET_ROOT="$2"
+            shift 2
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            usage >&2
+            exit 1
+            ;;
+    esac
+done
+
+destination_for_tool() {
+    case "$1" in
+        claude-code)
+            echo "$TARGET_ROOT/.claude/skills"
+            ;;
+        codex)
+            echo "$TARGET_ROOT/.codex/skills"
+            ;;
+        cursor)
+            echo "$TARGET_ROOT/.cursor/skills"
+            ;;
+        opencode)
+            echo "$TARGET_ROOT/.opencode/plugins"
+            ;;
+        *)
+            echo "Unsupported tool: $1" >&2
+            exit 1
+            ;;
+    esac
+}
+
+copy_skills_to() {
+    local destination="$1"
+
+    if [ "$DRY_RUN" = "true" ]; then
+        echo "DRY RUN: would create $destination"
+    else
+        mkdir -p "$destination"
+    fi
+
+    for skill in "$PROJECT_ROOT/skills"/*; do
+        if [ -d "$skill" ]; then
+            local skill_name
+            skill_name="$(basename "$skill")"
+            local target="$destination/$skill_name"
+
+            if [ "$DRY_RUN" = "true" ]; then
+                echo "DRY RUN: would install $skill_name to $target"
+            else
+                mkdir -p "$target"
+                cp -R "$skill"/. "$target"/
+                echo "  Installed: $skill_name"
+            fi
+        fi
+    done
+}
+
+install_tool() {
+    local tool="$1"
+    local destination
+    destination="$(destination_for_tool "$tool")"
+
+    echo "Installing skills for $tool..."
+    copy_skills_to "$destination"
+    echo "  $tool skills path: $destination"
+}
+
+tool_detected() {
+    case "$1" in
+        claude-code)
+            [ -d "$TARGET_ROOT/.claude" ] || command -v claude >/dev/null 2>&1
+            ;;
+        codex)
+            [ -d "$TARGET_ROOT/.codex" ] || command -v codex >/dev/null 2>&1
+            ;;
+        cursor)
+            [ -d "$TARGET_ROOT/.cursor" ] || [ -d "/Applications/Cursor.app" ] || command -v cursor >/dev/null 2>&1
+            ;;
+        opencode)
+            [ -d "$TARGET_ROOT/.opencode" ] || command -v opencode >/dev/null 2>&1
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+confirm_install() {
+    local tool="$1"
+
+    if [ "$AUTO_INSTALL" = "true" ]; then
+        return 0
+    fi
+
+    read -r -p "  Install skills for $tool? (y/n) " reply
+    [[ "$reply" =~ ^[Yy]$ ]]
+}
 
 echo "============================================"
 echo "  danny-skill Installer"
 echo "============================================"
 echo ""
 
-# Color codes
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-# Detect tools
-echo "Detecting installed AI coding tools..."
-echo ""
-
-detect_and_install() {
-    local tool=$1
-    local install_func=$2
-
-    if command -v "$tool" &> /dev/null || [ -d "$HOME/.claude" ]; then
-        echo -e "${GREEN}✓${NC} $tool detected"
-        if [ "$AUTO_INSTALL" = "true" ]; then
-            echo "  Installing assets..."
-            eval "$install_func"
-            echo -e "  ${GREEN}✓${NC} Installed"
-        else
-            read -p "  Install assets for $tool? (y/n) " -n 1 -r
-            echo ""
-            if [[ $REPLY =~ ^[Yy]$ ]]; then
-                eval "$install_func"
-                echo -e "  ${GREEN}✓${NC} Installed"
+case "$TARGET_TOOL" in
+    all)
+        for tool in claude-code codex cursor opencode; do
+            install_tool "$tool"
+        done
+        ;;
+    claude-code|codex|cursor|opencode)
+        install_tool "$TARGET_TOOL"
+        ;;
+    detected)
+        for tool in claude-code codex cursor opencode; do
+            if tool_detected "$tool"; then
+                echo "$tool detected"
+                if confirm_install "$tool"; then
+                    install_tool "$tool"
+                fi
             fi
-        fi
-    else
-        echo -e "${YELLOW}○${NC} $tool not found, skipping"
-    fi
-}
-
-install_claude_code() {
-    local skills_dir="$HOME/.claude/skills"
-    mkdir -p "$skills_dir"
-
-    # Copy skills
-    if [ -d "$PROJECT_ROOT/assets/skills" ]; then
-        cp -r "$PROJECT_ROOT/assets/skills/"* "$skills_dir/"
-    fi
-
-    echo "  Claude Code skills installed to $skills_dir"
-}
-
-install_cursor() {
-    # Cursor 配置路径: $HOME/.cursor/
-    # Skills 目录: $HOME/.cursor/skills/
-    echo "  [TODO] Cursor adapter not yet implemented"
-    return 1
-}
-
-install_opencode() {
-    # OpenCode 配置路径: $HOME/.config/opencode/
-    # Plugins 目录: $HOME/.config/opencode/plugins/
-    echo "  [TODO] OpenCode adapter not yet implemented"
-    return 1
-}
-
-# Main installation flow
-if [ "$1" = "-y" ] || [ "$1" = "--yes" ]; then
-    AUTO_INSTALL="true"
-    echo "Auto-install mode: will install to all detected tools"
-    echo ""
-else
-    AUTO_INSTALL="false"
-    echo "Interactive mode: will ask for confirmation"
-    echo ""
-fi
-
-# Check for Node.js (required for TypeScript build)
-if command -v node &> /dev/null; then
-    echo -e "${GREEN}✓${NC} Node.js found: $(node --version)"
-else
-    echo -e "${RED}✗${NC} Node.js not found. Please install Node.js first."
-    exit 1
-fi
-
-# Build TypeScript
-echo ""
-echo "Building project..."
-cd "$PROJECT_ROOT"
-if command -v pnpm &> /dev/null; then
-    pnpm install
-    pnpm run build
-    echo -e "${GREEN}✓${NC} Build complete"
-elif command -v npm &> /dev/null; then
-    npm install
-    npm run build
-    echo -e "${GREEN}✓${NC} Build complete"
-else
-    echo -e "${RED}✗${NC} pnpm or npm not found. Please install Node.js first."
-    exit 1
-fi
+        done
+        ;;
+    *)
+        echo "Unsupported tool: $TARGET_TOOL" >&2
+        usage >&2
+        exit 1
+        ;;
+esac
 
 echo ""
-echo "Installing assets..."
-
-detect_and_install "claude" "install_claude_code"
-detect_and_install "cursor" "install_cursor"
-detect_and_install "opencode" "install_opencode"
-
-echo ""
-echo "============================================"
-echo -e "${GREEN}Installation complete!${NC}"
-echo "============================================"
-echo ""
-echo "Next steps:"
-echo "  1. Restart your AI coding tool"
-echo "  2. Try /read to test read-code skill"
-echo "  3. Check ~/.claude/skills/ for installed assets"
-echo ""
+echo "Installation complete."
+echo "Restart your AI coding tool before using danny-skill skills."
