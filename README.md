@@ -46,6 +46,7 @@ pnpm test
 | `inspiration-box` | `/danny-idea` | 灵感收集与管理 |
 | `knowledge-distill` | `/danny-distill` | 团队知识蒸馏 |
 | `self-improvement` | `/danny-learn` | 错误、反馈和经验记录 |
+| `design-style` | 自动触发 | 参考 58 套网站设计系统生成 UI 风格 |
 
 ## 目录结构
 

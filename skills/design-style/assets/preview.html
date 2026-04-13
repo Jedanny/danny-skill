@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Style Matcher - 58 Design Systems</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-secondary: #f7f8fa;
+            --bg-tertiary: #eeeeee;
+            --text: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border: #e5e5e5;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --card-shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        .dark {
+            --bg: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #252525;
+            --text: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --border: #333333;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --card-shadow-hover: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 16px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 6px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text);
+            font-size: 13px;
+            width: 160px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .category-select {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .category-select:focus {
+            border-color: var(--accent);
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-muted);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .stats-bar strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        /* Card */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--text-muted);
+        }
+
+        .card.selected {
+            border-color: var(--accent);
+            border-width: 2px;
+        }
+
+        .card-preview {
+            height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.1) 100%);
+        }
+
+        .selected-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card.selected .selected-badge {
+            opacity: 1;
+        }
+
+        .card-content {
+            padding: 14px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+
+        .card-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-colors {
+            display: flex;
+            gap: 6px;
+        }
+
+        .color-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .color-dot:hover {
+            transform: scale(1.2);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg);
+            border-radius: var(--radius);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+        }
+
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .palette-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .palette-color {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 4px;
+            font-size: 8px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .palette-color:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .font-sample {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 10px;
+        }
+
+        .font-name {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .font-display {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .font-body {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .modal-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .use-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .use-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .use-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: var(--bg);
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 300;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Category colors */
+        .cat-ai { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+        .cat-devtools { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .cat-design { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+        .cat-productivity { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .cat-fintech { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .cat-enterprise { background: rgba(99, 102, 241, 0.15); color: #6366f1; }
+        .cat-car { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+        .cat-consumer { background: rgba(20, 184, 166, 0.15); color: #14b8a6; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            .controls {
+                justify-content: center;
+            }
+
+            .search {
+                width: 100%;
+                flex: 1;
+            }
+
+            .category-select {
+                flex: 1;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .card-preview {
+                height: 100px;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 4px;
+                text-align: center;
+            }
+
+            .modal-content {
+                max-height: 95vh;
+                margin: 10px;
+            }
+
+            .modal-header {
+                padding: 16px;
+            }
+
+            .modal-body {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+
+            .card-content {
+                padding: 12px;
+            }
+
+            .card-title {
+                font-size: 14px;
+            }
+
+            .palette-color {
+                width: 40px;
+                height: 40px;
+                font-size: 7px;
+            }
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                Design Style Matcher
+            </div>
+            <div class="controls">
+                <input type="text" class="search" id="searchInput" placeholder="Search designs...">
+                <select class="category-select" id="categorySelect">
+                    <option value="">All Categories</option>
+                    <option value="AI/ML">AI/ML</option>
+                    <option value="Developer Tools">Developer Tools</option>
+                    <option value="Design &amp; Productivity">Design &amp; Productivity</option>
+                    <option value="Fintech">Fintech</option>
+                    <option value="Enterprise">Enterprise</option>
+                    <option value="Car Brands">Car Brands</option>
+                    <option value="Consumer">Consumer</option>
+                </select>
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="stats-bar">
+            <span><strong id="visibleCount">58</strong> of <strong id="totalCount">58</strong> Design Systems</span>
+            <span id="categoryLabel">All Categories</span>
+        </div>
+
+        <div class="grid" id="designGrid"></div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">🔍</div>
+            <div class="empty-state-title">No designs found</div>
+            <div class="empty-state-text">Try adjusting your search or filter</div>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Design Name</div>
+                <button class="modal-close" id="modalClose" title="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <div class="modal-section-title">Color Palette</div>
+                    <div class="palette-grid" id="modalPalette"></div>
+                </div>
+                <div class="modal-section">
+                    <div class="modal-section-title">Typography</div>
+                    <div class="font-sample" id="modalFont"></div>
+                </div>
+                <div class="modal-section">
+                    <div class="modal-section-title">Description</div>
+                    <p class="modal-description" id="modalDescription"></p>
+                </div>
+                <button class="use-btn" id="useStyleBtn">Use This Style</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Design data - 58 designs with colors and metadata
+        const designs = [
+            { id: 'anthropic', name: 'Anthropic', category: 'AI/ML', colors: ['#c7a0ff', '#161b22', '#ffffff', '#8b5cf6', '#10b981'], description: 'Calm, AI-focused with purple accents and dark mode emphasis' },
+            { id: 'openai', name: 'OpenAI', category: 'AI/ML', colors: ['#10a171', '#0f0f0f', '#ffffff', '#01a87b', '#e5e5e5'], description: 'Clean, minimalist with green accents and monospace elements' },
+            { id: 'midjourney', name: 'Midjourney', category: 'AI/ML', colors: ['#000000', '#ffffff', '#9d4bdc', '#ff6b6b', '#feca57'], description: 'Bold, creative with gradient accents and dark canvas' },
+            { id: 'character.ai', name: 'Character.AI', category: 'AI/ML', colors: ['#7c3aed', '#fef3c7', '#fbbf24', '#f472b6', '#3b82f6'], description: 'Playful, engaging with warm pastels and vibrant accents' },
+            { id: 'cohere', name: 'Cohere', category: 'AI/ML', colors: ['#e5e5e5', '#000000', '#6366f1', '#10b981', '#f59e0b'], description: 'Developer-focused with clean gradients and technical precision' },
+            { id: 'elevenlabs', name: 'ElevenLabs', category: 'AI/ML', colors: ['#000000', '#ffffff', '#f97316', '#fbbf24', '#22c55e'], description: 'Audio-focused with warm orange accents and dark interface' },
+            { id: 'minimax', name: 'MiniMax', category: 'AI/ML', colors: ['#00d4aa', '#0a0a0a', '#ffffff', '#7c3aed', '#06b6d4'], description: 'Tech-forward with cyan/teal primary and dark mode' },
+            { id: 'mistral.ai', name: 'Mistral AI', category: 'AI/ML', colors: ['#000000', '#ffffff', '#ff6b6b', '#fbbf24', '#3b82f6'], description: 'Minimal monochrome with warm accent colors' },
+            { id: 'ollama', name: 'Ollama', category: 'AI/ML', colors: ['#ffffff', '#000000', '#16a34a', '#e5e5e5', '#666666'], description: 'Local AI with green accents and developer simplicity' },
+            { id: 'replicate', name: 'Replicate', category: 'AI/ML', colors: ['#000000', '#ffffff', '#f97316', '#fbbf24', '#3b82f6'], description: 'Code-first platform with orange accents and dark theme' },
+            { id: 'together.ai', name: 'Together AI', category: 'AI/ML', colors: ['#7c3aed', '#1a1a1a', '#ffffff', '#a78bfa', '#10b981'], description: 'Purple-focused gradient system with modern aesthetics' },
+            { id: 'x.ai', name: 'x.ai', category: 'AI/ML', colors: ['#000000', '#ffffff', '#e11d48', '#f97316', '#16a34a'], description: 'Bold red accents with minimalist presentation' },
+            { id: 'vercel', name: 'Vercel', category: 'Developer Tools', colors: ['#171717', '#ffffff', '#ff5b4f', '#0a72ef', '#de1d8d'], description: 'Minimal, monochrome with extreme negative letter-spacing' },
+            { id: 'linear', name: 'Linear', category: 'Developer Tools', colors: ['#1e1e1e', '#10b981', '#3b82f6', '#8b5cf6', '#ffffff'], description: 'Precise, dark-first with purple accents and tight UI' },
+            { id: 'raycast', name: 'Raycast', category: 'Developer Tools', colors: ['#000000', '#ffffff', '#ff5f00', '#fbbf24', '#3b82f6'], description: 'macOS-native with orange accents and spotlight style' },
+            { id: 'fig', name: 'Fig', category: 'Developer Tools', colors: ['#000000', '#7c3aed', '#ffffff', '#a78bfa', '#6366f1'], description: 'Terminal-focused with purple autocomplete overlays' },
+            { id: 'sentry', name: 'Sentry', category: 'Developer Tools', colors: ['#8b5cf6', '#1e1e1e', '#ffffff', '#ef4444', '#f59e0b'], description: 'Error tracking purple with clear visual hierarchy' },
+            { id: 'hashicorp', name: 'HashiCorp', category: 'Developer Tools', colors: ['#000000', '#60dea9', '#ffffff', '#8b5cf6', '#6366f1'], description: 'Infrastructure-focused with green accents and dark theme' },
+            { id: 'expo', name: 'Expo', category: 'Developer Tools', colors: ['#000000', '#ffffff', '#10b981', '#6366f1', '#f5f5f5'], description: 'React Native focus with green accents and clean spacing' },
+            { id: 'clickhouse', name: 'ClickHouse', category: 'Developer Tools', colors: ['#ffcc00', '#000000', '#ffffff', '#f97316', '#3b82f6'], description: 'Database yellow with high contrast monochrome' },
+            { id: 'mongodb', name: 'MongoDB', category: 'Developer Tools', colors: ['#00684a', '#143420', '#ffffff', '#00ed64', '#4d4d4d'], description: 'Leaf green with dark forest tones and bright accents' },
+            { id: 'supabase', name: 'Supabase', category: 'Developer Tools', colors: ['#3ecf8e', '#1a1a1a', '#ffffff', '#14b8a6', '#6366f1'], description: 'Postgres-focused with bright green and dark mode' },
+            { id: 'sanity', name: 'Sanity', category: 'Developer Tools', colors: ['#000000', '#f16a3c', '#ffffff', '#ffd500', '#3b82f6'], description: 'CMS orange with creative flexibility and dark canvas' },
+            { id: 'resend', name: 'Resend', category: 'Developer Tools', colors: ['#000000', '#ffffff', '#e5e5e5', '#16a34a', '#ef4444'], description: 'Email API with minimal black/white and green CTAs' },
+            { id: 'mintlify', name: 'Mintlify', category: 'Developer Tools', colors: ['#ffffff', '#000000', '#6366f1', '#e5e5e5', '#10b981'], description: 'Documentation focused with indigo accents and clean cards' },
+            { id: 'lovable', name: 'Lovable', category: 'Developer Tools', colors: ['#000000', '#ffffff', '#a78bfa', '#f97316', '#22c55e'], description: 'Purple and orange gradient accents with modern feel' },
+            { id: 'opencode.ai', name: 'OpenCode.ai', category: 'Developer Tools', colors: ['#0d1117', '#161b22', '#58a6ff', '#238636', '#f0883e'], description: 'GitHub-inspired dark theme with blue/green accents' },
+            { id: 'voltagent', name: 'VoltAgent', category: 'Developer Tools', colors: ['#f97316', '#000000', '#ffffff', '#fbbf24', '#3b82f6'], description: 'Agent platform orange with high contrast' },
+            { id: 'figma', name: 'Figma', category: 'Design & Productivity', colors: ['#000000', '#a259ff', '#1abcfe', '#ff7262', '#0acf83'], description: 'Colorful rainbow accents with black toolbar' },
+            { id: 'framer', name: 'Framer', category: 'Design & Productivity', colors: ['#eeeeee', '#000000', '#ffffff', '#ff6d00', '#666666'], description: 'Prototype tool with orange and minimal canvas' },
+            { id: 'webflow', name: 'Webflow', category: 'Design & Productivity', colors: ['#146ef5', '#ffffff', '#1a1a1a', '#947aff', '#00d4aa'], description: 'Blue primary with purple and teal secondary accents' },
+            { id: 'cal', name: 'Cal.com', category: 'Design & Productivity', colors: ['#000000', '#ffffff', '#f97316', '#e5e5e5', '#10b981'], description: 'Scheduling with orange CTAs and clean monochrome' },
+            { id: 'miro', name: 'Miro', category: 'Design & Productivity', colors: ['#ffd02f', '#050038', '#ffffff', '#4262e8', '#ff6b6b'], description: 'Yellow logo with deep blue canvas and colorful boards' },
+            { id: 'notion', name: 'Notion', category: 'Design & Productivity', colors: ['#ffffff', '#000000', '#e5e5e5', '#37352f', '#2383e2'], description: 'Clean black text on white with blue accents' },
+            { id: 'cursor', name: 'Cursor', category: 'Design & Productivity', colors: ['#000000', '#ffffff', '#10b981', '#6366f1', '#ff6b6b'], description: 'AI code editor with green/purple accents and dark UI' },
+            { id: 'superhuman', name: 'Superhuman', category: 'Design & Productivity', colors: ['#ffffff', '#000000', '#ff6b6b', '#3b82f6', '#10b981'], description: 'Email client with red accents and minimal keyboard-first UI' },
+            { id: 'posthog', name: 'PostHog', category: 'Design & Productivity', colors: ['#000000', '#ffffff', '#f9bd2b', '#f472b6', '#10b981'], description: 'Product analytics with yellow and pink gradient accents' },
+            { id: 'intercom', name: 'Intercom', category: 'Design & Productivity', colors: ['#1f8ded', '#ffffff', '#1a1a1a', '#68dc9e', '#f5f5f5'], description: 'Customer messaging blue with fresh green accents' },
+            { id: 'zapier', name: 'Zapier', category: 'Design & Productivity', colors: ['#ff4a00', '#ffffff', '#1a1a1a', '#ffd400', '#1651d4'], description: 'Orange/red primary with workflow automation energy' },
+            { id: 'airtable', name: 'Airtable', category: 'Design & Productivity', colors: ['#18bfff', '#ffffff', '#1a1a1a', '#f7d048', '#ff6b6b'], description: 'Sky blue primary with colorful record cards' },
+            { id: 'composio', name: 'Composio', category: 'Design & Productivity', colors: ['#000000', '#ffffff', '#8b5cf6', '#10b981', '#f97316'], description: 'Purple-green accent combination with dark theme' },
+            { id: 'stripe', name: 'Stripe', category: 'Fintech', colors: ['#635bff', '#061b31', '#ffffff', '#00d4aa', '#ffd700'], description: 'Premium fintech purple with navy and green accents' },
+            { id: 'coinbase', name: 'Coinbase', category: 'Fintech', colors: ['#0052ff', '#ffffff', '#000000', '#00d4ff', '#16a34a'], description: 'Blue primary with vibrant crypto asset colors' },
+            { id: 'kraken', name: 'Kraken', category: 'Fintech', colors: ['#5741d9', '#ffffff', '#000000', '#00d4aa', '#f7931a'], description: 'Purple brand with crypto orange and teal' },
+            { id: 'revolut', name: 'Revolut', category: 'Fintech', colors: ['#000000', '#ffffff', '#e5e5e5', '#10b981', '#f97316'], description: 'Black card premium with green/black simplicity' },
+            { id: 'wise', name: 'Wise', category: 'Fintech', colors: ['#00d4aa', '#1a1a1a', '#ffffff', '#0094ff', '#ff6b6b'], description: 'Teal/green with clean transfer-focused interface' },
+            { id: 'ibm', name: 'IBM', category: 'Enterprise', colors: ['#0f62fe', '#ffffff', '#161616', '#8e8e8e', '#262626'], description: 'Blue primary with strict IBM Design Language' },
+            { id: 'spacex', name: 'SpaceX', category: 'Enterprise', colors: ['#000000', '#ffffff', '#e5e5e5', '#ff6d00', '#3b82f6'], description: 'Space exploration black with orange accents' },
+            { id: 'nvidia', name: 'NVIDIA', category: 'Enterprise', colors: ['#76b900', '#000000', '#ffffff', '#ff6b6b', '#3b82f6'], description: 'Green brand color with gaming/enterprise divide' },
+            { id: 'uber', name: 'Uber', category: 'Enterprise', colors: ['#000000', '#ffffff', '#00d4aa', '#f97316', '#e5e5e5'], description: 'Black/white with teal and orange service colors' },
+            { id: 'tesla', name: 'Tesla', category: 'Car Brands', colors: ['#000000', '#ffffff', '#e5e5e5', '#4d4d4d', '#1a1a1a'], description: 'Ultra-minimal black and white automotive luxury' },
+            { id: 'bmw', name: 'BMW', category: 'Car Brands', colors: ['#0066b1', '#000000', '#ffffff', '#e5e5e5', '#4d4d4d'], description: 'Premium blue with German engineering precision' },
+            { id: 'ferrari', name: 'Ferrari', category: 'Car Brands', colors: ['#ff2800', '#000000', '#ffffff', '#ffcc00', '#e5e5e5'], description: 'Iconic racing red with luxury black accents' },
+            { id: 'lamborghini', name: 'Lamborghini', category: 'Car Brands', colors: ['#000000', '#ffcc00', '#ffffff', '#ff6b6b', '#e5e5e5'], description: 'Yellow accents with aggressive black presentation' },
+            { id: 'renault', name: 'Renault', category: 'Car Brands', colors: ['#ffd400', '#000000', '#ffffff', '#e5e5e5', '#4d4d4d'], description: 'French yellow with modern geometric identity' },
+            { id: 'airbnb', name: 'Airbnb', category: 'Consumer', colors: ['#ff385c', '#00a699', '#ffffff', '#0f0f0f', '#717171'], description: 'Warm coral pink with teal hospitality accents' },
+            { id: 'apple', name: 'Apple', category: 'Consumer', colors: ['#1d1d1f', '#f5f5f7', '#0071e3', '#86868b', '#ffffff'], description: 'Ultra-clean with subtle grays and blue links' },
+            { id: 'pinterest', name: 'Pinterest', category: 'Consumer', colors: ['#e60023', '#ffffff', '#000000', '#e5e5e5', '#9d4bdc'], description: 'Bold red with creative inspiration palette' },
+            { id: 'spotify', name: 'Spotify', category: 'Consumer', colors: ['#1db954', '#191414', '#ffffff', '#535353', '#1ed760'], description: 'Signature green with near-black depth' },
+            { id: 'runwayml', name: 'Runway', category: 'Consumer', colors: ['#000000', '#ffffff', '#ff6b6b', '#a78bfa', '#3b82f6'], description: 'AI video with purple/red creative accents' }
+        ];
+
+        // DOM elements
+        const grid = document.getElementById('designGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const themeToggle = document.getElementById('themeToggle');
+        const modal = document.getElementById('modal');
+        const toast = document.getElementById('toast');
+        const emptyState = document.getElementById('emptyState');
+        const visibleCount = document.getElementById('visibleCount');
+        const categoryLabel = document.getElementById('categoryLabel');
+
+        let selectedDesign = null;
+
+        // Get category color
+        function getCategoryColor(category) {
+            const colors = {
+                'AI/ML': '#8b5cf6',
+                'Developer Tools': '#3b82f6',
+                'Design & Productivity': '#ec4899',
+                'Fintech': '#f59e0b',
+                'Enterprise': '#6366f1',
+                'Car Brands': '#ef4444',
+                'Consumer': '#14b8a6'
+            };
+            return colors[category] || '#6366f1';
+        }
+
+        // Render grid
+        function renderGrid(filtered = designs) {
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                visibleCount.textContent = '0';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            visibleCount.textContent = filtered.length;
+
+            grid.innerHTML = filtered.map(d => `
+                <div class="card" data-id="${d.id}" onclick="openModal('${d.id}')">
+                    <div class="card-preview" style="background: linear-gradient(135deg, ${d.colors[0]} 0%, ${d.colors[1] || d.colors[0]} 100%);">
+                        <div class="selected-badge">Selected</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-title">${d.name}</div>
+                            <span class="category-tag" style="background: ${getCategoryColor(d.category)}20; color: ${getCategoryColor(d.category)}">${d.category}</span>
+                        </div>
+                        <p class="card-description">${d.description}</p>
+                        <div class="card-colors">
+                            ${d.colors.slice(0, 5).map(c => `<div class="color-dot" style="background: ${c}" title="${c}"></div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter designs
+        function filterDesigns() {
+            const search = searchInput.value.toLowerCase().trim();
+            const category = categorySelect.value;
+
+            categoryLabel.textContent = category || 'All Categories';
+
+            const filtered = designs.filter(d => {
+                const matchSearch = !search ||
+                    d.name.toLowerCase().includes(search) ||
+                    d.description.toLowerCase().includes(search) ||
+                    d.category.toLowerCase().includes(search);
+                const matchCategory = !category || d.category === category;
+                return matchSearch && matchCategory;
+            });
+
+            renderGrid(filtered);
+        }
+
+        searchInput.addEventListener('input', filterDesigns);
+        categorySelect.addEventListener('change', filterDesigns);
+
+        // Theme toggle
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            themeToggle.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+        });
+
+        // Modal
+        function openModal(id) {
+            const d = designs.find(x => x.id === id);
+            if (!d) return;
+
+            selectedDesign = d;
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+
+            document.getElementById('modalTitle').textContent = d.name;
+            document.getElementById('modalDescription').textContent = d.description;
+
+            document.getElementById('modalPalette').innerHTML = d.colors.map(c => `
+                <div class="palette-color" style="background: ${c}" onclick="event.stopPropagation(); copyColor('${c}')" title="Click to copy">
+                    ${c}
+                </div>
+            `).join('');
+
+            document.getElementById('modalFont').innerHTML = `
+                <div class="font-name">Primary Font</div>
+                <div class="font-display" style="font-family: 'Inter', sans-serif; color: ${d.colors[0]}">${d.name}</div>
+                <div class="font-body">The quick brown fox jumps over the lazy dog</div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Use style - copy design tokens
+        document.getElementById('useStyleBtn').addEventListener('click', () => {
+            if (selectedDesign) {
+                const code = `// Design tokens from ${selectedDesign.name}
+// Category: ${selectedDesign.category}
+
+const designTokens = {
+  name: "${selectedDesign.name}",
+  colors: ${JSON.stringify(selectedDesign.colors, null, 2).replace(/^/gm, '  ')},
+  category: "${selectedDesign.category}",
+  description: "${selectedDesign.description}"
+};
+
+// CSS custom properties
+const css = \`
+:root {
+${selectedDesign.colors.map((c, i) => `  --color-${i + 1}: ${c};`).join('\n')}
+}
+\`;
+
+console.log("Design:", designTokens);`;
+
+                navigator.clipboard.writeText(code).then(() => {
+                    showToast(`✓ ${selectedDesign.name} design copied!`);
+                });
+            }
+        });
+
+        function copyColor(color) {
+            navigator.clipboard.writeText(color);
+            showToast(`Copied: ${color}`);
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+            if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+
+        // Initial render
+        renderGrid();
+    </script>
+</body>
+</html>

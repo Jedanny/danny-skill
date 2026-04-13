@@ -30,4 +30,15 @@ describe('skill library schema', () => {
       }
     }
   });
+
+  test('design-style bundles its visual preview and design references', () => {
+    const designStyleDir = join(skillsDir, 'design-style');
+    const designsDir = join(designStyleDir, 'references', 'designs');
+    const designReferences = readdirSync(designsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .filter((entry) => existsSync(join(designsDir, entry.name, 'DESIGN.md')));
+
+    expect(existsSync(join(designStyleDir, 'assets', 'preview.html'))).toBe(true);
+    expect(designReferences).toHaveLength(58);
+  });
 });
