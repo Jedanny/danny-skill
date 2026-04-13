@@ -66,4 +66,40 @@ describe('skill library schema', () => {
     expect(existsSync(join(autoresearchDir, 'references', 'eval-format.md'))).toBe(true);
     expect(existsSync(join(autoresearchDir, 'assets', 'eval.example.json'))).toBe(true);
   });
+
+  test('research-to-implementation documents the paper-to-coding pipeline', () => {
+    const skillDir = join(skillsDir, 'research-to-implementation');
+    const skillFile = join(skillDir, 'SKILL.md');
+    const content = readFileSync(skillFile, 'utf8');
+    const metadata = parseFrontmatter(content);
+
+    expect(metadata.name).toBe('research-to-implementation');
+    expect(metadata.description).toMatch(/^Use when\b/);
+    expect(metadata.supported_tools).toEqual(['claude-code', 'codex']);
+    expect(metadata.triggers).toEqual(
+      expect.arrayContaining(['paper', 'research', 'open-source', 'implementation', 'business-fit']),
+    );
+
+    for (const requiredTerm of [
+      'paper search',
+      'paper analysis',
+      'open source evaluation',
+      'business fit',
+      'implementation proposal',
+      'coding handoff',
+    ]) {
+      expect(content).toContain(requiredTerm);
+    }
+
+    for (const template of [
+      'paper-analysis-template.md',
+      'open-source-evaluation-template.md',
+      'business-fit-template.md',
+      'implementation-proposal-template.md',
+    ]) {
+      expect(existsSync(join(skillDir, 'references', template))).toBe(true);
+    }
+
+    expect(existsSync(join(skillDir, 'assets', 'research-workspace.example.md'))).toBe(true);
+  });
 });

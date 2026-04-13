@@ -68,6 +68,7 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 | `self-improvement` | `/danny-learn` | 错误、反馈和经验记录 |
 | `design-style` | 自动触发 | 参考 58 套网站设计系统生成 UI 风格 |
 | `autoresearch-loop` | 自动触发 | 用 eval 驱动的实验循环优化 skill、prompt 和 workflow |
+| `research-to-implementation` | 自动触发 | 从论文/开源方案研究到业务适配和编码交接 |
 
 ## 目录结构
 
