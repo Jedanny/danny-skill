@@ -1,8 +1,0 @@
-name: deploy
-version: "1.0"
-domain: devops
-tags: [deploy, ci-cd, release]
-description: "标准化部署流程，支持多环境部署"
-command: |
-  echo "Deploy command"
-adapter: universal

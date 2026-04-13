@@ -1,9 +1,0 @@
-name: project-init
-version: "1.0"
-domain: common
-tags: [init, setup, scaffolding]
-description: "标准化项目初始化流程，支持多种项目模板"
-command: |
-  echo "Project initialization"
-  # 具体命令根据项目类型动态生成
-adapter: universal
