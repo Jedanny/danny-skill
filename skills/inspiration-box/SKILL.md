@@ -1,7 +1,8 @@
 ---
 name: inspiration-box
-description: "灵感收集与管理技能，快速捕获、转化的团队创意资产"
+description: "Use when capturing, organizing, developing, or transforming product ideas, technical ideas, brainstorms, and creative inspiration"
 trigger: "/danny-idea"
+triggers: [idea, inspiration, brainstorm, capture, creativity, product, concept]
 adapter: universal
 version: "1.0"
 domain: common

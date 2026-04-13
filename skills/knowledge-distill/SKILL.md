@@ -1,7 +1,8 @@
 ---
 name: knowledge-distill
-description: "团队知识蒸馏技能，从讨论和交互中提取、沉淀可复用的知识资产"
+description: "Use when distilling reusable knowledge from discussions, decisions, lessons learned, best practices, or AI interactions"
 trigger: "/danny-distill"
+triggers: [distill, knowledge, documentation, decision, lesson, learning, best-practice]
 adapter: universal
 version: "1.0"
 domain: common

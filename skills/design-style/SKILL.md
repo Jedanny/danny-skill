@@ -1,7 +1,8 @@
 ---
 name: design-style
-description: This skill should be used when generating website/UI designs or when user asks to reference a specific website's design style. It provides trigger-based progressive disclosure of 58 website design systems from the awesome-design-md collection by VoltAgent.
+description: Use when generating website or UI designs, selecting visual styles, matching a known brand aesthetic, or referencing a specific website design system
 version: "1.0"
+triggers: [design, style, ui, website, frontend, brand, visual, landing]
 tags: [design, design-systems, ui, style, frontend]
 supported_tools: [claude-code, codex, cursor, opencode]
 ---

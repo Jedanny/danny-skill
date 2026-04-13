@@ -22,8 +22,12 @@ describe('skill library schema', () => {
 
       expect(metadata.name).toBe(skillName);
       expect(metadata.description).toEqual(expect.any(String));
+      expect(metadata.description).toMatch(/^Use when\b/);
       expect(metadata.version).toEqual(expect.any(String));
+      expect(Array.isArray(metadata.triggers)).toBe(true);
       expect(Array.isArray(metadata.supported_tools)).toBe(true);
+
+      expect((metadata.triggers as string[]).length).toBeGreaterThan(0);
 
       for (const tool of metadata.supported_tools as string[]) {
         expect(supportedTools).toContain(tool);

@@ -1,7 +1,8 @@
 ---
 name: self-improvement
-description: "自我进化技能，记录错误和反馈实现持续改进"
+description: "Use when recording errors, user corrections, successful solutions, repeated patterns, or feedback for future improvement"
 trigger: "/danny-learn"
+triggers: [learn, error, correction, feedback, success, pattern, retrospective]
 adapter: universal
 version: "1.0"
 domain: common
