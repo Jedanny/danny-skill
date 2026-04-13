@@ -13,20 +13,20 @@ From the repository root:
 By default, this links all `skills/*/` directories into:
 
 ```text
-~/.codex/skills/
+~/.agents/skills/
 ```
 
 Restart Codex after installation so skills are rediscovered.
 
-## Project Scope for oh-my-codex
+## Project Scope
 
-oh-my-codex scans project skills from `.codex/skills/`. To make this repository expose its skills in project scope, link the canonical skills into `.codex/skills/`:
+Codex scans repository skills from `.agents/skills/` in the working directory and parent directories. To make this repository expose its skills in project scope, link the canonical skills into `.agents/skills/`:
 
 ```bash
 ./scripts/install.sh --tool codex --scope project --yes
 ```
 
-Generated `.codex/skills/` links are ignored by git; keep editing canonical files under `skills/`.
+Generated `.agents/skills/` links are ignored by git; keep editing canonical files under `skills/`.
 
 If a previous copy-based install already exists, replace it with links:
 
@@ -45,8 +45,8 @@ Preview writes without copying files:
 ## Manual Install
 
 ```bash
-mkdir -p ~/.codex/skills
-ln -s "$(pwd)/skills/"* ~/.codex/skills/
+mkdir -p ~/.agents/skills
+ln -s "$(pwd)/skills/"* ~/.agents/skills/
 ```
 
 ## Copy Fallback
@@ -57,13 +57,13 @@ If your environment cannot create symlinks, use copy mode:
 ./scripts/install.sh --tool codex --mode copy --yes
 ```
 
-## Legacy Native Discovery
+## oh-my-codex Compatibility Note
 
-Some non-OMX or legacy Codex setups may discover skills through `~/.agents/skills/`. oh-my-codex treats that path as legacy because it can duplicate `${CODEX_HOME:-~/.codex}/skills`. Use it only when your Codex setup specifically requires it:
+Some oh-my-codex installations also scan `${CODEX_HOME:-~/.codex}/skills`. This repository follows the current Codex official skill locations by default. If your local oh-my-codex setup requires `~/.codex/skills`, create manual links there and avoid duplicating the same skills in `~/.agents/skills`.
 
 ```bash
-mkdir -p ~/.agents/skills
-ln -s "$(pwd)/skills" ~/.agents/skills/danny-skill
+mkdir -p ~/.codex/skills
+ln -s "$(pwd)/skills/"* ~/.codex/skills/
 ```
 
-Use either per-skill links under `~/.codex/skills/` or native discovery under `~/.agents/skills/`, not both for the same checkout.
+Use one Codex discovery path per checkout to avoid duplicate skill entries.

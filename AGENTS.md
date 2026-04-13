@@ -21,10 +21,11 @@ This repository is a skill-library-first package for sharing AI coding skills ac
 
 ## Codex / oh-my-codex Alignment
 
-- User-scope skills install to `~/.codex/skills/<skill>`.
-- Project-scope skills install to `.codex/skills/<skill>` via generated links.
-- `.codex/skills/` is ignored because it is generated from canonical `skills/`.
-- Treat `~/.agents/skills` as a legacy/native fallback, not the default oh-my-codex path.
+- Codex official user-scope skills install to `~/.agents/skills/<skill>`.
+- Codex official project-scope skills install to `.agents/skills/<skill>` via generated links.
+- Claude Code project-scope skills install to `.claude/skills/<skill>` via generated links.
+- `.agents/skills/`, `.claude/skills/`, and `.codex/skills/` are ignored because they are generated from canonical `skills/`.
+- Treat `~/.codex/skills` as an oh-my-codex compatibility path, not the default official Codex path.
 - Keep `AGENTS.md` focused on runtime/project instructions; broad contribution docs belong in `CONTRIBUTING.md`.
 
 ## Commands
@@ -34,6 +35,7 @@ pnpm test
 pnpm run validate
 pnpm exec tsc --noEmit
 ./scripts/install.sh --tool codex --scope project --yes
+./scripts/install.sh --tool claude-code --scope project --yes
 ./scripts/install.sh --tool all --dry-run --yes
 ```
 

@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .omx/
+.agents/skills/
+.claude/skills/
 .codex/skills/
 *.js
 *.d.ts

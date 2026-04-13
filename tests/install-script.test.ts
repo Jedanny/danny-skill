@@ -17,12 +17,12 @@ describe('install script', () => {
       stdio: 'pipe',
     });
 
-    const linkedSkill = join(root, '.codex', 'skills', 'inspiration-box');
+    const linkedSkill = join(root, '.agents', 'skills', 'inspiration-box');
     expect(lstatSync(linkedSkill).isSymbolicLink()).toBe(true);
     expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'inspiration-box'));
-    expect(existsSync(join(root, '.codex', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
-    expect(existsSync(join(root, '.codex', 'skills', 'knowledge-distill', 'SKILL.md'))).toBe(true);
-    expect(existsSync(join(root, '.codex', 'skills', 'self-improvement', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'knowledge-distill', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'self-improvement', 'SKILL.md'))).toBe(true);
   });
 
   test('supports explicit copy mode for environments that cannot use links', () => {
@@ -33,25 +33,36 @@ describe('install script', () => {
       stdio: 'pipe',
     });
 
-    const copiedSkill = join(root, '.codex', 'skills', 'inspiration-box');
+    const copiedSkill = join(root, '.agents', 'skills', 'inspiration-box');
     expect(lstatSync(copiedSkill).isSymbolicLink()).toBe(false);
     expect(existsSync(join(copiedSkill, 'SKILL.md'))).toBe(true);
   });
 
-  test('links Codex project-scope skills under .codex/skills', () => {
+  test('links Codex project-scope skills under .agents/skills', () => {
     execFileSync('./scripts/install.sh', ['--yes', '--tool', 'codex', '--scope', 'project', '--replace'], {
       cwd: process.cwd(),
       stdio: 'pipe',
     });
 
-    const linkedSkill = join(process.cwd(), '.codex', 'skills', 'design-style');
+    const linkedSkill = join(process.cwd(), '.agents', 'skills', 'design-style');
     expect(lstatSync(linkedSkill).isSymbolicLink()).toBe(true);
     expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'design-style'));
   });
 
-  test('rejects project scope for non-Codex tools', () => {
+  test('links Claude Code project-scope skills under .claude/skills', () => {
+    execFileSync('./scripts/install.sh', ['--yes', '--tool', 'claude-code', '--scope', 'project', '--replace'], {
+      cwd: process.cwd(),
+      stdio: 'pipe',
+    });
+
+    const linkedSkill = join(process.cwd(), '.claude', 'skills', 'design-style');
+    expect(lstatSync(linkedSkill).isSymbolicLink()).toBe(true);
+    expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'design-style'));
+  });
+
+  test('rejects project scope for tools without official project skill paths', () => {
     expect(() =>
-      execFileSync('./scripts/install.sh', ['--yes', '--tool', 'claude-code', '--scope', 'project'], {
+      execFileSync('./scripts/install.sh', ['--yes', '--tool', 'cursor', '--scope', 'project'], {
         cwd: process.cwd(),
         stdio: 'pipe',
       }),

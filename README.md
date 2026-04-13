@@ -45,9 +45,10 @@ pnpm test
 ./scripts/install.sh --tool codex --mode copy --yes
 ```
 
-oh-my-codex 项目级技能可链接到 `.codex/skills/`：
+Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 和 `.agents/skills/`：
 
 ```bash
+./scripts/install.sh --tool claude-code --scope project --yes
 ./scripts/install.sh --tool codex --scope project --yes
 ```
 
