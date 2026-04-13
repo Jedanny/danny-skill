@@ -22,10 +22,12 @@ describe('plugin manifests', () => {
     const marketplace = readJson('.claude-plugin/marketplace.json');
 
     expect(marketplace.name).toEqual(expect.any(String));
+    expect(marketplace.description).toContain('design style');
     expect(marketplace.plugins).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           name: 'danny-skill',
+          description: expect.stringContaining('design style'),
           source: './',
         }),
       ]),
