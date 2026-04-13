@@ -10,13 +10,19 @@ From the repository root:
 ./scripts/install.sh --tool codex --yes
 ```
 
-This copies all `skills/*/` directories to:
+By default, this links all `skills/*/` directories into:
 
 ```text
 ~/.codex/skills/
 ```
 
 Restart Codex after installation so skills are rediscovered.
+
+If a previous copy-based install already exists, replace it with links:
+
+```bash
+./scripts/install.sh --tool codex --replace --yes
+```
 
 ## Dry Run
 
@@ -30,7 +36,15 @@ Preview writes without copying files:
 
 ```bash
 mkdir -p ~/.codex/skills
-cp -R skills/* ~/.codex/skills/
+ln -s "$(pwd)/skills/"* ~/.codex/skills/
+```
+
+## Copy Fallback
+
+If your environment cannot create symlinks, use copy mode:
+
+```bash
+./scripts/install.sh --tool codex --mode copy --yes
 ```
 
 ## Advanced Native Discovery
@@ -42,4 +56,4 @@ mkdir -p ~/.agents/skills
 ln -s "$(pwd)/skills" ~/.agents/skills/danny-skill
 ```
 
-Use either copy-based install or symlink discovery, not both for the same checkout.
+Use either per-skill links under `~/.codex/skills/` or native discovery under `~/.agents/skills/`, not both for the same checkout.

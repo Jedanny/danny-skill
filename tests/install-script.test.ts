@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { execFileSync } from 'child_process';
-import { existsSync, mkdtempSync } from 'fs';
+import { existsSync, lstatSync, mkdtempSync, readlinkSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
@@ -9,7 +9,7 @@ function tempRoot() {
 }
 
 describe('install script', () => {
-  test('installs skills into a test target root for Codex', () => {
+  test('links skills into a test target root for Codex by default', () => {
     const root = tempRoot();
 
     execFileSync('./scripts/install.sh', ['--yes', '--tool', 'codex', '--target-root', root], {
@@ -17,9 +17,25 @@ describe('install script', () => {
       stdio: 'pipe',
     });
 
-    expect(existsSync(join(root, '.codex', 'skills', 'inspiration-box', 'SKILL.md'))).toBe(true);
+    const linkedSkill = join(root, '.codex', 'skills', 'inspiration-box');
+    expect(lstatSync(linkedSkill).isSymbolicLink()).toBe(true);
+    expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'inspiration-box'));
+    expect(existsSync(join(root, '.codex', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
     expect(existsSync(join(root, '.codex', 'skills', 'knowledge-distill', 'SKILL.md'))).toBe(true);
     expect(existsSync(join(root, '.codex', 'skills', 'self-improvement', 'SKILL.md'))).toBe(true);
+  });
+
+  test('supports explicit copy mode for environments that cannot use links', () => {
+    const root = tempRoot();
+
+    execFileSync('./scripts/install.sh', ['--yes', '--mode', 'copy', '--tool', 'codex', '--target-root', root], {
+      cwd: process.cwd(),
+      stdio: 'pipe',
+    });
+
+    const copiedSkill = join(root, '.codex', 'skills', 'inspiration-box');
+    expect(lstatSync(copiedSkill).isSymbolicLink()).toBe(false);
+    expect(existsSync(join(copiedSkill, 'SKILL.md'))).toBe(true);
   });
 
   test('dry-run reports planned writes without copying skills', () => {
@@ -35,6 +51,7 @@ describe('install script', () => {
     );
 
     expect(output).toContain('DRY RUN');
+    expect(output).toContain('would link');
     expect(output).toContain(join(root, '.claude', 'skills'));
     expect(existsSync(join(root, '.claude', 'skills'))).toBe(false);
   });

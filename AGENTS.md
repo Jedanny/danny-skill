@@ -9,7 +9,7 @@
 - `pnpm install`：根据 `pnpm-lock.yaml` 安装依赖。
 - `pnpm test`：运行 Jest 测试，覆盖技能 schema、插件 manifest、仓库结构和安装脚本。
 - `pnpm run validate`：当前等同于 `pnpm test`。
-- `pnpm run install:claude`：安装技能到 Claude Code。
+- `pnpm run install:claude`：以链接模式安装技能到 Claude Code。
 - `./scripts/install.sh --tool codex --dry-run --yes`：预览 Codex 安装路径。
 
 当前没有独立构建产物；如修改 TypeScript 测试或未来工具代码，运行 `pnpm exec tsc --noEmit`。
@@ -28,4 +28,4 @@
 
 ## 安全与配置提示
 
-不要提交本地密钥、私有工具路径、`node_modules/`、`dist/` 或 `.omx/` 运行态数据。修改安装脚本时保持保守，因为它会写入用户工具目录，例如 `~/.claude/skills/`、`~/.codex/skills/`、`~/.cursor/skills/` 和 `~/.opencode/plugins/`。
+不要提交本地密钥、私有工具路径、`node_modules/`、`dist/` 或 `.omx/` 运行态数据。修改安装脚本时保持保守，因为它会写入或链接到用户工具目录，例如 `~/.claude/skills/`、`~/.codex/skills/`、`~/.cursor/skills/` 和 `~/.opencode/plugins/`。

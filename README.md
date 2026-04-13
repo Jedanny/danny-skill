@@ -24,13 +24,25 @@ pnpm install
 pnpm test
 ```
 
-安装到指定工具：
+默认安装使用软链接，便于一个仓库同时复用到多个工具：
 
 ```bash
 ./scripts/install.sh --tool claude-code --yes
 ./scripts/install.sh --tool codex --yes
 ./scripts/install.sh --tool cursor --yes
 ./scripts/install.sh --tool opencode --yes
+```
+
+在 macOS/Linux 下使用 symlink；在 Windows Git Bash/MSYS/Cygwin 环境下脚本会尝试创建目录 junction。若目标目录已有旧的复制版技能，使用 `--replace` 替换为链接：
+
+```bash
+./scripts/install.sh --tool all --replace --yes
+```
+
+如果目标环境不支持软链接，可显式使用复制模式：
+
+```bash
+./scripts/install.sh --tool codex --mode copy --yes
 ```
 
 安全预览安装路径：

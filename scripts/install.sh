@@ -10,6 +10,8 @@ AUTO_INSTALL="false"
 DRY_RUN="false"
 TARGET_TOOL="detected"
 TARGET_ROOT="$HOME"
+INSTALL_MODE="link"
+REPLACE_EXISTING="false"
 
 usage() {
     cat <<'USAGE'
@@ -18,6 +20,9 @@ Usage: ./scripts/install.sh [options]
 Options:
   -y, --yes                         Run without interactive prompts
   --dry-run                         Print planned writes without copying
+  --mode <link|copy>                Install by symlink/junction or copy (default: link)
+  --copy                            Shortcut for --mode copy
+  --replace                         Replace existing skill paths before installing
   --tool <claude-code|codex|cursor|opencode|all>
                                      Install for one tool or every supported tool
   --target-root <path>              Use this root instead of $HOME
@@ -33,6 +38,22 @@ while [ "$#" -gt 0 ]; do
             ;;
         --dry-run)
             DRY_RUN="true"
+            shift
+            ;;
+        --mode)
+            if [ "$#" -lt 2 ]; then
+                echo "Missing value for --mode" >&2
+                exit 1
+            fi
+            INSTALL_MODE="$2"
+            shift 2
+            ;;
+        --copy)
+            INSTALL_MODE="copy"
+            shift
+            ;;
+        --replace)
+            REPLACE_EXISTING="true"
             shift
             ;;
         --tool)
@@ -63,6 +84,16 @@ while [ "$#" -gt 0 ]; do
     esac
 done
 
+case "$INSTALL_MODE" in
+    link|copy)
+        ;;
+    *)
+        echo "Unsupported install mode: $INSTALL_MODE" >&2
+        usage >&2
+        exit 1
+        ;;
+esac
+
 destination_for_tool() {
     case "$1" in
         claude-code)
@@ -84,7 +115,69 @@ destination_for_tool() {
     esac
 }
 
-copy_skills_to() {
+is_windows_shell() {
+    case "$(uname -s 2>/dev/null || true)" in
+        MINGW*|MSYS*|CYGWIN*)
+            return 0
+            ;;
+    esac
+
+    [ "${OS:-}" = "Windows_NT" ] && command -v cmd.exe >/dev/null 2>&1 && command -v cygpath >/dev/null 2>&1
+}
+
+create_directory_link() {
+    local source="$1"
+    local target="$2"
+
+    if is_windows_shell && command -v cmd.exe >/dev/null 2>&1 && command -v cygpath >/dev/null 2>&1; then
+        cmd.exe /c mklink /J "$(cygpath -w "$target")" "$(cygpath -w "$source")" >/dev/null
+    else
+        ln -s "$source" "$target"
+    fi
+}
+
+install_skill() {
+    local source="$1"
+    local target="$2"
+    local skill_name
+    skill_name="$(basename "$source")"
+
+    if [ "$DRY_RUN" = "true" ]; then
+        if [ "$REPLACE_EXISTING" = "true" ]; then
+            echo "DRY RUN: would replace $target"
+        fi
+
+        if [ "$INSTALL_MODE" = "link" ]; then
+            echo "DRY RUN: would link $source to $target"
+        else
+            echo "DRY RUN: would copy $source to $target"
+        fi
+        return 0
+    fi
+
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        if [ "$REPLACE_EXISTING" = "true" ]; then
+            rm -rf "$target"
+        elif [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+            echo "  Linked: $skill_name"
+            return 0
+        else
+            echo "  Skipped existing $target (use --replace to overwrite)" >&2
+            return 0
+        fi
+    fi
+
+    if [ "$INSTALL_MODE" = "link" ]; then
+        create_directory_link "$source" "$target"
+        echo "  Linked: $skill_name"
+    else
+        mkdir -p "$target"
+        cp -R "$source"/. "$target"/
+        echo "  Copied: $skill_name"
+    fi
+}
+
+install_skills_to() {
     local destination="$1"
 
     if [ "$DRY_RUN" = "true" ]; then
@@ -99,13 +192,7 @@ copy_skills_to() {
             skill_name="$(basename "$skill")"
             local target="$destination/$skill_name"
 
-            if [ "$DRY_RUN" = "true" ]; then
-                echo "DRY RUN: would install $skill_name to $target"
-            else
-                mkdir -p "$target"
-                cp -R "$skill"/. "$target"/
-                echo "  Installed: $skill_name"
-            fi
+            install_skill "$skill" "$target"
         fi
     done
 }
@@ -115,8 +202,8 @@ install_tool() {
     local destination
     destination="$(destination_for_tool "$tool")"
 
-    echo "Installing skills for $tool..."
-    copy_skills_to "$destination"
+    echo "Installing skills for $tool using $INSTALL_MODE mode..."
+    install_skills_to "$destination"
     echo "  $tool skills path: $destination"
 }
 

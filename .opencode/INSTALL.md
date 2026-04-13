@@ -1,6 +1,6 @@
 # Installing danny-skill for OpenCode
 
-danny-skill currently supports OpenCode through copy-based skill installation.
+danny-skill currently supports OpenCode through link-based skill installation, with copy mode available as a fallback.
 
 ## Recommended Install
 
@@ -10,13 +10,19 @@ From the repository root:
 ./scripts/install.sh --tool opencode --yes
 ```
 
-This copies all `skills/*/` directories to:
+By default, this links all `skills/*/` directories into:
 
 ```text
 ~/.opencode/plugins/
 ```
 
 Restart OpenCode after installation.
+
+If a previous copy-based install already exists, replace it with links:
+
+```bash
+./scripts/install.sh --tool opencode --replace --yes
+```
 
 ## Dry Run
 
@@ -28,7 +34,13 @@ Restart OpenCode after installation.
 
 ```bash
 mkdir -p ~/.opencode/plugins
-cp -R skills/* ~/.opencode/plugins/
+ln -s "$(pwd)/skills/"* ~/.opencode/plugins/
+```
+
+## Copy Fallback
+
+```bash
+./scripts/install.sh --tool opencode --mode copy --yes
 ```
 
 ## Future Plugin Shim
