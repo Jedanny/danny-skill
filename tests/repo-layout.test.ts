@@ -11,5 +11,7 @@ describe('repository layout', () => {
     expect(existsSync(join(process.cwd(), 'skills'))).toBe(true);
     expect(existsSync(join(process.cwd(), 'commands'))).toBe(true);
     expect(existsSync(join(process.cwd(), 'prompts'))).toBe(true);
+    expect(existsSync(join(process.cwd(), 'tools', 'README.md'))).toBe(true);
+    expect(existsSync(join(process.cwd(), 'packages', 'cli', 'README.md'))).toBe(true);
   });
 });
