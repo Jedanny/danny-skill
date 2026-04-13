@@ -23,6 +23,7 @@ describe('plugin manifests', () => {
 
     expect(marketplace.name).toEqual(expect.any(String));
     expect(marketplace.description).toContain('design style');
+    expect(marketplace.description).toContain('autoresearch');
     expect(marketplace.plugins).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

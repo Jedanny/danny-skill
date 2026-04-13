@@ -45,4 +45,25 @@ describe('skill library schema', () => {
     expect(existsSync(join(designStyleDir, 'assets', 'preview.html'))).toBe(true);
     expect(designReferences).toHaveLength(58);
   });
+
+  test('autoresearch-loop documents the eval-driven optimization loop', () => {
+    const autoresearchDir = join(skillsDir, 'autoresearch-loop');
+    const skillFile = join(autoresearchDir, 'SKILL.md');
+    const content = readFileSync(skillFile, 'utf8');
+    const metadata = parseFrontmatter(content);
+
+    expect(metadata.name).toBe('autoresearch-loop');
+    expect(metadata.description).toMatch(/^Use when\b/);
+    expect(metadata.supported_tools).toEqual(['claude-code', 'codex']);
+    expect(metadata.triggers).toEqual(
+      expect.arrayContaining(['autoresearch', 'eval', 'experiment', 'prompt-optimization']),
+    );
+
+    for (const requiredTerm of ['baseline', 'eval', 'mutation', 'keep-or-revert', 'changelog', 'max_experiments']) {
+      expect(content).toContain(requiredTerm);
+    }
+
+    expect(existsSync(join(autoresearchDir, 'references', 'eval-format.md'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'assets', 'eval.example.json'))).toBe(true);
+  });
 });

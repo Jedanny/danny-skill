@@ -1,0 +1,29 @@
+{
+  "target": "skills/autoresearch-loop/SKILL.md",
+  "objective": "Verify the skill documents the eval-driven optimization loop",
+  "metric": "pass_rate",
+  "max_experiments": 5,
+  "evals": [
+    {
+      "name": "description_starts_with_use_when",
+      "type": "rule",
+      "rule": "regex",
+      "path": "skills/autoresearch-loop/SKILL.md",
+      "expected": "^description: Use when"
+    },
+    {
+      "name": "mentions_baseline",
+      "type": "rule",
+      "rule": "contains",
+      "path": "skills/autoresearch-loop/SKILL.md",
+      "expected": "baseline"
+    },
+    {
+      "name": "mentions_keep_or_revert",
+      "type": "rule",
+      "rule": "contains",
+      "path": "skills/autoresearch-loop/SKILL.md",
+      "expected": "keep-or-revert"
+    }
+  ]
+}
