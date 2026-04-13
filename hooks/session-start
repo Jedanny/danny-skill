@@ -1,0 +1,4 @@
+#!/bin/bash
+# Session start hook
+
+echo "danny-skill loaded"

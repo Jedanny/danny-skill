@@ -1,67 +1,51 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file guides Claude Code when working in this repository.
 
-## 项目概述
+## Project Overview
 
-danny-skill 是团队 AI 技能共享中心，支持跨工具复用（Claude Code、Cursor、OpenCode、Codex、Codebuddy）。
+danny-skill is a skill-library-first repository for sharing AI coding skills across Claude Code, Codex, Cursor, and OpenCode. The canonical source is `skills/`; tool-specific directories contain distribution metadata or install instructions only.
 
-## 常用命令
+## Project Structure
 
-```bash
-# 安装依赖
-pnpm install
-
-# 构建 TypeScript
-pnpm run build
-
-# 运行测试
-pnpm test
-
-# 安装到本地工具
-./scripts/install.sh
-
-# 检测已安装的 AI 工具
-./scripts/detect-tools.sh
+```text
+danny-skill/
+├── skills/             # Canonical SKILL.md skills
+├── commands/           # Reusable command documents
+├── prompts/            # Prompt templates
+├── hooks/              # Session hooks
+├── docs/               # Specs, plans, learnings
+├── tests/              # Jest validation tests
+├── .claude-plugin/     # Claude Code plugin metadata
+├── .codex/             # Codex install docs
+├── .cursor-plugin/     # Cursor plugin metadata
+└── .opencode/          # OpenCode install docs
 ```
 
-## 项目结构
+## Available Skills
 
-- `assets/` - 声明式 AI 资产（skills、commands、prompts、workflows）
-- `adapters/` - 工具适配器（当前实现 Claude Code）
-- `lib/` - 共享库和类型定义
-- `scripts/` - 安装和配置脚本
-- `tests/` - 测试文件
+- `inspiration-box`: `/danny-idea` - inspiration capture and management
+- `knowledge-distill`: `/danny-distill` - team knowledge distillation
+- `self-improvement`: `/danny-learn` - learning from errors, feedback, and successes
 
-## 资产类型
+## Adding New Skills
 
-### Skills
-位置: `assets/skills/<domain>/`
-- 触发方式: `/<skill-name>`
-- 每个 skill 包含 `.yaml` 元数据和 `.md` 内容
+1. Create `skills/<skill-name>/SKILL.md`.
+2. Use kebab-case for the directory and the `name` frontmatter.
+3. Include `description`, `version`, `tags`, and `supported_tools`.
+4. Put long references in `references/`, helper scripts in `scripts/`, and reusable files in `assets/`.
+5. Run `pnpm test`.
 
-### Commands
-位置: `assets/commands/<domain>/`
-- 可执行的命令定义
-- 支持参数配置
+## Commands
 
-### Prompts
-位置: `assets/prompts/<domain>/`
-- 提示词模板
-- 支持变量替换
+```bash
+pnpm install
+pnpm test
+pnpm run validate
+pnpm exec tsc --noEmit
+./scripts/install.sh --tool claude-code --dry-run --yes
+```
 
-## 领域分类
+## Architecture Notes
 
-- `common/` - 通用技能
-- `frontend/` - 前端开发
-- `backend/` - 后端开发
-- `devops/` - 运维部署
-- `quality/` - 代码质量
-- `docs/` - 文档生成
-
-## 添加新资产
-
-1. 在对应领域目录创建 `<name>/` 目录
-2. 创建 `<name>.yaml` 元数据文件
-3. 创建 `<name>.md` 内容描述文件
-4. 运行测试确保格式正确
+Do not restore the old `assets/ + adapters/ + lib/schema.ts` architecture unless a new design supersedes `docs/superpowers/specs/2026-04-13-danny-skill-shareable-tooling-architecture-design.md`. Future CLI work belongs under `packages/cli/`; lightweight scripts can start under `tools/`.
