@@ -1,31 +1,46 @@
-# Repository Guidelines
+# danny-skill Agent Contract
 
-## 项目结构与模块组织
+This repository is a skill-library-first package for sharing AI coding skills across Claude Code, Codex, Cursor, and OpenCode.
 
-本仓库是 `danny-skill` 跨工具 AI 技能库。`skills/` 是唯一技能源目录，每个技能位于 `skills/<skill-name>/SKILL.md`，可选资料放在同级 `references/`、`scripts/`、`assets/`。`commands/` 保存可复用命令文档，`prompts/` 保存提示词模板，`hooks/` 保存会话 hook。`.claude-plugin/`、`.cursor-plugin/`、`.codex/`、`.opencode/` 只保存工具分发元数据或安装说明。设计、计划和学习记录放在 `docs/`，测试放在 `tests/`。
+## Operating Principles
 
-## 构建、测试与开发命令
+- Keep `skills/` as the canonical source for skill content.
+- Prefer symlink/junction installation over copying so all tools reuse the same source files.
+- Do not restore the legacy `assets/ + adapters/ + lib/schema.ts` architecture without a new approved design.
+- Keep CLI work incremental: lightweight scripts may live in `tools/`; stable user-facing CLI code belongs in `packages/cli/`.
+- Contributor-facing guidance lives in `CONTRIBUTING.md`.
 
-- `pnpm install`：根据 `pnpm-lock.yaml` 安装依赖。
-- `pnpm test`：运行 Jest 测试，覆盖技能 schema、插件 manifest、仓库结构和安装脚本。
-- `pnpm run validate`：当前等同于 `pnpm test`。
-- `pnpm run install:claude`：以链接模式安装技能到 Claude Code。
-- `./scripts/install.sh --tool codex --dry-run --yes`：预览 Codex 安装路径。
+## Skill Rules
 
-当前没有独立构建产物；如修改 TypeScript 测试或未来工具代码，运行 `pnpm exec tsc --noEmit`。
+- Each skill lives at `skills/<skill-name>/SKILL.md`.
+- `name` must match the directory name and use kebab-case.
+- `description` must start with `Use when` for Codex/OMX discovery.
+- Include `triggers`, `version`, `tags`, and `supported_tools`.
+- Put large supporting material in `references/`, helper scripts in `scripts/`, and reusable files in `assets/`.
+- Do not duplicate skill bodies into tool-specific directories.
 
-## 编码风格与命名约定
+## Codex / oh-my-codex Alignment
 
-代码使用 TypeScript 和 ES Modules；技能、命令和提示词使用 Markdown。JSON、YAML、TypeScript 使用两个空格缩进。技能目录必须使用 kebab-case，并与 frontmatter 的 `name` 一致。技能触发命名保持 `/danny-*` 约定。不要为不同工具复制技能正文；工具差异放入 manifest、安装文档或未来 CLI。
+- User-scope skills install to `~/.codex/skills/<skill>`.
+- Project-scope skills install to `.codex/skills/<skill>` via generated links.
+- `.codex/skills/` is ignored because it is generated from canonical `skills/`.
+- Treat `~/.agents/skills` as a legacy/native fallback, not the default oh-my-codex path.
+- Keep `AGENTS.md` focused on runtime/project instructions; broad contribution docs belong in `CONTRIBUTING.md`.
 
-## 测试规范
+## Commands
 
-测试框架为 Jest + `ts-jest`，配置见 `jest.config.js`。新增测试使用 `*.test.ts` 命名并放在 `tests/`。修改技能 frontmatter、插件元数据、安装脚本或目录结构时，必须补充或更新对应测试。安装脚本测试必须使用临时目标目录，不能写真实用户工具目录。
+```bash
+pnpm test
+pnpm run validate
+pnpm exec tsc --noEmit
+./scripts/install.sh --tool codex --scope project --yes
+./scripts/install.sh --tool all --dry-run --yes
+```
 
-## 提交与 Pull Request 规范
+## Verification
 
-提交信息遵守仓库 Lore commit 协议：首行写“为什么”，正文说明约束和取舍，必要时添加 `Constraint:`、`Rejected:`、`Confidence:`、`Scope-risk:`、`Tested:`、`Not-tested:` 等 trailer。PR 应说明变更的技能、安装路径或分发元数据，列出验证命令，并关联相关设计文档或计划。
+Run `pnpm test` after changing skills, manifests, installer behavior, layout rules, or docs that describe install paths. Run `pnpm exec tsc --noEmit` after changing TypeScript tests or future TypeScript tooling.
 
-## 安全与配置提示
+## Commit Protocol
 
-不要提交本地密钥、私有工具路径、`node_modules/`、`dist/` 或 `.omx/` 运行态数据。修改安装脚本时保持保守，因为它会写入或链接到用户工具目录，例如 `~/.claude/skills/`、`~/.codex/skills/`、`~/.cursor/skills/` 和 `~/.opencode/plugins/`。
+Use Lore-style commits: first line explains why, body records constraints and tradeoffs, trailers document confidence, scope risk, tests, and known gaps.

@@ -93,3 +93,5 @@ pnpm exec tsc --noEmit
 ```
 
 新增技能时，创建 `skills/<skill-name>/SKILL.md`，填写 `name`、`description`、`version`、`tags`、`supported_tools` 等 frontmatter，并运行 `pnpm test`。
+
+更多贡献规范见 `CONTRIBUTING.md`。Codex/oh-my-codex 项目运行约定见 `AGENTS.md`。

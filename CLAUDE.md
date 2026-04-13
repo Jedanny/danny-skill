@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file guides Claude Code when working in this repository.
+This file guides Claude Code when working in this repository. See `CONTRIBUTING.md` for contributor workflow details and `AGENTS.md` for Codex/OMX project instructions.
 
 ## Project Overview
 
@@ -27,12 +27,13 @@ danny-skill/
 - `inspiration-box`: `/danny-idea` - inspiration capture and management
 - `knowledge-distill`: `/danny-distill` - team knowledge distillation
 - `self-improvement`: `/danny-learn` - learning from errors, feedback, and successes
+- `design-style`: automatic trigger - website and UI design style references
 
 ## Adding New Skills
 
 1. Create `skills/<skill-name>/SKILL.md`.
 2. Use kebab-case for the directory and the `name` frontmatter.
-3. Include `description`, `version`, `tags`, and `supported_tools`.
+3. Include a `Use when` description, `triggers`, `version`, `tags`, and `supported_tools`.
 4. Put long references in `references/`, helper scripts in `scripts/`, and reusable files in `assets/`.
 5. Run `pnpm test`.
 
