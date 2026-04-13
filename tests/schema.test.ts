@@ -1,37 +1,31 @@
 import { describe, expect, test } from '@jest/globals';
 
-describe('Schema', () => {
-  test('Skill type should have required fields', () => {
+describe('canonical asset metadata', () => {
+  test('skill metadata uses the shared SKILL.md shape', () => {
     const skill = {
-      name: 'read-code',
+      name: 'knowledge-distill',
       version: '1.0',
-      domain: 'common',
-      tags: ['reading', 'understanding'],
-      description: 'Code reading skill',
-      type: 'skill',
-      trigger: '/read',
-      adapter: 'universal',
-      content: '# Read Code\n\nThis skill helps...'
+      tags: ['knowledge', 'documentation'],
+      description: 'Team knowledge distillation skill',
+      trigger: '/danny-distill',
+      supported_tools: ['claude-code', 'codex', 'cursor', 'opencode'],
+      content: '# Knowledge Distill Skill',
     };
 
-    expect(skill.name).toBe('read-code');
-    expect(skill.type).toBe('skill');
-    expect(skill.domain).toBe('common');
+    expect(skill.name).toBe('knowledge-distill');
+    expect(skill.supported_tools).toContain('codex');
+    expect(skill.trigger).toMatch(/^\/danny-/);
   });
 
-  test('Command type should have command field', () => {
+  test('command assets stay separate from skills', () => {
     const cmd = {
       name: 'project-init',
-      version: '1.0',
-      domain: 'common',
       tags: ['init', 'setup'],
       description: 'Project initialization',
-      type: 'command',
-      command: 'npm init',
-      adapter: 'universal'
+      path: 'commands/project-init.md',
     };
 
-    expect(cmd.type).toBe('command');
-    expect(cmd.command).toBe('npm init');
+    expect(cmd.path).toBe('commands/project-init.md');
+    expect(cmd.name).not.toBe('knowledge-distill');
   });
 });
