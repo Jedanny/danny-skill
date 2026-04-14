@@ -17,7 +17,7 @@ Use it when the user is asking whether a paper, algorithm, architecture, model, 
 
 ## Methodology Note
 
-Methodology reference: https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w
+Methodology reference: 花叔, https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w
 
 ## Pipeline
 
