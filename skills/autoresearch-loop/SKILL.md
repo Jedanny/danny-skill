@@ -55,6 +55,28 @@ Use **LLM evals** for judgment:
 
 Start with rule evals whenever possible. Add LLM evals only when behavior cannot be checked deterministically.
 
+## Skill Quality Ratchet
+
+Use this mode when the target is a `SKILL.md` file or a collection of skills.
+
+Phases:
+
+1. **Inventory**: List target skills and validate referenced files exist.
+2. **Baseline score**: Score each skill before edits using `references/skill-quality-rubric.md`.
+3. **Pick weakest dimension**: Optimize only the lowest-scoring dimension for the current skill.
+4. **Single-asset mutation**: Edit only one `SKILL.md` per experiment.
+5. **Independent evaluation**: A separate evaluator scores the candidate using `references/evaluator-protocol.md`.
+6. **Human in the loop**: Show diff, score delta, eval output, and risk notes using `references/hitl-review-template.md`.
+7. **Keep-or-revert**: Keep only confirmed improvements; revert non-improvements.
+8. **Summary**: Produce a before/after table for all optimized skills.
+
+Limits:
+
+- Optimize at most one skill per active experiment.
+- Run at most three mutation rounds per skill unless the user explicitly raises the budget.
+- Do not let the modifying agent be the only scoring agent.
+- Prefer real prompt output quality over paper-perfect formatting.
+
 ## Experiment Log
 
 Store logs under:

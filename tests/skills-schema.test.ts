@@ -67,6 +67,27 @@ describe('skill library schema', () => {
     expect(existsSync(join(autoresearchDir, 'assets', 'eval.example.json'))).toBe(true);
   });
 
+  test('autoresearch-loop includes skill quality ratchet references', () => {
+    const autoresearchDir = join(skillsDir, 'autoresearch-loop');
+    const content = readFileSync(join(autoresearchDir, 'SKILL.md'), 'utf8');
+    const rubric = readFileSync(join(autoresearchDir, 'references', 'skill-quality-rubric.md'), 'utf8');
+    const evaluator = readFileSync(join(autoresearchDir, 'references', 'evaluator-protocol.md'), 'utf8');
+    const hitl = readFileSync(join(autoresearchDir, 'references', 'hitl-review-template.md'), 'utf8');
+
+    expect(content).toContain('Skill Quality Ratchet');
+    expect(rubric).toContain('100');
+    expect(rubric).toContain('Structure Score');
+    expect(rubric).toContain('Effect Score');
+    expect(rubric).toContain('Frontmatter');
+    expect(rubric).toContain('Real prompt output quality');
+    expect(evaluator).toContain('independent evaluator');
+    expect(evaluator.toLowerCase()).toContain('before score');
+    expect(evaluator.toLowerCase()).toContain('after score');
+    expect(hitl).toContain('Keep');
+    expect(hitl).toContain('Revert');
+    expect(hitl).toContain('Revise and rerun');
+  });
+
   test('research-to-implementation documents the paper-to-coding pipeline', () => {
     const skillDir = join(skillsDir, 'research-to-implementation');
     const skillFile = join(skillDir, 'SKILL.md');
