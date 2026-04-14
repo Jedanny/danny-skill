@@ -17,7 +17,7 @@ Use it when the user is asking whether a paper, algorithm, architecture, model, 
 
 ## Methodology Note
 
-This workflow is inspired by 花叔's shared methodology for turning research into reusable skills and business implementation: start from papers and technical ideas, analyze the underlying solution, search for open-source implementations, brainstorm business fit, then convert the validated path into coding work. This skill adapts that methodology into a reusable Claude Code / Codex workflow while keeping the output templates project-neutral.
+Methodology reference: https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w
 
 ## Pipeline
 
