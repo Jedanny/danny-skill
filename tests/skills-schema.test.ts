@@ -61,6 +61,8 @@ describe('skill library schema', () => {
     expect(readme).toContain('/danny-skill:inspiration-box');
     expect(readme).toContain('Project alias 是本仓库约定');
     expect(readme).toContain('不会自动变成 Claude Code 或 Codex 的原生命令');
+    expect(readme).toContain('每个 skill 都可以独立使用');
+    expect(readme).toContain('不要把组合示例当作强制流程');
   });
 
   test('autoresearch-loop documents the eval-driven optimization loop', () => {

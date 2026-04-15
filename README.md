@@ -81,9 +81,11 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 - Codex 显式调用使用 `$skill-name`；也可以让 Codex 根据 `description` 隐式选择 skill。
 - Project alias 是本仓库约定，不是 Claude Code / Codex 官方自动识别字段；后续 CLI 可以据此生成命令包装。
 
-## 推荐工作流
+## 可选组合方式
 
-常规任务从轻量捕获开始，逐步进入研究、执行和沉淀：
+每个 skill 都可以独立使用。下面只是复杂任务的一种组合示例，不要求按顺序执行，也不要求在完成一个 skill 后自动推荐下一个 skill。
+
+复杂任务可以按需组合：
 
 ```text
 inspiration-box
@@ -98,14 +100,14 @@ inspiration-box
 
 | 阶段 | 使用方式 |
 | --- | --- |
-| 有想法但还不确定价值 | 先用 `inspiration-box` 放入 `inbox/` 或 `ideas/`。 |
+| 有想法但还不确定价值 | 可用 `inspiration-box` 放入 `inbox/` 或 `ideas/`。 |
 | 需要验证论文、开源项目或方案价值 | 用 `research-to-implementation` 形成研究矩阵、业务适配和实施提案。 |
 | 已进入编码、修复、重构或评审 | 用 `coding-guardrails` 限制范围、明确验证方式。 |
 | 要优化 skill、prompt 或 workflow | 用 `autoresearch-loop` 建 baseline、跑 eval、做 keep-or-revert。 |
 | 出现错误、纠正或成功模式 | 用 `self-improvement` 记录到 `learnings/`。 |
 | 结论已经稳定可复用 | 用 `knowledge-distill` 固化到 `distilled/`。 |
 
-`design-style` 是视觉专项能力，只在 UI/网站/品牌风格相关任务中插入使用。
+后续建议只在用户目标明确需要时给出；不要把组合示例当作强制流程。`design-style` 是视觉专项能力，只在 UI/网站/品牌风格相关任务中插入使用。
 
 ## 技能能力边界
 
