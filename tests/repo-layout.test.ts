@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 describe('repository layout', () => {
@@ -27,6 +27,7 @@ describe('repository layout', () => {
 
     for (const requiredPath of [
       'docs/knowledge-base/README.md',
+      'docs/knowledge-base/storage-model.md',
       'docs/knowledge-base/project/README.md',
       'docs/knowledge-base/project/inbox/inspiration',
       'docs/knowledge-base/project/ideas',
@@ -42,5 +43,9 @@ describe('repository layout', () => {
     ]) {
       expect(existsSync(join(process.cwd(), requiredPath))).toBe(true);
     }
+
+    const storageModel = readFileSync(join(process.cwd(), 'docs/knowledge-base/storage-model.md'), 'utf8');
+    expect(storageModel).toContain('capture -> workspace -> evidence -> distilled');
+    expect(storageModel).toContain('Do not commit `.omx/` state');
   });
 });

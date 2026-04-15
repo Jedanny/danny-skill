@@ -109,6 +109,8 @@ docs/knowledge-base/project/distilled/
 
 Use `docs/knowledge-base/project/distilled/` for repository-specific knowledge. Use `~/.danny-skill/knowledge-base/distilled/` for global knowledge that applies across projects.
 
+Follow `docs/knowledge-base/storage-model.md`: distilled entries should link back to the source workspace or evidence, and `.omx` runtime state must not be copied here without review and rewriting.
+
 ## Integration
 
 ### 与 self-improvement 技能配合

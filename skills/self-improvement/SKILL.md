@@ -59,6 +59,8 @@ docs/knowledge-base/project/learnings/
 
 Use `docs/knowledge-base/project/learnings/` for repository-specific learnings. Use `~/.danny-skill/knowledge-base/learnings/` for global patterns that should apply across projects.
 
+Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. Store concrete events and prevention notes here, not raw `.omx` logs or temporary task progress.
+
 ## Learning Entry Format
 
 ```markdown

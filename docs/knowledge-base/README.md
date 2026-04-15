@@ -2,6 +2,8 @@
 
 This directory is the unified home for knowledge assets created by the skill system.
 
+See `storage-model.md` for the storage boundary and promotion rules inspired by oh-my-codex `.omx` storage.
+
 ## Scopes
 
 ### Project Scope
@@ -34,13 +36,18 @@ project/
 ├── inbox/
 │   └── inspiration/
 ├── ideas/
+├── research/
+├── experiments/
 ├── learnings/
-├── distilled/
-└── experiments/
+└── distilled/
 ```
 
 Lifecycle:
 
 ```text
-inbox -> ideas -> experiments -> learnings -> distilled
+capture -> workspace -> evidence -> distilled
 ```
+
+In this repository, `inbox/` is capture, `ideas/` and `research/` are workspaces, `experiments/` and `learnings/` are evidence, and `distilled/` is stable reusable knowledge.
+
+Runtime state, active mode progress, local logs, and metrics belong in `.omx/`, not in this knowledge base.

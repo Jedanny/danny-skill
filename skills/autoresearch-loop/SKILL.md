@@ -93,6 +93,8 @@ docs/knowledge-base/project/experiments/autoresearch/<target-name>/
 └── changelog.md
 ```
 
+Follow `docs/knowledge-base/storage-model.md`: experiment records are evidence, not transient agent scratch state. Keep runtime progress in `.omx/`; write only baseline, metric, mutation, and keep-or-revert evidence here.
+
 `results.tsv` columns:
 
 ```text

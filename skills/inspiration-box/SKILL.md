@@ -100,6 +100,8 @@ docs/knowledge-base/project/
 
 Use `docs/knowledge-base/project/` for repository-specific ideas. Use `~/.danny-skill/knowledge-base/` for global ideas that should apply across projects.
 
+Follow `docs/knowledge-base/storage-model.md`: raw captures start in `inbox/`, developed ideas move to `ideas/`, and runtime notes from `.omx/` must be rewritten before becoming knowledge entries.
+
 ## Integration
 
 ### 与 knowledge-distill 配合
