@@ -51,6 +51,18 @@ describe('skill library schema', () => {
     expect(designReferences).toHaveLength(58);
   });
 
+  test('README distinguishes official invocation from project aliases', () => {
+    const readme = readFileSync(join(process.cwd(), 'README.md'), 'utf8');
+
+    expect(readme).toContain('Claude Code standalone');
+    expect(readme).toContain('Claude Code plugin');
+    expect(readme).toContain('Codex');
+    expect(readme).toContain('$inspiration-box');
+    expect(readme).toContain('/danny-skill:inspiration-box');
+    expect(readme).toContain('Project alias 是本仓库约定');
+    expect(readme).toContain('不会自动变成 Claude Code 或 Codex 的原生命令');
+  });
+
   test('autoresearch-loop documents the eval-driven optimization loop', () => {
     const autoresearchDir = join(skillsDir, 'autoresearch-loop');
     const skillFile = join(autoresearchDir, 'SKILL.md');

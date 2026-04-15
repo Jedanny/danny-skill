@@ -14,8 +14,9 @@ danny-skill 是一个跨 AI 编码工具的团队技能库。仓库优先维护�
 - `skills/` 是唯一技能源目录。
 - 每个技能使用 `skills/<skill-name>/SKILL.md`。
 - 技能目录使用 kebab-case，例如 `skills/knowledge-distill/`。
-- `trigger` 表示显式命令入口，例如 `/danny-idea`；`triggers` 表示自然语言和关键词触发。
-- 没有稳定命令入口的技能只使用 `triggers`，在 README 里标为“自动触发”。
+- Claude Code / Codex 原生触发以 `name` 和 `description` 为准。
+- `trigger` 是本项目保留的推荐别名/未来 CLI 命令元数据，不会自动变成 Claude Code 或 Codex 的原生命令。
+- `triggers` 表示自然语言和关键词触发提示，用于跨工具发现、README 和后续 CLI 生成。
 - 插件目录只保存分发元数据或安装说明，不复制技能正文。
 - 当前阶段优先稳定技能库；完整 CLI 后续放入 `packages/cli/`。
 
@@ -61,17 +62,24 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 ./scripts/install.sh --tool codex --dry-run --yes
 ```
 
-## 当前技能
+## 当前技能与触发方式
 
-| Skill | Trigger | Description |
-| --- | --- | --- |
-| `inspiration-box` | `/danny-idea` | 灵感收集与管理 |
-| `knowledge-distill` | `/danny-distill` | 团队知识蒸馏 |
-| `self-improvement` | `/danny-learn` | 错误、反馈和经验记录 |
-| `design-style` | 自动触发 | 参考 58 套网站设计系统生成 UI 风格 |
-| `autoresearch-loop` | 自动触发 | 用 eval 驱动的实验循环优化 skill、prompt 和 workflow |
-| `research-to-implementation` | 自动触发 | 从论文/开源方案研究到业务适配和编码交接 |
-| `coding-guardrails` | 自动触发 | 编码、修复、重构、评审时的简洁/验证/最小变更护栏 |
+| Skill | Claude Code standalone | Claude Code plugin | Codex | Project alias | Description |
+| --- | --- | --- | --- | --- | --- |
+| `inspiration-box` | `/inspiration-box` | `/danny-skill:inspiration-box` | `$inspiration-box` | `/danny-idea` | 灵感收集与管理 |
+| `knowledge-distill` | `/knowledge-distill` | `/danny-skill:knowledge-distill` | `$knowledge-distill` | `/danny-distill` | 团队知识蒸馏 |
+| `self-improvement` | `/self-improvement` | `/danny-skill:self-improvement` | `$self-improvement` | `/danny-learn` | 错误、反馈和经验记录 |
+| `design-style` | `/design-style` | `/danny-skill:design-style` | `$design-style` | 自动触发 | 参考 58 套网站设计系统生成 UI 风格 |
+| `autoresearch-loop` | `/autoresearch-loop` | `/danny-skill:autoresearch-loop` | `$autoresearch-loop` | 自动触发 | 用 eval 驱动的实验循环优化 skill、prompt 和 workflow |
+| `research-to-implementation` | `/research-to-implementation` | `/danny-skill:research-to-implementation` | `$research-to-implementation` | 自动触发 | 从论文/开源方案研究到业务适配和编码交接 |
+| `coding-guardrails` | `/coding-guardrails` | `/danny-skill:coding-guardrails` | `$coding-guardrails` | 自动触发 | 编码、修复、重构、评审时的简洁/验证/最小变更护栏 |
+
+说明：
+
+- Claude Code standalone 指通过 `~/.claude/skills/` 或项目 `.claude/skills/` 安装后的原生 slash 命令。
+- Claude Code plugin 指通过 `.claude-plugin/plugin.json` 作为插件加载后的 namespaced slash 命令。
+- Codex 显式调用使用 `$skill-name`；也可以让 Codex 根据 `description` 隐式选择 skill。
+- Project alias 是本仓库约定，不是 Claude Code / Codex 官方自动识别字段；后续 CLI 可以据此生成命令包装。
 
 ## 推荐工作流
 
@@ -117,7 +125,7 @@ inspiration-box
 
 同一个 skill 同时支持项目级和全局级知识，不拆成两套 skill。触发词表达动作，scope 表达存放位置。
 
-默认写入当前项目：
+默认写入当前项目。下面使用项目别名表达动作；在 Claude Code / Codex 原生环境中，用上表对应的 skill 调用方式并带上同样参数即可。
 
 ```text
 /danny-idea ...      -> .danny-skill/knowledge-base/...
