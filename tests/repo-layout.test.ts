@@ -21,6 +21,7 @@ describe('repository layout', () => {
       'docs/knowledge',
       'docs/learnings',
       'docs/autoresearch',
+      'docs/knowledge-base/project',
     ]) {
       expect(existsSync(join(process.cwd(), legacyPath))).toBe(false);
     }
@@ -28,24 +29,25 @@ describe('repository layout', () => {
     for (const requiredPath of [
       'docs/knowledge-base/README.md',
       'docs/knowledge-base/storage-model.md',
-      'docs/knowledge-base/project/README.md',
-      'docs/knowledge-base/project/inbox/inspiration',
-      'docs/knowledge-base/project/ideas',
-      'docs/knowledge-base/project/learnings/errors',
-      'docs/knowledge-base/project/learnings/corrections',
-      'docs/knowledge-base/project/learnings/successes',
-      'docs/knowledge-base/project/distilled/concepts',
-      'docs/knowledge-base/project/distilled/best-practices',
-      'docs/knowledge-base/project/distilled/decisions',
-      'docs/knowledge-base/project/distilled/lessons',
-      'docs/knowledge-base/project/experiments/autoresearch',
-      'docs/knowledge-base/project/research',
+      '.danny-skill/knowledge-base/README.md',
+      '.danny-skill/knowledge-base/inbox/inspiration',
+      '.danny-skill/knowledge-base/ideas',
+      '.danny-skill/knowledge-base/learnings/errors',
+      '.danny-skill/knowledge-base/learnings/corrections',
+      '.danny-skill/knowledge-base/learnings/successes',
+      '.danny-skill/knowledge-base/distilled/concepts',
+      '.danny-skill/knowledge-base/distilled/best-practices',
+      '.danny-skill/knowledge-base/distilled/decisions',
+      '.danny-skill/knowledge-base/distilled/lessons',
+      '.danny-skill/knowledge-base/experiments/autoresearch',
+      '.danny-skill/knowledge-base/research',
     ]) {
       expect(existsSync(join(process.cwd(), requiredPath))).toBe(true);
     }
 
     const storageModel = readFileSync(join(process.cwd(), 'docs/knowledge-base/storage-model.md'), 'utf8');
     expect(storageModel).toContain('capture -> workspace -> evidence -> distilled');
+    expect(storageModel).toContain('.danny-skill/knowledge-base/');
     expect(storageModel).toContain('Do not commit `.omx/` state');
   });
 });

@@ -89,7 +89,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## Inspiration Storage Structure
 
 ```
-docs/knowledge-base/project/
+.danny-skill/knowledge-base/
 ├── inbox/inspiration/  # 收件箱（新捕获）
 └── ideas/
     ├── feature/        # 功能点子
@@ -98,7 +98,7 @@ docs/knowledge-base/project/
     └── exploration/    # 探索性尝试
 ```
 
-Use `docs/knowledge-base/project/` for repository-specific ideas. Use `~/.danny-skill/knowledge-base/` for global ideas that should apply across projects.
+Use `.danny-skill/knowledge-base/` for repository-specific ideas. Use `~/.danny-skill/knowledge-base/` for global ideas that should apply across projects.
 
 Follow `docs/knowledge-base/storage-model.md`: raw captures start in `inbox/`, developed ideas move to `ideas/`, and runtime notes from `.omx/` must be rewritten before becoming knowledge entries.
 

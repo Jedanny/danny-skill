@@ -61,7 +61,7 @@ Do not start coding until the implementation proposal states:
 Use this structure for each research topic:
 
 ```text
-docs/knowledge-base/project/research/YYYY-MM-DD-topic/
+.danny-skill/knowledge-base/research/YYYY-MM-DD-topic/
 ├── research-brief.md
 ├── paper-matrix.md
 ├── paper-notes/
@@ -71,7 +71,7 @@ docs/knowledge-base/project/research/YYYY-MM-DD-topic/
 └── decision.md
 ```
 
-Use `docs/knowledge-base/project/research/` for repository-specific research. Use `~/.danny-skill/knowledge-base/research/` for global research patterns that should apply across projects.
+Use `.danny-skill/knowledge-base/research/` for repository-specific research. Use `~/.danny-skill/knowledge-base/research/` for global research patterns that should apply across projects.
 
 Follow `docs/knowledge-base/storage-model.md`: research directories are workspaces. Keep source notes, comparisons, business fit, and decisions here; keep transient `.omx` mode state out unless it is distilled into a durable artifact.
 

@@ -88,7 +88,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - **教训**: 问题 + 原因 + 解决方案 + 预防措施
 
 ### Step 3: 结构化存储
-- 保存到 `docs/knowledge-base/project/distilled/` 目录
+- 保存到 `.danny-skill/knowledge-base/distilled/` 目录
 - 按领域/类型自动分类
 - 生成索引便于检索
 
@@ -100,14 +100,14 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## Knowledge Storage Structure
 
 ```
-docs/knowledge-base/project/distilled/
+.danny-skill/knowledge-base/distilled/
 ├── concepts/           # 概念定义
 ├── best-practices/     # 最佳实践
 ├── decisions/          # 决策记录
 └── lessons/            # 教训总结
 ```
 
-Use `docs/knowledge-base/project/distilled/` for repository-specific knowledge. Use `~/.danny-skill/knowledge-base/distilled/` for global knowledge that applies across projects.
+Use `.danny-skill/knowledge-base/distilled/` for repository-specific knowledge. Use `~/.danny-skill/knowledge-base/distilled/` for global knowledge that applies across projects.
 
 Follow `docs/knowledge-base/storage-model.md`: distilled entries should link back to the source workspace or evidence, and `.omx` runtime state must not be copied here without review and rewriting.
 

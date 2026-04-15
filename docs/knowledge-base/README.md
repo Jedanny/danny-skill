@@ -1,6 +1,6 @@
 # Knowledge Base
 
-This directory is the unified home for knowledge assets created by the skill system.
+This directory documents the knowledge storage model used by the skill system.
 
 See `storage-model.md` for the storage boundary and promotion rules inspired by oh-my-codex `.omx` storage.
 
@@ -8,7 +8,7 @@ See `storage-model.md` for the storage boundary and promotion rules inspired by 
 
 ### Project Scope
 
-Use `docs/knowledge-base/project/` for knowledge that belongs to this repository and should be versioned with it.
+Use `.danny-skill/knowledge-base/` for knowledge that belongs to a repository and should travel with it. This avoids occupying a host project's own `docs/` tree.
 
 Examples:
 
@@ -27,12 +27,12 @@ Recommended global path:
 ~/.danny-skill/knowledge-base/
 ```
 
-Do not commit global knowledge directly into this repository. If a project needs a global note, link to it or distill a project-specific summary under `docs/knowledge-base/project/`.
+Do not commit global knowledge directly into this repository. If a project needs a global note, link to it or distill a project-specific summary under `.danny-skill/knowledge-base/`.
 
 ## Project Layout
 
 ```text
-project/
+.danny-skill/knowledge-base/
 ├── inbox/
 │   └── inspiration/
 ├── ideas/
@@ -50,4 +50,6 @@ capture -> workspace -> evidence -> distilled
 
 In this repository, `inbox/` is capture, `ideas/` and `research/` are workspaces, `experiments/` and `learnings/` are evidence, and `distilled/` is stable reusable knowledge.
 
-Runtime state, active mode progress, local logs, and metrics belong in `.omx/`, not in this knowledge base.
+Runtime state, active mode progress, local logs, and metrics belong in `.omx/`, not in the knowledge base.
+
+`docs/knowledge-base/` is documentation only. Use it to explain the model, not as the default write target for project knowledge.

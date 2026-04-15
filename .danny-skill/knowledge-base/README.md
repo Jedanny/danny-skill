@@ -2,6 +2,8 @@
 
 Project-local knowledge assets for danny-skill.
 
+This dot-directory is the default project scope so skills do not occupy or reshape a host project's existing `docs/` tree.
+
 ```text
 inbox/inspiration/       raw captured ideas
 ideas/                   developed but not yet validated ideas

@@ -45,7 +45,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## Learning Storage Structure
 
 ```
-docs/knowledge-base/project/learnings/
+.danny-skill/knowledge-base/learnings/
 ├── errors/              # 错误记录
 │   ├── {{timestamp}}-{{error-type}}.md
 ├── corrections/        # 纠正记录
@@ -57,7 +57,7 @@ docs/knowledge-base/project/learnings/
 └── REVIEW.md          # 定期回顾
 ```
 
-Use `docs/knowledge-base/project/learnings/` for repository-specific learnings. Use `~/.danny-skill/knowledge-base/learnings/` for global patterns that should apply across projects.
+Use `.danny-skill/knowledge-base/learnings/` for repository-specific learnings. Use `~/.danny-skill/knowledge-base/learnings/` for global patterns that should apply across projects.
 
 Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. Store concrete events and prevention notes here, not raw `.omx` logs or temporary task progress.
 
@@ -98,7 +98,7 @@ Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. St
 
 ### Step 2: 记录 (Record)
 
-自动或手动记录到 `docs/knowledge-base/project/learnings/` 目录：
+自动或手动记录到 `.danny-skill/knowledge-base/learnings/` 目录：
 - 文件名格式：`{{时间戳}}-{{类型}}-{{简短描述}}.md`
 - 包含完整上下文和解决方案
 
