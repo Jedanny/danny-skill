@@ -29,6 +29,11 @@ describe('skill library schema', () => {
 
       expect((metadata.triggers as string[]).length).toBeGreaterThan(0);
 
+      if (metadata.trigger !== undefined) {
+        expect(metadata.trigger).toEqual(expect.any(String));
+        expect(metadata.trigger).toMatch(/^\/danny-/);
+      }
+
       for (const tool of metadata.supported_tools as string[]) {
         expect(supportedTools).toContain(tool);
       }

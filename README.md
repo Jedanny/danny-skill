@@ -14,6 +14,8 @@ danny-skill 是一个跨 AI 编码工具的团队技能库。仓库优先维护�
 - `skills/` 是唯一技能源目录。
 - 每个技能使用 `skills/<skill-name>/SKILL.md`。
 - 技能目录使用 kebab-case，例如 `skills/knowledge-distill/`。
+- `trigger` 表示显式命令入口，例如 `/danny-idea`；`triggers` 表示自然语言和关键词触发。
+- 没有稳定命令入口的技能只使用 `triggers`，在 README 里标为“自动触发”。
 - 插件目录只保存分发元数据或安装说明，不复制技能正文。
 - 当前阶段优先稳定技能库；完整 CLI 后续放入 `packages/cli/`。
 
@@ -70,6 +72,32 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 | `autoresearch-loop` | 自动触发 | 用 eval 驱动的实验循环优化 skill、prompt 和 workflow |
 | `research-to-implementation` | 自动触发 | 从论文/开源方案研究到业务适配和编码交接 |
 | `coding-guardrails` | 自动触发 | 编码、修复、重构、评审时的简洁/验证/最小变更护栏 |
+
+## 推荐工作流
+
+常规任务从轻量捕获开始，逐步进入研究、执行和沉淀：
+
+```text
+inspiration-box
+  -> research-to-implementation
+  -> coding-guardrails
+  -> autoresearch-loop
+  -> self-improvement
+  -> knowledge-distill
+```
+
+使用建议：
+
+| 阶段 | 使用方式 |
+| --- | --- |
+| 有想法但还不确定价值 | 先用 `inspiration-box` 放入 `inbox/` 或 `ideas/`。 |
+| 需要验证论文、开源项目或方案价值 | 用 `research-to-implementation` 形成研究矩阵、业务适配和实施提案。 |
+| 已进入编码、修复、重构或评审 | 用 `coding-guardrails` 限制范围、明确验证方式。 |
+| 要优化 skill、prompt 或 workflow | 用 `autoresearch-loop` 建 baseline、跑 eval、做 keep-or-revert。 |
+| 出现错误、纠正或成功模式 | 用 `self-improvement` 记录到 `learnings/`。 |
+| 结论已经稳定可复用 | 用 `knowledge-distill` 固化到 `distilled/`。 |
+
+`design-style` 是视觉专项能力，只在 UI/网站/品牌风格相关任务中插入使用。
 
 ## 技能能力边界
 
@@ -146,7 +174,8 @@ danny-skill/
 ├── .codex/             # Codex 安装说明
 ├── .cursor-plugin/     # Cursor plugin metadata
 ├── .opencode/          # OpenCode 安装说明
-├── docs/               # 设计、计划和学习记录
+├── docs/               # 设计、计划和知识存储模型说明
+├── .danny-skill/       # 项目级 skill 知识资产
 ├── tests/              # Jest 结构和安装测试
 ├── tools/              # 预留轻量工具脚本
 └── packages/cli/       # 预留 CLI 包
