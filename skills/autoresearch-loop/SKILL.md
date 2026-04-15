@@ -88,7 +88,7 @@ Limits:
 Store logs under:
 
 ```text
-docs/autoresearch/<target-name>/
+docs/knowledge-base/project/experiments/autoresearch/<target-name>/
 ├── results.tsv
 └── changelog.md
 ```

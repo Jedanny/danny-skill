@@ -61,7 +61,7 @@ Do not start coding until the implementation proposal states:
 Use this structure for each research topic:
 
 ```text
-docs/knowledge-base/research/YYYY-MM-DD-topic/
+docs/knowledge-base/project/research/YYYY-MM-DD-topic/
 ├── research-brief.md
 ├── paper-matrix.md
 ├── paper-notes/
@@ -71,7 +71,7 @@ docs/knowledge-base/research/YYYY-MM-DD-topic/
 └── decision.md
 ```
 
-If the repository has not adopted `docs/knowledge-base/` yet, create the same files under `docs/research/YYYY-MM-DD-topic/` and note the temporary location.
+Use `docs/knowledge-base/project/research/` for repository-specific research. Use `~/.danny-skill/knowledge-base/research/` for global research patterns that should apply across projects.
 
 ## Templates
 

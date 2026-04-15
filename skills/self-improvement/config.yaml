@@ -1,7 +1,7 @@
 learning:
   enabled: true
   auto_capture: false
-  storage_path: "docs/learnings"
+  storage_path: "docs/knowledge-base/project/learnings"
   review_interval: "weekly"
 
 capture:

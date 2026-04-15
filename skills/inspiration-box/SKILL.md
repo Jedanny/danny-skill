@@ -89,14 +89,16 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## Inspiration Storage Structure
 
 ```
-docs/inspiration/
-├── INBOX/              # 收件箱（新捕获）
-├── feature/            # 功能点子
-├── tech/               # 技术构想
-├── process/            # 流程优化
-├── archive/            # 归档
-└── INDEX.md           # 灵感索引
+docs/knowledge-base/project/
+├── inbox/inspiration/  # 收件箱（新捕获）
+└── ideas/
+    ├── feature/        # 功能点子
+    ├── tech/           # 技术构想
+    ├── process/        # 流程优化
+    └── exploration/    # 探索性尝试
 ```
+
+Use `docs/knowledge-base/project/` for repository-specific ideas. Use `~/.danny-skill/knowledge-base/` for global ideas that should apply across projects.
 
 ## Integration
 

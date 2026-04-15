@@ -45,7 +45,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## Learning Storage Structure
 
 ```
-docs/learnings/
+docs/knowledge-base/project/learnings/
 ├── errors/              # 错误记录
 │   ├── {{timestamp}}-{{error-type}}.md
 ├── corrections/        # 纠正记录
@@ -56,6 +56,8 @@ docs/learnings/
 │   └── PATTERNS.md    # 模式索引
 └── REVIEW.md          # 定期回顾
 ```
+
+Use `docs/knowledge-base/project/learnings/` for repository-specific learnings. Use `~/.danny-skill/knowledge-base/learnings/` for global patterns that should apply across projects.
 
 ## Learning Entry Format
 
@@ -94,7 +96,7 @@ docs/learnings/
 
 ### Step 2: 记录 (Record)
 
-自动或手动记录到 `docs/learnings/` 目录：
+自动或手动记录到 `docs/knowledge-base/project/learnings/` 目录：
 - 文件名格式：`{{时间戳}}-{{类型}}-{{简短描述}}.md`
 - 包含完整上下文和解决方案
 
