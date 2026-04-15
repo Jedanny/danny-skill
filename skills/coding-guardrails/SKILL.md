@@ -13,7 +13,9 @@ supported_tools: [claude-code, codex, cursor]
 
 Reduce common coding-agent mistakes during implementation, debugging, refactoring, and review. Use this skill as a compact behavioral guardrail before changing code.
 
-Adapted from the principles in `forrestchang/andrej-karpathy-skills`. See `references/examples.md` for examples and source attribution.
+Reference source: forrestchang/andrej-karpathy-skills, https://github.com/forrestchang/andrej-karpathy-skills
+
+See `references/examples.md` for adapted examples and license note.
 
 ## Core Rules
 

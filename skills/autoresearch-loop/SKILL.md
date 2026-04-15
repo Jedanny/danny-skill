@@ -15,6 +15,12 @@ Use an eval-driven research loop to improve a skill, prompt, workflow, or agent 
 
 The pattern is adapted from autoresearch-style prompt optimization: establish a baseline, run evals, make one mutation, retest, then keep-or-revert based on evidence.
 
+Reference sources:
+
+- Karpathy autoresearch: https://github.com/karpathy/autoresearch
+- openclaw-autoresearch: https://github.com/zning1994/openclaw-autoresearch
+- 花叔 methodology article: https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w
+
 ## When To Use
 
 - A skill or prompt behaves inconsistently across realistic tasks.
