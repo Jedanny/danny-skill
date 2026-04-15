@@ -85,6 +85,43 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 
 知识资产统一遵守 [`docs/knowledge-base/storage-model.md`](docs/knowledge-base/storage-model.md)：`capture -> workspace -> evidence -> distilled`。`.omx/` 只保存运行态、编排态和本地日志，不直接作为知识库内容提交。
 
+## 知识存储 Scope
+
+同一个 skill 同时支持项目级和全局级知识，不拆成两套 skill。触发词表达动作，scope 表达存放位置。
+
+默认写入当前项目：
+
+```text
+/danny-idea ...      -> docs/knowledge-base/project/...
+/danny-distill ...   -> docs/knowledge-base/project/...
+/danny-learn ...     -> docs/knowledge-base/project/...
+```
+
+显式写入全局或双写：
+
+```text
+/danny-idea --global ...
+/danny-distill --global ...
+/danny-learn --global ...
+/danny-distill --both ...
+```
+
+| Scope | 存储位置 | 适用内容 |
+| --- | --- | --- |
+| `--project` | `docs/knowledge-base/project/` | 和本仓库代码、目录、安装脚本、skill 组成、项目决策有关的内容。默认值。 |
+| `--global` | `~/.danny-skill/knowledge-base/` | 脱离当前仓库也成立、可复用于其他项目或团队工作流的内容。 |
+| `--both` | 两边都写 | 项目里保留本仓库决策或事实，全局里存去项目化后的通用原则。 |
+
+自然语言也可以触发 scope 判断：
+
+| 用户说法 | Scope |
+| --- | --- |
+| “记录到当前项目”、“这个项目里记一下”、“本仓库适用” | `--project` |
+| “固化到全局”、“以后所有项目都用”、“个人知识库记一下”、“团队通用方法论” | `--global` |
+| “项目留一份，全局也沉淀”、“固化成方法论但保留项目记录” | `--both` |
+
+全局知识必须先去项目化：不要包含本地私有路径、一次性任务状态、仓库专有实现细节或 `.omx/` 运行日志。
+
 ## 参考来源
 
 | Skill | 参考链接 |
