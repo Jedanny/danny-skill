@@ -19,6 +19,14 @@ This repository is a skill-library-first package for sharing AI coding skills ac
 - Put large supporting material in `references/`, helper scripts in `scripts/`, and reusable files in `assets/`.
 - Do not duplicate skill bodies into tool-specific directories.
 
+## Coding Guardrails
+
+- State assumptions before implementation when scope is ambiguous.
+- Prefer the smallest implementation that satisfies the request.
+- Touch only files and lines required by the task.
+- Define verification before claiming completion.
+- Reproduce bugs with a test or concrete command before fixing when practical.
+
 ## Codex / oh-my-codex Alignment
 
 - Codex official user-scope skills install to `~/.agents/skills/<skill>`.

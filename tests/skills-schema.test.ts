@@ -123,4 +123,32 @@ describe('skill library schema', () => {
 
     expect(existsSync(join(skillDir, 'assets', 'research-workspace.example.md'))).toBe(true);
   });
+
+  test('coding-guardrails documents Karpathy-style coding safeguards', () => {
+    const skillDir = join(skillsDir, 'coding-guardrails');
+    const skillFile = join(skillDir, 'SKILL.md');
+    const content = readFileSync(skillFile, 'utf8');
+    const metadata = parseFrontmatter(content);
+
+    expect(metadata.name).toBe('coding-guardrails');
+    expect(metadata.description).toMatch(/^Use when\b/);
+    expect(metadata.triggers).toEqual(
+      expect.arrayContaining(['coding', 'refactor', 'bugfix', 'verification']),
+    );
+
+    for (const requiredTerm of [
+      'Think Before Coding',
+      'Simplicity First',
+      'Surgical Changes',
+      'Goal-Driven Execution',
+    ]) {
+      expect(content).toContain(requiredTerm);
+    }
+
+    const examples = readFileSync(join(skillDir, 'references', 'examples.md'), 'utf8');
+    expect(examples).toContain('andrej-karpathy-skills');
+    expect(examples.toLowerCase()).toContain('hidden assumptions');
+    expect(examples.toLowerCase()).toContain('over-abstraction');
+    expect(examples.toLowerCase()).toContain('drive-by refactor');
+  });
 });

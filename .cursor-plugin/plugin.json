@@ -1,6 +1,6 @@
 {
   "name": "danny-skill",
-  "description": "Team AI Skills Hub - Cross-tool skills for research-to-implementation, design style references, eval-driven autoresearch, knowledge distillation, inspiration capture, and self-improvement",
+  "description": "Team AI Skills Hub - Cross-tool skills for coding guardrails, research-to-implementation, design style references, eval-driven autoresearch, knowledge distillation, inspiration capture, and self-improvement",
   "version": "1.0.0",
   "author": {
     "name": "danny-skill maintainers"

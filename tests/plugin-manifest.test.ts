@@ -25,6 +25,7 @@ describe('plugin manifests', () => {
     expect(marketplace.description).toContain('design style');
     expect(marketplace.description).toContain('autoresearch');
     expect(marketplace.description).toContain('research-to-implementation');
+    expect(marketplace.description).toContain('coding guardrails');
     expect(marketplace.plugins).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
