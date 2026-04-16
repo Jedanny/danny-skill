@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { execFileSync } from 'child_process';
-import { existsSync, mkdtempSync, readFileSync, lstatSync } from 'fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, lstatSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
@@ -265,6 +265,24 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, 'dist', 'commands', 'list-designs.md'))).toBe(true);
   });
 
+  test('packaged CLI can run directly from bundled dist skills', () => {
+    const root = tempRoot();
+    const packageRoot = join(root, 'package');
+
+    runCli(['package', '--target-root', packageRoot, '--profile', 'minimal']);
+    cpSync(join(process.cwd(), 'packages', 'cli', 'danny-skill.mjs'), join(packageRoot, 'danny-skill.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'index.mjs'), join(packageRoot, 'index.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'package.json'), join(packageRoot, 'package.json'));
+
+    const output = execFileSync(process.execPath, [join(packageRoot, 'danny-skill.mjs'), 'validate'], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+
+    expect(output).toContain('valid: 7 skills');
+  });
+
   test('packages the CLI as a Rust N-API npm package with JS fallback', () => {
     const packageJsonPath = join(process.cwd(), 'packages', 'cli', 'package.json');
     const cargoToml = readFileSync(join(process.cwd(), 'packages', 'cli', 'Cargo.toml'), 'utf8');
@@ -275,6 +293,8 @@ describe('danny-skill CLI', () => {
 
     expect(packageJson.name).toBe('@danny-skill/cli');
     expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');
+    expect(packageJson.files).toContain('dist/');
+    expect(packageJson.scripts['prepare:package']).toContain('--target-root . --profile full');
     expect(packageJson.scripts.build).toContain('napi build');
     expect(packageJson.devDependencies['@napi-rs/cli']).toEqual(expect.any(String));
     expect(packageJson.napi.name).toBe('danny_skill_cli');

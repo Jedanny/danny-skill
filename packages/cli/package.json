@@ -11,6 +11,7 @@
     "bin/",
     "index.mjs",
     "danny-skill.mjs",
+    "dist/",
     "*.node",
     "Cargo.toml",
     "Cargo.lock",
@@ -18,6 +19,7 @@
     "README.md"
   ],
   "scripts": {
+    "prepare:package": "node danny-skill.mjs package --target-root . --profile full",
     "build": "napi build --release",
     "build:debug": "napi build",
     "artifacts": "napi artifacts",

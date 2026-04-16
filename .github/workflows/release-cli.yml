@@ -76,6 +76,9 @@ jobs:
         working-directory: packages/cli
         run: npm install
 
+      - name: Package CLI distribution assets
+        run: node packages/cli/danny-skill.mjs package --target-root packages/cli --profile full
+
       - name: Publish package
         working-directory: packages/cli
         env:

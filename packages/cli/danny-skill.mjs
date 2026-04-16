@@ -6,7 +6,9 @@ import { fileURLToPath } from 'node:url';
 import { initProjectKnowledgeNative, validateSkillsNative, writeConfigPathsNative } from './index.mjs';
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
-const repoRoot = resolve(cliDir, '..', '..');
+const workspaceRoot = resolve(cliDir, '..', '..');
+const packageDistRoot = join(cliDir, 'dist');
+const repoRoot = existsSync(join(packageDistRoot, 'skills')) ? packageDistRoot : workspaceRoot;
 
 function fail(message) {
   console.error(message);
@@ -119,7 +121,10 @@ function readJson(path) {
 }
 
 function rootPackageMetadata() {
-  const packageJson = readJson(join(repoRoot, 'package.json'));
+  const packageJsonPath = existsSync(join(workspaceRoot, 'package.json'))
+    ? join(workspaceRoot, 'package.json')
+    : join(cliDir, 'package.json');
+  const packageJson = readJson(packageJsonPath);
   return {
     name: packageJson.name,
     version: packageJson.version,

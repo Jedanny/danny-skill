@@ -34,6 +34,7 @@ describe('GitHub Actions CI/CD', () => {
     expect(workflow).toContain('windows-latest');
     expect(workflow).toContain('actions/upload-artifact@v4');
     expect(workflow).toContain('actions/download-artifact@v4');
+    expect(workflow).toContain('node packages/cli/danny-skill.mjs package --target-root packages/cli --profile full');
     expect(workflow).toContain('npm publish --provenance --access public');
     expect(workflow).toContain('NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}');
     expect(workflow).toContain('id-token: write');
