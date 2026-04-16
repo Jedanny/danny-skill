@@ -7,57 +7,57 @@ tags: [design, design-systems, ui, style, frontend]
 supported_tools: [claude-code, codex, cursor, opencode]
 ---
 
-> **Design Reference Source**: [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) by [VoltAgent](https://github.com/VoltAgent)
+> **设计参考来源**：[awesome-design-md](https://github.com/VoltAgent/awesome-design-md) by [VoltAgent](https://github.com/VoltAgent)
 
 # Design Style Matcher
 
-## Overview
+## 概览
 
-Match any website's design style from a curated collection of 58 design systems. Provides pixel-perfect UI generation via structured design tokens, color palettes, typography rules, and component patterns.
+从 58 套精选设计系统中匹配网站设计风格。通过结构化 design tokens、色板、排版规则和组件模式，为 UI 生成提供风格依据。
 
-## Progressive Disclosure
+## 渐进加载
 
-This skill uses three-level loading:
+这个 skill 使用三级加载：
 
-1. **Metadata** (~100 words): `name` + `description` above — always in context
-2. **SKILL.md body** (<5k words): This file — loaded when triggered
-3. **Bundled resources**: `references/designs/*.md` and `assets/preview.html` — loaded as needed
+1. **Metadata**（约 100 词）：上方 `name` + `description`，始终在上下文中。
+2. **SKILL.md body**（少于 5k 词）：当前文件，触发时加载。
+3. **Bundled resources**：`references/designs/*.md` 和 `assets/preview.html`，按需加载。
 
-## Trigger Patterns
+## 触发模式
 
-Activate when user mentions:
+用户提到以下内容时激活：
 
-- A specific website: "make it look like Vercel", "参照 Airbnb"
-- Design style request: "minimal dark theme", "科技感风格"
-- UI generation: "create a landing page like Linear"
-- Pattern matching: "give me Stripe's checkout style"
+- 具体网站："make it look like Vercel"、"参照 Airbnb"
+- 设计风格请求："minimal dark theme"、"科技感风格"
+- UI 生成："create a landing page like Linear"
+- 模式匹配："give me Stripe's checkout style"
 
-## Usage Modes
+## 使用模式
 
-### Mode 1: Direct Specification
+### 模式 1：直接指定
 
 ```
 User: "make it look like Stripe"
 → Load references/designs/stripe/DESIGN.md
 ```
 
-### Mode 2: Interactive Selection
+### 模式 2：交互选择
 
 ```
 User: "show me some design options"
 → Open assets/preview.html for visual browsing
 ```
 
-### Mode 3: Category Filter
+### 模式 3：按类别筛选
 
 ```
 User: "something minimal and developer-focused"
 → Filter by "Developer Tools" → present options
 ```
 
-## Workflow
+## 流程
 
-### Step 1: Identify Intent
+### 步骤 1：识别意图
 
 | User Input | Interpretation |
 |------------|---------------|
@@ -66,28 +66,28 @@ User: "something minimal and developer-focused"
 | "minimal dark" | Category filter → minimal/dark designs |
 | "playful" | Category filter → colorful/creative |
 
-### Step 2: Extract Design Tokens
+### 步骤 2：提取 Design Tokens
 
-From loaded DESIGN.md:
+从加载的 `DESIGN.md` 中提取：
 
-- **Colors**: Primary, secondary, accent with hex codes
-- **Typography**: Font families, sizes, weights, line heights
-- **Spacing**: 4px base grid scale
-- **Components**: Button, card, input, navigation patterns
-- **Shadows**: Elevation system with exact values
-- **Border Radius**: Consistent rounding values
+- **Colors**：primary、secondary、accent 及 hex codes。
+- **Typography**：font families、sizes、weights、line heights。
+- **Spacing**：4px base grid scale。
+- **Components**：button、card、input、navigation patterns。
+- **Shadows**：带精确值的 elevation system。
+- **Border Radius**：一致的圆角值。
 
-### Step 3: Apply to Generation
+### 步骤 3：应用到生成
 
-Use tokens to generate code with:
+生成代码时使用这些 tokens：
 
-- Exact color codes from palette
-- Specified font stacks
-- Documented component structures
-- Defined spacing scale
-- Shadow/elevation values
+- 色板中的精确颜色值。
+- 指定 font stacks。
+- 已记录的组件结构。
+- 已定义的 spacing scale。
+- shadow/elevation values。
 
-## Categories
+## 分类
 
 | Category | Count | Brands |
 |----------|-------|--------|
@@ -99,7 +99,7 @@ Use tokens to generate code with:
 | Car Brands | 5 | tesla, bmw, ferrari, lamborghini, renault |
 | Consumer | 8 | airbnb, apple, pinterest, spotify, runwayml |
 
-## Quick Reference
+## 快速参考
 
 | Brand | Key Trait | Primary Colors |
 |-------|-----------|----------------|
@@ -112,17 +112,17 @@ Use tokens to generate code with:
 | Figma | Creative, modern | #000000, #a259ff |
 | Tesla | Minimal, premium | #000000, #ffffff |
 
-## Web Preview
+## Web 预览
 
-Open `assets/preview.html` for:
+打开 `assets/preview.html` 可用于：
 
-- Visual gallery of all 58 designs
-- Category filtering
-- Dark/light mode toggle
-- Color palette extraction
-- "Use This Style" action
+- 浏览 58 套设计的视觉 gallery。
+- 按 category 过滤。
+- 切换 dark/light mode。
+- 提取 color palette。
+- 使用 "Use This Style" action。
 
-## CLI Tool
+## CLI 工具
 
 ```bash
 # List all designs

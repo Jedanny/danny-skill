@@ -12,17 +12,17 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 # Inspiration Box Skill
 
-## Purpose
+## 用途
 灵感收集与管理技能，用于快速捕获、转化的团队创意资产。
 
-## When to Use
+## 适用场景
 - 头脑风暴时记录想法
 - 突然想到的产品点子
 - 技术方案的初步构想
 - 用户需求的灵感闪现
 - 任何需要暂时保存的创意
 
-## Core Concepts
+## 核心概念
 
 ### 1. 灵感生命周期
 
@@ -41,9 +41,9 @@ supported_tools: [claude-code, codex, cursor, opencode]
 | developed | 已发展完善 |
 | archived | 已归档或转化 |
 
-## Process
+## 流程
 
-### Step 1: 快速捕获 (Capture)
+### 步骤 1：快速捕获 (Capture)
 
 当灵感出现时，以最快速度记录核心：
 - 一句话描述核心想法
@@ -61,7 +61,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 **状态**: raw
 ```
 
-### Step 2: 快速分类 (Tag)
+### 步骤 2：快速分类 (Tag)
 
 根据灵感类型选择分类：
 - **feature**: 产品功能点子
@@ -70,7 +70,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - **fix**: 问题修复思路
 - **exploration**: 探索性尝试
 
-### Step 3: 发展完善 (Develop)
+### 步骤 3：发展完善 (Develop)
 
 当需要发展灵感时：
 1. 补充背景和动机
@@ -78,7 +78,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 3. 评估资源和风险
 4. 识别依赖和前置条件
 
-### Step 4: 转化行动 (Transform)
+### 步骤 4：转化行动 (Transform)
 
 根据灵感价值选择转化方式：
 - **→ Task**: 拆解为可执行任务
@@ -86,7 +86,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - **→ Doc**: 沉淀为文档
 - **→ Archive**: 暂时归档
 
-## Inspiration Storage Structure
+## 灵感存储结构
 
 ```
 .danny-skill/knowledge-base/
@@ -98,11 +98,11 @@ supported_tools: [claude-code, codex, cursor, opencode]
     └── exploration/    # 探索性尝试
 ```
 
-Use `.danny-skill/knowledge-base/` for repository-specific ideas. Use `~/.danny-skill/knowledge-base/` for global ideas that should apply across projects.
+仓库相关想法使用 `.danny-skill/knowledge-base/`。跨项目通用想法使用 `~/.danny-skill/knowledge-base/`。
 
-Follow `docs/knowledge-base/storage-model.md`: raw captures start in `inbox/`, developed ideas move to `ideas/`, and runtime notes from `.omx/` must be rewritten before becoming knowledge entries.
+遵守 `docs/knowledge-base/storage-model.md`：原始捕获先进入 `inbox/`，发展后的想法移动到 `ideas/`；来自 `.omx/` 的运行态笔记必须先重写，才能成为知识条目。
 
-## Integration
+## 可选衔接
 
 ### 与 knowledge-distill 配合
 灵感是知识的源泉：
@@ -116,14 +116,14 @@ Follow `docs/knowledge-base/storage-model.md`: raw captures start in `inbox/`, d
 - 成功/失败的经验
 - 迭代改进的记录
 
-## Quality Checklist
+## 质量检查清单
 
 - [ ] 核心想法清晰，一句话能说清
 - [ ] 至少 1 个标签分类
 - [ ] 有来源记录便于追溯
 - [ ] 定期回顾整理（建议每周）
 
-## Quick Commands
+## 快速命令
 
 | 命令 | 功能 |
 |------|------|

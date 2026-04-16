@@ -17,6 +17,8 @@ danny-skill 是一个跨 AI 编码工具的团队技能库。仓库优先维护�
 - Claude Code / Codex 原生触发以 `name` 和 `description` 为准。
 - `trigger` 是本项目保留的推荐别名/未来 CLI 命令元数据，不会自动变成 Claude Code 或 Codex 的原生命令。
 - `triggers` 表示自然语言和关键词触发提示，用于跨工具发现、README 和后续 CLI 生成。
+- skill 正文使用中文为主；frontmatter `description` 保持英文 `Use when...`，以兼容 Claude Code / Codex 的技能发现。
+- 命令、路径、配置键、技术术语和外部项目名保持原文。
 - 插件目录只保存分发元数据或安装说明，不复制技能正文。
 - 当前阶段优先稳定技能库；完整 CLI 后续放入 `packages/cli/`。
 

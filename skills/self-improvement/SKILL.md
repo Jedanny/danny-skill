@@ -12,17 +12,17 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 # Self-Improvement Skill
 
-## Purpose
+## 用途
 自我进化技能，记录错误、反馈和经验教训，实现 AI 持续自我改进。
 
-## When to Use
+## 适用场景
 - 命令或操作意外失败时
 - 用户纠正 AI 的错误时
 - 发现有效的解决方案时
 - 遇到已知的错误模式时
 - 需要更新认知时
 
-## Core Concepts
+## 核心概念
 
 ### 1. 学习循环
 
@@ -42,7 +42,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 | success | 有效方案 | 成功模式、可复用经验 |
 | pattern | 重复问题 | 模式识别、预防措施 |
 
-## Learning Storage Structure
+## 学习存储结构
 
 ```
 .danny-skill/knowledge-base/learnings/
@@ -57,11 +57,11 @@ supported_tools: [claude-code, codex, cursor, opencode]
 └── REVIEW.md          # 定期回顾
 ```
 
-Use `.danny-skill/knowledge-base/learnings/` for repository-specific learnings. Use `~/.danny-skill/knowledge-base/learnings/` for global patterns that should apply across projects.
+仓库相关学习记录使用 `.danny-skill/knowledge-base/learnings/`。跨项目通用模式使用 `~/.danny-skill/knowledge-base/learnings/`。
 
-Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. Store concrete events and prevention notes here, not raw `.omx` logs or temporary task progress.
+遵守 `docs/knowledge-base/storage-model.md`：learning records 属于 evidence。这里保存具体事件和预防说明，不保存原始 `.omx` 日志或临时任务进度。
 
-## Learning Entry Format
+## 学习条目格式
 
 ```markdown
 ## {{学习标题}}
@@ -86,9 +86,9 @@ Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. St
 - [ ] {{行动项}}
 ```
 
-## Process
+## 流程
 
-### Step 1: 捕获 (Capture)
+### 步骤 1：捕获 (Capture)
 
 当遇到以下情况时触发记录：
 1. 命令执行失败
@@ -96,27 +96,27 @@ Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. St
 3. 找到有效解决方案
 4. 发现重复出现的问题
 
-### Step 2: 记录 (Record)
+### 步骤 2：记录 (Record)
 
 自动或手动记录到 `.danny-skill/knowledge-base/learnings/` 目录：
 - 文件名格式：`{{时间戳}}-{{类型}}-{{简短描述}}.md`
 - 包含完整上下文和解决方案
 
-### Step 3: 反思 (Reflect)
+### 步骤 3：反思 (Reflect)
 
 定期（月/周）回顾学习记录：
 1. 识别重复模式
 2. 提取可复用模式到 `patterns/`
 3. 更新最佳实践
 
-### Step 4: 应用 (Apply)
+### 步骤 4：应用 (Apply)
 
 在后续工作中：
 1. 执行任务前检查相关学习
 2. 遇到类似问题引用已有学习
 3. 验证学习有效性并更新
 
-## Integration
+## 可选衔接
 
 ### 与 knowledge-distill 配合
 - 重复出现的模式 → 提炼为团队知识
@@ -126,7 +126,7 @@ Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. St
 - 灵感实现过程中的学习
 - 方案探索的教训
 
-## Quality Checklist
+## 质量检查清单
 
 - [ ] 记录包含足够的上下文
 - [ ] 原因分析清晰
@@ -134,7 +134,7 @@ Follow `docs/knowledge-base/storage-model.md`: learning records are evidence. St
 - [ ] 定期回顾和更新
 - [ ] 模式被正确识别
 
-## Quick Commands
+## 快速命令
 
 | 命令 | 功能 |
 |------|------|

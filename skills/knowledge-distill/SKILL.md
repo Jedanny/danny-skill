@@ -12,17 +12,17 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 # Knowledge Distill Skill
 
-## Purpose
+## 用途
 团队知识蒸馏技能，从 AI 交互、讨论和文档中提取、沉淀可复用的知识资产。
 
-## When to Use
+## 适用场景
 - 完成重要讨论后，需要沉淀结论
 - 发现有效的解决方案或最佳实践
 - 从错误中学习，需要记录教训
 - 将隐式知识转化为显式文档
 - 构建团队知识库
 
-## Knowledge Categories
+## 知识分类
 
 ### 1. 概念与定义 (Concepts)
 - 新学到的概念解释
@@ -44,7 +44,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - 已验证的不可行方案
 - 已知限制与注意事项
 
-## Output Format
+## 输出格式
 
 ### 知识条目模板
 
@@ -73,31 +73,31 @@ supported_tools: [claude-code, codex, cursor, opencode]
 #标签1 #标签2
 ```
 
-## Process
+## 流程
 
-### Step 1: 识别知识
+### 步骤 1：识别知识
 - 判断讨论中是否有值得沉淀的内容
 - 区分事实性信息和经验性知识
 - 确认知识的可复用性
 
-### Step 2: 分类提取
+### 步骤 2：分类提取
 根据知识类型选择合适的模板：
 - **概念**: 简洁定义 + 详细解释 + 示例
 - **实践**: 做法 + 适用条件 + 效果
 - **决策**: 背景 + 选项 + 选择 + 理由
 - **教训**: 问题 + 原因 + 解决方案 + 预防措施
 
-### Step 3: 结构化存储
+### 步骤 3：结构化存储
 - 保存到 `.danny-skill/knowledge-base/distilled/` 目录
 - 按领域/类型自动分类
 - 生成索引便于检索
 
-### Step 4: 关联标注
+### 步骤 4：关联标注
 - 标注相关知识条目
 - 建立知识图谱连接
 - 识别知识缺口
 
-## Knowledge Storage Structure
+## 知识存储结构
 
 ```
 .danny-skill/knowledge-base/distilled/
@@ -107,11 +107,11 @@ supported_tools: [claude-code, codex, cursor, opencode]
 └── lessons/            # 教训总结
 ```
 
-Use `.danny-skill/knowledge-base/distilled/` for repository-specific knowledge. Use `~/.danny-skill/knowledge-base/distilled/` for global knowledge that applies across projects.
+仓库相关知识使用 `.danny-skill/knowledge-base/distilled/`。跨项目通用知识使用 `~/.danny-skill/knowledge-base/distilled/`。
 
-Follow `docs/knowledge-base/storage-model.md`: distilled entries should link back to the source workspace or evidence, and `.omx` runtime state must not be copied here without review and rewriting.
+遵守 `docs/knowledge-base/storage-model.md`：蒸馏条目应链接回来源 workspace 或 evidence；`.omx` 运行态内容未经审阅和重写，不要复制到这里。
 
-## Integration
+## 可选衔接
 
 ### 与 self-improvement 技能配合
 知识蒸馏与自我改进形成闭环：
@@ -125,7 +125,7 @@ Follow `docs/knowledge-base/storage-model.md`: distilled entries should link bac
 2. 提取核心流程为 skill.yaml
 3. 补充详细说明为 skill.md
 
-## Quality Checklist
+## 质量检查清单
 
 - [ ] 知识有明确的适用场景
 - [ ] 内容准确、可验证

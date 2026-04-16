@@ -63,6 +63,51 @@ describe('skill library schema', () => {
     expect(readme).toContain('不会自动变成 Claude Code 或 Codex 的原生命令');
     expect(readme).toContain('每个 skill 都可以独立使用');
     expect(readme).toContain('不要把组合示例当作强制流程');
+    expect(readme).toContain('skill 正文使用中文为主');
+    expect(readme).toContain('frontmatter `description` 保持英文 `Use when...`');
+  });
+
+  test('skill bodies use Chinese primary section headings', () => {
+    const oldEnglishHeadings = [
+      'Purpose',
+      'When To Use',
+      'When to Use',
+      'Overview',
+      'Progressive Disclosure',
+      'Trigger Patterns',
+      'Usage Modes',
+      'Workflow',
+      'Process',
+      'Core Concepts',
+      'Output Format',
+      'Knowledge Categories',
+      'Learning Storage Structure',
+      'Learning Entry Format',
+      'Quality Checklist',
+      'Quick Commands',
+      'Integration',
+      'Guardrails',
+      'Templates',
+      'Handoff To Other Skills',
+      'Output Workspace',
+      'Decision Gates',
+      'Methodology Note',
+      'Pipeline',
+      'Experiment Log',
+      'Eval Types',
+      'Core Loop',
+      'Checklists',
+    ];
+
+    for (const skillName of readdirSync(skillsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)) {
+      const content = readFileSync(join(skillsDir, skillName, 'SKILL.md'), 'utf8');
+
+      for (const heading of oldEnglishHeadings) {
+        expect(content).not.toContain(`## ${heading}`);
+      }
+    }
   });
 
   test('autoresearch-loop documents the eval-driven optimization loop', () => {
@@ -93,7 +138,7 @@ describe('skill library schema', () => {
     const evaluator = readFileSync(join(autoresearchDir, 'references', 'evaluator-protocol.md'), 'utf8');
     const hitl = readFileSync(join(autoresearchDir, 'references', 'hitl-review-template.md'), 'utf8');
 
-    expect(content).toContain('Skill Quality Ratchet');
+    expect(content).toContain('Skill 质量棘轮');
     expect(rubric).toContain('100');
     expect(rubric).toContain('Structure Score');
     expect(rubric).toContain('Effect Score');
@@ -156,10 +201,10 @@ describe('skill library schema', () => {
     );
 
     for (const requiredTerm of [
-      'Think Before Coding',
-      'Simplicity First',
-      'Surgical Changes',
-      'Goal-Driven Execution',
+      '先想清楚再编码',
+      '简单优先',
+      '外科手术式修改',
+      '目标驱动执行',
     ]) {
       expect(content).toContain(requiredTerm);
     }
