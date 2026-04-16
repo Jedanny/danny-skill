@@ -35,6 +35,10 @@ export function nativeBindingCandidates() {
 }
 
 export function loadNativeBinding() {
+  if (process.env.DANNY_SKILL_DISABLE_NATIVE === '1') {
+    return null;
+  }
+
   for (const candidate of nativeBindingCandidates()) {
     try {
       return require(candidate);

@@ -338,6 +338,7 @@ describe('danny-skill CLI', () => {
     expect(rustLib).toContain('build_package_plan');
     expect(rustLib).toContain('include_str!("../templates/PATTERNS.md")');
     expect(nativeLoader).toContain('loadNativeBinding');
+    expect(nativeLoader).toContain("DANNY_SKILL_DISABLE_NATIVE === '1'");
     expect(nativeLoader).toContain('validateSkillsNative');
     expect(nativeLoader).toContain('writeConfigPathsNative');
     expect(nativeLoader).toContain('initProjectKnowledgeNative');
