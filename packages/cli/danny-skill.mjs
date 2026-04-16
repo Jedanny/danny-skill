@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { validateSkillsNative } from './index.mjs';
 
@@ -268,7 +269,6 @@ function commandInstall(args) {
   const scope = String(options.scope ?? 'user');
   const profile = String(options.profile ?? 'full');
   const mode = String(options.mode ?? 'link');
-  const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
 
   if (!['minimal', 'standard', 'full'].includes(profile)) {
     fail(`unsupported install profile: ${profile}`);
@@ -276,6 +276,9 @@ function commandInstall(args) {
   if (!['user', 'project'].includes(scope)) {
     fail(`unsupported install scope: ${scope}`);
   }
+
+  const defaultTargetRoot = scope === 'user' ? homedir() : process.cwd();
+  const targetRoot = resolve(String(options['target-root'] ?? defaultTargetRoot));
 
   if (tool === 'cursor') {
     installCursorProject(targetRoot, mode, profile);

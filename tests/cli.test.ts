@@ -145,6 +145,31 @@ describe('danny-skill CLI', () => {
     expect(lstatSync(join(root, '.agents', 'skills', 'design-style')).isSymbolicLink()).toBe(true);
   });
 
+  test('install defaults user scope to HOME when target root is omitted', () => {
+    const root = tempRoot();
+
+    execFileSync(process.execPath, [
+      cli,
+      'install',
+      '--tool',
+      'codex',
+      '--scope',
+      'user',
+      '--profile',
+      'minimal',
+      '--mode',
+      'copy',
+    ], {
+      cwd: process.cwd(),
+      env: { ...process.env, HOME: root },
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(process.cwd(), '.agents', 'skills', 'design-style', 'SKILL.md'))).toBe(false);
+  });
+
   test('install rejects link mode for filtered profiles', () => {
     const root = tempRoot();
 
