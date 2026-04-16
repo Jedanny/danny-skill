@@ -56,3 +56,11 @@ jobs:
       - name: Build N-API addon
         working-directory: packages/cli
         run: npm run build
+
+      - name: Package CLI distribution assets
+        working-directory: packages/cli
+        run: node danny-skill.mjs package --target-root . --profile standard
+
+      - name: Verify npm package contents
+        working-directory: packages/cli
+        run: npm pack --dry-run

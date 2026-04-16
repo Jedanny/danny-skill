@@ -83,3 +83,16 @@ pnpm build
 ```
 
 Repository-level tests can run without the native addon because `danny-skill.mjs` falls back to JavaScript when no `.node` binding is present.
+
+## CI And npm Release
+
+CI builds the N-API addon, packages `dist/`, and runs `npm pack --dry-run` to verify the publishable package shape.
+
+npm publishing is gated to the `Release CLI` workflow. It runs when pushing a tag that matches `cli-v*`, or when started manually with `workflow_dispatch` from GitHub Actions.
+
+```bash
+git tag cli-v1.0.0
+git push origin cli-v1.0.0
+```
+
+Publishing requires the repository secret `NPM_TOKEN` unless the package is moved to npm Trusted Publishing.
