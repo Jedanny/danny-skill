@@ -194,6 +194,12 @@ function destinationFor(tool, scope, targetRoot) {
   if (tool === 'claude-code') {
     return join(targetRoot, scope === 'project' ? '.claude/skills' : '.claude/skills');
   }
+  if (tool === 'cursor') {
+    if (scope !== 'project') {
+      fail('cursor install currently requires --scope project');
+    }
+    return join(targetRoot, '.cursor');
+  }
   fail(`unsupported install tool: ${tool}`);
 }
 
@@ -271,11 +277,51 @@ function commandInstall(args) {
     fail(`unsupported install scope: ${scope}`);
   }
 
+  if (tool === 'cursor') {
+    installCursorProject(targetRoot, mode, profile);
+    console.log(`installed ${profile} profile for cursor at ${join(targetRoot, '.cursor')}`);
+    return;
+  }
+
   const destination = destinationFor(tool, scope, targetRoot);
   for (const skillName of listSkillNames()) {
     installSkill(skillName, join(destination, skillName), mode, profile);
   }
   console.log(`installed ${profile} profile for ${tool} at ${destination}`);
+}
+
+function copyOrLinkFile(source, target, mode) {
+  rmSync(target, { force: true });
+  mkdirSync(dirname(target), { recursive: true });
+  if (mode === 'copy') {
+    cpSync(source, target);
+  } else if (mode === 'link') {
+    symlinkSync(source, target);
+  } else {
+    fail(`unsupported install mode: ${mode}`);
+  }
+}
+
+function installCursorProject(targetRoot, mode, profile) {
+  if (profile !== 'full' && mode !== 'copy') {
+    fail(`${profile} profile requires --mode copy`);
+  }
+
+  const rulesDir = join(targetRoot, '.cursor', 'rules');
+  const commandsDir = join(targetRoot, '.cursor', 'commands');
+  mkdirSync(rulesDir, { recursive: true });
+  mkdirSync(commandsDir, { recursive: true });
+
+  for (const skillName of listSkillNames()) {
+    const source = join(repoRoot, 'skills', skillName, 'SKILL.md');
+    const target = join(rulesDir, `${skillName}.mdc`);
+    copyOrLinkFile(source, target, mode);
+  }
+
+  const commandDir = join(repoRoot, 'commands');
+  for (const commandName of readdirSync(commandDir).filter((name) => name.endsWith('.md'))) {
+    copyOrLinkFile(join(commandDir, commandName), join(commandsDir, commandName), mode);
+  }
 }
 
 function main(argv) {

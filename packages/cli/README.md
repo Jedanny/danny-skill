@@ -5,7 +5,7 @@ This package contains the danny-skill CLI. It uses a Node.js command wrapper wit
 Implemented commands:
 
 - `danny-skill validate`: check skills and required frontmatter
-- `danny-skill install`: install skills for Claude Code or Codex
+- `danny-skill install`: install skills for Claude Code, Codex, or Cursor project rules
 - `danny-skill config paths set`: write knowledge-base path mappings
 - `danny-skill knowledge init`: initialize project knowledge directories
 
@@ -32,20 +32,21 @@ The CLI turns current README conventions into executable behavior:
 - Resolve `<project-knowledge-base>` and `<global-knowledge-base>` from config.
 - Install by profile: `--profile minimal|standard|full`.
 - Install by scope: `--scope user|project`.
-- Install by tool: `--tool claude-code|codex`.
+- Install by tool: `--tool claude-code|codex|cursor`.
 - Initialize knowledge indexes such as `learnings/patterns/PATTERNS.md`.
 
 Future CLI responsibilities:
 
 - Generate project alias wrappers such as `/danny-idea` where the target tool supports command files.
 - Package tool-specific output under `dist/`.
-- Extend install adapters for Cursor and OpenCode.
+- Extend install adapters for OpenCode.
 
 Proposed command surface:
 
 ```bash
 danny-skill config paths set --project .danny-skill/knowledge-base --global ~/.danny-skill/knowledge-base
 danny-skill install --tool codex --scope project --profile standard
+danny-skill install --tool cursor --scope project --profile standard --mode copy
 danny-skill knowledge init --project
 danny-skill validate
 ```

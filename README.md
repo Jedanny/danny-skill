@@ -74,13 +74,16 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 | `standard` | 分发 `SKILL.md`、小型 `references/` 和 `assets/`，适合大多数团队共享。 |
 | `full` | 分发完整 skill 目录，包括大型设计参考和 preview 资源；这是当前 `scripts/install.sh` 的行为。 |
 
-CLI 当前负责 profile 选择、路径映射和知识库初始化；alias 生成仍是后续能力。当前 shell 脚本继续作为跨工具 full-directory 安装器。
+CLI 当前负责 profile 选择、路径映射、知识库初始化，以及 Cursor project rules/commands 适配；alias 生成仍是后续能力。当前 shell 脚本继续作为跨工具 full-directory 安装器。
 
 ```bash
 pnpm cli validate
 pnpm cli install --tool codex --scope project --profile standard --mode copy
+pnpm cli install --tool cursor --scope project --profile standard --mode copy
 pnpm cli knowledge init --project
 ```
+
+`minimal` 和 `standard` profile 会筛选文件，因此只支持 `--mode copy`。`full` profile 支持 `--mode copy` 或 `--mode link`。
 
 ## 当前技能与触发方式
 

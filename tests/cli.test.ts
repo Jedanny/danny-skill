@@ -125,6 +125,68 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'designs'))).toBe(true);
   });
 
+  test('install supports full profile with symlinks', () => {
+    const root = tempRoot();
+
+    runCli([
+      'install',
+      '--tool',
+      'codex',
+      '--scope',
+      'project',
+      '--profile',
+      'full',
+      '--target-root',
+      root,
+      '--mode',
+      'link',
+    ]);
+
+    expect(lstatSync(join(root, '.agents', 'skills', 'design-style')).isSymbolicLink()).toBe(true);
+  });
+
+  test('install rejects link mode for filtered profiles', () => {
+    const root = tempRoot();
+
+    expect(() =>
+      runCli([
+        'install',
+        '--tool',
+        'codex',
+        '--scope',
+        'project',
+        '--profile',
+        'minimal',
+        '--target-root',
+        root,
+        '--mode',
+        'link',
+      ]),
+    ).toThrow();
+  });
+
+  test('install supports Cursor project rules and commands', () => {
+    const root = tempRoot();
+
+    runCli([
+      'install',
+      '--tool',
+      'cursor',
+      '--scope',
+      'project',
+      '--profile',
+      'standard',
+      '--target-root',
+      root,
+      '--mode',
+      'copy',
+    ]);
+
+    expect(existsSync(join(root, '.cursor', 'rules', 'design-style.mdc'))).toBe(true);
+    expect(readFileSync(join(root, '.cursor', 'rules', 'design-style.mdc'), 'utf8')).toContain('name: design-style');
+    expect(existsSync(join(root, '.cursor', 'commands', 'list-designs.md'))).toBe(true);
+  });
+
   test('packages the CLI as a Rust N-API npm package with JS fallback', () => {
     const packageJsonPath = join(process.cwd(), 'packages', 'cli', 'package.json');
     const cargoToml = readFileSync(join(process.cwd(), 'packages', 'cli', 'Cargo.toml'), 'utf8');
