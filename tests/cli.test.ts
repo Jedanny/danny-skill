@@ -289,11 +289,13 @@ describe('danny-skill CLI', () => {
     const rustLib = readFileSync(join(process.cwd(), 'packages', 'cli', 'src', 'lib.rs'), 'utf8');
     const nativeLoader = readFileSync(join(process.cwd(), 'packages', 'cli', 'index.mjs'), 'utf8');
     const binWrapper = readFileSync(join(process.cwd(), 'packages', 'cli', 'bin', 'danny-skill.mjs'), 'utf8');
+    const template = readFileSync(join(process.cwd(), 'packages', 'cli', 'templates', 'PATTERNS.md'), 'utf8');
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
     expect(packageJson.name).toBe('@danny-skill/cli');
     expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');
     expect(packageJson.files).toContain('dist/');
+    expect(packageJson.files).toContain('templates/');
     expect(packageJson.scripts['prepare:package']).toContain('--target-root . --profile full');
     expect(packageJson.scripts.build).toContain('napi build');
     expect(packageJson.devDependencies['@napi-rs/cli']).toEqual(expect.any(String));
@@ -308,6 +310,7 @@ describe('danny-skill CLI', () => {
     expect(rustLib).toContain('sync_plugin_manifests');
     expect(rustLib).toContain('generate_aliases');
     expect(rustLib).toContain('build_package_plan');
+    expect(rustLib).toContain('include_str!("../templates/PATTERNS.md")');
     expect(nativeLoader).toContain('loadNativeBinding');
     expect(nativeLoader).toContain('validateSkillsNative');
     expect(nativeLoader).toContain('writeConfigPathsNative');
@@ -320,5 +323,6 @@ describe('danny-skill CLI', () => {
     expect(nativeLoader).toContain('darwin-arm64');
     expect(nativeLoader).toContain('win32-x64-msvc');
     expect(binWrapper).toContain("import '../danny-skill.mjs'");
+    expect(template).toContain('Agent 使用入口');
   });
 });

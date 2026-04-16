@@ -66,10 +66,13 @@ packages/cli/
 ├── index.mjs             native addon loader
 ├── Cargo.toml            Rust crate metadata
 ├── build.rs              napi-rs build hook
-└── src/lib.rs            Rust N-API exports
+├── src/lib.rs            Rust N-API exports
+└── templates/            small files embedded into the native addon
 ```
 
-The first native function is `validate_skills`, exported to JavaScript as `validateSkills`. It mirrors the current JS `validate` behavior and provides the migration path for moving more core logic into Rust.
+The native addon embeds only small templates, such as the default `PATTERNS.md` created by `knowledge init`. Large skill content, commands, and design assets stay in `dist/` so the native binary does not absorb bulky distribution data.
+
+The first native function was `validate_skills`, exported to JavaScript as `validateSkills`. Additional deterministic core behavior such as path config, knowledge initialization, manifest sync, alias generation, and package plan generation is migrating into Rust while JavaScript keeps platform-sensitive file copying and symlink execution.
 
 Build native addon:
 

@@ -3,6 +3,8 @@ use napi_derive::napi;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+const DEFAULT_PATTERNS_TEMPLATE: &str = include_str!("../templates/PATTERNS.md");
+
 #[napi(object)]
 pub struct ValidationResult {
     pub ok: bool,
@@ -118,10 +120,7 @@ pub fn init_project_knowledge(root: String, project_path: String) -> Result<Stri
 
     let patterns_path = base_path.join("learnings").join("patterns").join("PATTERNS.md");
     if !patterns_path.exists() {
-        fs::write(
-            &patterns_path,
-            "# Learning Patterns\n\n## Agent 使用入口\n\n后续 Agent 执行任务前，先按任务关键词、工具和错误信息扫描本文件。\n",
-        )
+        fs::write(&patterns_path, DEFAULT_PATTERNS_TEMPLATE)
         .map_err(|err| Error::from_reason(format!("failed to write patterns index: {err}")))?;
     }
 
@@ -409,6 +408,9 @@ mod tests {
         assert!(Path::new(&base)
             .join("learnings/patterns/PATTERNS.md")
             .exists());
+        let patterns = fs::read_to_string(Path::new(&base).join("learnings/patterns/PATTERNS.md"))
+            .expect("patterns file should be readable");
+        assert_eq!(patterns, DEFAULT_PATTERNS_TEMPLATE);
         fs::remove_dir_all(root).ok();
     }
 

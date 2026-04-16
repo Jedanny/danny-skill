@@ -16,6 +16,7 @@
     "Cargo.toml",
     "Cargo.lock",
     "src/",
+    "templates/",
     "README.md"
   ],
   "scripts": {
