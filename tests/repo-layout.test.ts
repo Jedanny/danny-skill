@@ -52,4 +52,20 @@ describe('repository layout', () => {
     expect(storageModel).toContain('Temporary task state');
     expect(storageModel).not.toContain('.omx');
   });
+
+  test('documents install profiles and future CLI responsibilities', () => {
+    const readme = readFileSync(join(process.cwd(), 'README.md'), 'utf8');
+    const cliReadme = readFileSync(join(process.cwd(), 'packages', 'cli', 'README.md'), 'utf8');
+
+    for (const profile of ['minimal', 'standard', 'full']) {
+      expect(readme).toContain(`\`${profile}\``);
+      expect(cliReadme).toContain(`\`${profile}\``);
+    }
+
+    expect(readme).toContain('当前 shell installer 安装完整 skill 目录');
+    expect(cliReadme).toContain('Resolve `<project-knowledge-base>` and `<global-knowledge-base>` from config');
+    expect(cliReadme).toContain('Generate project alias wrappers');
+    expect(cliReadme).toContain('danny-skill install --tool codex --scope project --profile standard');
+    expect(cliReadme).toContain('Do not add a package manifest here');
+  });
 });

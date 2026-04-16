@@ -4,10 +4,12 @@ danny-skill 是一个跨 AI 编码工具的团队技能库。仓库优先维护�
 
 ## 支持工具
 
-- Claude Code
-- OpenAI Codex
-- Cursor
-- OpenCode
+| 等级 | 工具 | 支持方式 |
+| --- | --- | --- |
+| Tier 1 | Claude Code | 原生 `SKILL.md`，支持用户级和项目级 `.claude/skills/`。 |
+| Tier 1 | OpenAI Codex | 原生 `SKILL.md`，支持用户级和项目级 `.agents/skills/`。 |
+| Tier 2 | Cursor | 通过 `.cursor/rules/` 和 `.cursor/commands/` 适配，不等同于原生 skill runtime。 |
+| Tier 3 | OpenCode | 通过 plugin/link 兼容路径适配，后续可补更完整的 plugin shim。 |
 
 ## 核心约定
 
@@ -63,6 +65,16 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 ```bash
 ./scripts/install.sh --tool codex --dry-run --yes
 ```
+
+当前 shell installer 安装完整 skill 目录，相当于 `full` profile。更细的安装 profile 预留给后续 CLI：
+
+| Profile | 计划用途 |
+| --- | --- |
+| `minimal` | 只分发 `SKILL.md` 和必要配置，适合轻量同步或手工安装。 |
+| `standard` | 分发 `SKILL.md`、小型 `references/` 和 `assets/`，适合大多数团队共享。 |
+| `full` | 分发完整 skill 目录，包括大型设计参考和 preview 资源；这是当前 `scripts/install.sh` 的行为。 |
+
+后续 CLI 会负责 profile 选择、路径映射、scope 解析和 alias 生成；当前脚本只负责稳定安装。
 
 ## 当前技能与触发方式
 
