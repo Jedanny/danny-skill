@@ -19,6 +19,29 @@ function runCli(args: string[], cwd = process.cwd()) {
 }
 
 describe('danny-skill CLI', () => {
+  test('prints top-level help with zero exit', () => {
+    const output = runCli(['--help']);
+
+    expect(output).toContain('Usage: danny-skill');
+    expect(output).toContain('Commands:');
+    expect(output).toContain('install');
+    expect(output).toContain('alias generate');
+  });
+
+  test('supports pnpm-style leading argument separator before help', () => {
+    const output = runCli(['--', '--help']);
+
+    expect(output).toContain('Usage: danny-skill');
+  });
+
+  test('prints command help with zero exit', () => {
+    const output = runCli(['install', '--help']);
+
+    expect(output).toContain('Usage: danny-skill install');
+    expect(output).toContain('--profile minimal|standard|full');
+    expect(output).toContain('--mode copy|link');
+  });
+
   test('validate checks the repository skill layout', () => {
     const output = runCli(['validate']);
 

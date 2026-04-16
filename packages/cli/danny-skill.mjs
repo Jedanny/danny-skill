@@ -22,6 +22,40 @@ function fail(message) {
   process.exit(1);
 }
 
+function printHelp(command = '') {
+  const help = {
+    '': `Usage: danny-skill <command> [options]
+
+Commands:
+  validate                      Check skill frontmatter and layout
+  config paths set              Write knowledge-base path mappings
+  knowledge init                Initialize project knowledge directories
+  install                       Install skills for Claude Code, Codex, or Cursor
+  alias generate                Generate tool command aliases from skill triggers
+  sync                          Sync plugin manifests from package metadata
+  package                       Generate distributable dist artifacts
+
+Run "danny-skill <command> --help" for command options.
+`,
+    install: `Usage: danny-skill install --tool <claude-code|codex|cursor> [options]
+
+Options:
+  --scope user|project          Install scope (default: user)
+  --profile minimal|standard|full
+  --mode copy|link              minimal/standard require copy; full supports copy or link
+  --target-root <path>          Override HOME/user root or project root
+`,
+    config: `Usage: danny-skill config paths set --project <path> --global <path> [--target-root <path>]`,
+    knowledge: `Usage: danny-skill knowledge init --project [--target-root <path>]`,
+    alias: `Usage: danny-skill alias generate --tool <claude-code|cursor> [--target-root <path>]`,
+    package: `Usage: danny-skill package [--profile minimal|standard|full] [--target-root <path>]`,
+    sync: `Usage: danny-skill sync [--target-root <path>]`,
+    validate: `Usage: danny-skill validate`,
+  };
+
+  console.log(help[command] ?? help['']);
+}
+
 function parseOptions(args) {
   const options = {};
   const positionals = [];
@@ -532,7 +566,18 @@ function commandAlias(args) {
 }
 
 function main(argv) {
-  const [command, ...rest] = argv;
+  const normalizedArgv = argv[0] === '--' ? argv.slice(1) : argv;
+  const [command, ...rest] = normalizedArgv;
+
+  if (command === undefined || command === '--help' || command === '-h') {
+    printHelp();
+    return;
+  }
+
+  if (rest.includes('--help') || rest.includes('-h')) {
+    printHelp(command);
+    return;
+  }
 
   if (command === 'validate') {
     commandValidate();
