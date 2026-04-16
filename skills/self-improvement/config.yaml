@@ -4,6 +4,12 @@ learning:
   storage_path: "<project-knowledge-base>/learnings"
   review_interval: "weekly"
 
+retrieval:
+  enabled: true
+  index_path: "<project-knowledge-base>/learnings/patterns/PATTERNS.md"
+  lookup_order: ["patterns", "corrections", "errors", "successes", "global"]
+  max_context_items: 5
+
 capture:
   error: true
   correction: true

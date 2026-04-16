@@ -244,6 +244,34 @@ describe('skill library schema', () => {
     expect(existsSync(join(skillDir, 'assets', 'research-workspace.example.md'))).toBe(true);
   });
 
+  test('self-improvement records can be retrieved and applied by future agents', () => {
+    const skillDir = join(skillsDir, 'self-improvement');
+    const content = readFileSync(join(skillDir, 'SKILL.md'), 'utf8');
+    const config = readFileSync(join(skillDir, 'config.yaml'), 'utf8');
+    const patterns = readFileSync(
+      join(process.cwd(), '.danny-skill', 'knowledge-base', 'learnings', 'patterns', 'PATTERNS.md'),
+      'utf8',
+    );
+
+    for (const requiredTerm of [
+      'Agent 应用协议',
+      '检索顺序',
+      'PATTERNS.md',
+      'trigger_patterns',
+      'Agent 应用',
+      '默认动作',
+      '例外情况',
+    ]) {
+      expect(content).toContain(requiredTerm);
+    }
+
+    expect(config).toContain('retrieval:');
+    expect(config).toContain('index_path: "<project-knowledge-base>/learnings/patterns/PATTERNS.md"');
+    expect(config).toContain('max_context_items');
+    expect(patterns).toContain('Agent 使用入口');
+    expect(patterns).toContain('优先使用 `pnpm`');
+  });
+
   test('coding-guardrails documents Karpathy-style coding safeguards', () => {
     const skillDir = join(skillsDir, 'coding-guardrails');
     const skillFile = join(skillDir, 'SKILL.md');

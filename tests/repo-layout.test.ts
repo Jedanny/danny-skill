@@ -35,6 +35,7 @@ describe('repository layout', () => {
       '.danny-skill/knowledge-base/learnings/errors',
       '.danny-skill/knowledge-base/learnings/corrections',
       '.danny-skill/knowledge-base/learnings/successes',
+      '.danny-skill/knowledge-base/learnings/patterns/PATTERNS.md',
       '.danny-skill/knowledge-base/distilled/concepts',
       '.danny-skill/knowledge-base/distilled/best-practices',
       '.danny-skill/knowledge-base/distilled/decisions',

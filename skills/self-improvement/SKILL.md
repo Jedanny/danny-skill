@@ -61,9 +61,52 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 遵守所在项目定义的知识存储模型：learning records 属于 evidence。这里保存具体事件和预防说明，不保存本地日志或临时任务进度。
 
+## Agent 应用协议
+
+记录的内容必须能被后续 Agent 快速检索、压缩进上下文并转化为行动约束。不要只保存长篇复盘。
+
+### 检索顺序
+
+1. 先读 `<project-knowledge-base>/learnings/patterns/PATTERNS.md`，获取高频规则和关键词索引。
+2. 根据当前任务关键词、工具、语言、错误信息和用户纠正，检索 `errors/`、`corrections/`、`successes/` 中相关条目。
+3. 若项目级没有相关记录，再查 `<global-knowledge-base>/learnings/`。
+4. 只把相关、可执行的结论带回当前任务上下文，不要整篇复制历史记录。
+
+### 应用规则
+
+- 命中 `correction` 时，优先遵守用户纠正，除非当前项目证据明确冲突。
+- 命中 `error` 时，先检查是否存在同类失败条件，再执行预防动作。
+- 命中 `success` 时，只在上下文相似时复用成功做法。
+- 命中 `pattern` 时，把它作为默认行为约束，并在本次任务中验证是否仍然适用。
+- 应用后如发现规则失效，追加新记录或更新 `PATTERNS.md`。
+
+### `PATTERNS.md` 索引格式
+
+```markdown
+# Learning Patterns
+
+## Agent 使用入口
+
+- 任务关键词: package-manager, nodejs
+  - 规则: 优先使用 pnpm。
+  - 来源: corrections/2026-03-25-npm-vs-pnpm.md
+  - 适用: Node.js 项目依赖安装、测试、脚本执行。
+  - 例外: 项目明确锁定 npm/yarn。
+```
+
 ## 学习条目格式
 
 ```markdown
+---
+type: error | correction | success | pattern
+status: active | superseded | archived
+scope: project | global
+applies_to: [tool, language, workflow]
+trigger_patterns: [keyword, error-message, user-correction]
+confidence: low | medium | high
+last_verified: YYYY-MM-DD
+---
+
 ## {{学习标题}}
 
 **类型**: error | correction | success | pattern
@@ -81,6 +124,11 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 ### 相关标签
 #{{tag1}} #{{tag2}}
+
+### Agent 应用
+- **触发条件**: {{什么任务/错误/用户表述应该召回这条记录}}
+- **默认动作**: {{Agent 下次应该怎么做}}
+- **例外情况**: {{什么时候不要套用}}
 
 ### 下次行动
 - [ ] {{行动项}}
@@ -106,15 +154,15 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 定期（月/周）回顾学习记录：
 1. 识别重复模式
-2. 提取可复用模式到 `patterns/`
+2. 提取可复用模式到 `patterns/PATTERNS.md`
 3. 更新最佳实践
 
 ### 步骤 4：应用 (Apply)
 
 在后续工作中：
-1. 执行任务前检查相关学习
-2. 遇到类似问题引用已有学习
-3. 验证学习有效性并更新
+1. 执行任务前按“检索顺序”检查相关学习。
+2. 遇到类似问题时引用已有学习，并说明采用了哪条规则。
+3. 验证学习有效性；如果不适用，更新或废弃对应记录。
 
 ## 可选衔接
 
@@ -131,6 +179,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - [ ] 记录包含足够的上下文
 - [ ] 原因分析清晰
 - [ ] 有明确的行动项
+- [ ] 包含 Agent 应用规则：触发条件、默认动作、例外情况
 - [ ] 定期回顾和更新
 - [ ] 模式被正确识别
 
