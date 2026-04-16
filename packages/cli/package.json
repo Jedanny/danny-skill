@@ -1,0 +1,36 @@
+{
+  "name": "@danny-skill/cli",
+  "version": "0.1.0",
+  "description": "Rust N-API powered CLI for danny-skill",
+  "type": "module",
+  "bin": {
+    "danny-skill": "bin/danny-skill.mjs"
+  },
+  "main": "index.mjs",
+  "files": [
+    "bin/",
+    "index.mjs",
+    "danny-skill.mjs",
+    "*.node",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "napi build --release",
+    "build:debug": "napi build",
+    "artifacts": "napi artifacts",
+    "prepublishOnly": "napi prepublish -t npm"
+  },
+  "napi": {
+    "name": "danny_skill_cli",
+    "triples": {
+      "defaults": true
+    }
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

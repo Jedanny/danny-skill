@@ -13,6 +13,8 @@ describe('repository layout', () => {
     expect(existsSync(join(process.cwd(), 'prompts'))).toBe(true);
     expect(existsSync(join(process.cwd(), 'tools', 'README.md'))).toBe(true);
     expect(existsSync(join(process.cwd(), 'packages', 'cli', 'README.md'))).toBe(true);
+    expect(existsSync(join(process.cwd(), 'packages', 'cli', 'package.json'))).toBe(true);
+    expect(existsSync(join(process.cwd(), 'packages', 'cli', 'Cargo.toml'))).toBe(true);
   });
 
   test('uses a unified project knowledge-base path', () => {
@@ -66,6 +68,8 @@ describe('repository layout', () => {
     expect(cliReadme).toContain('Resolve `<project-knowledge-base>` and `<global-knowledge-base>` from config');
     expect(cliReadme).toContain('Generate project alias wrappers');
     expect(cliReadme).toContain('danny-skill install --tool codex --scope project --profile standard');
-    expect(cliReadme).toContain('Do not add a package manifest here');
+    expect(cliReadme).toContain('Rust N-API Layout');
+    expect(cliReadme).toContain('validate_skills');
+    expect(cliReadme).toContain('JavaScript implementation remains the compatibility fallback');
   });
 });

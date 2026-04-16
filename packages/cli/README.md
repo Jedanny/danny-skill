@@ -1,8 +1,8 @@
 # danny-skill CLI
 
-This directory reserves the future CLI package for danny-skill distribution workflows.
+This package contains the danny-skill CLI. It uses a Node.js command wrapper with a Rust N-API core that can be adopted incrementally. When the native addon has not been built, the JavaScript implementation remains the compatibility fallback.
 
-Planned commands:
+Implemented commands:
 
 - `danny-skill validate`: check skills and required frontmatter
 - `danny-skill install`: install skills for Claude Code or Codex
@@ -52,4 +52,27 @@ danny-skill validate
 
 Use `scripts/install.sh` when you need the legacy full-directory installer behavior across all currently supported tools.
 
-Do not add a package manifest here until the shell scripts and tests prove the command surface is stable.
+## Rust N-API Layout
+
+```text
+packages/cli/
+├── package.json          npm package metadata and bin entry
+├── bin/danny-skill.mjs   npm executable wrapper
+├── danny-skill.mjs       JavaScript CLI fallback implementation
+├── index.mjs             native addon loader
+├── Cargo.toml            Rust crate metadata
+├── build.rs              napi-rs build hook
+└── src/lib.rs            Rust N-API exports
+```
+
+The first native function is `validate_skills`, exported to JavaScript as `validateSkills`. It mirrors the current JS `validate` behavior and provides the migration path for moving more core logic into Rust.
+
+Build native addon:
+
+```bash
+cd packages/cli
+pnpm install
+pnpm build
+```
+
+Repository-level tests can run without the native addon because `danny-skill.mjs` falls back to JavaScript when no `.node` binding is present.

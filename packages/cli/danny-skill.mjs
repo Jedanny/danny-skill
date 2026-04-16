@@ -2,6 +2,7 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateSkillsNative } from './index.mjs';
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(cliDir, '..', '..');
@@ -67,6 +68,15 @@ function parseFrontmatter(content) {
 }
 
 function commandValidate() {
+  const nativeResult = validateSkillsNative(repoRoot);
+  if (nativeResult) {
+    if (!nativeResult.ok) {
+      fail(`invalid skills:\n${nativeResult.errors.join('\n')}`);
+    }
+    console.log(`valid: ${nativeResult.skillCount} skills`);
+    return;
+  }
+
   const skillNames = listSkillNames();
   const failures = [];
 

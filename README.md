@@ -22,7 +22,7 @@ danny-skill 是一个跨 AI 编码工具的团队技能库。仓库优先维护�
 - skill 正文使用中文为主；frontmatter `description` 保持英文 `Use when...`，以兼容 Claude Code / Codex 的技能发现。
 - 命令、路径、配置键、技术术语和外部项目名保持原文。
 - 插件目录只保存分发元数据或安装说明，不复制技能正文。
-- 当前阶段优先稳定技能库；完整 CLI 后续放入 `packages/cli/`。
+- 当前阶段优先稳定技能库；CLI 位于 `packages/cli/`，采用 Node 入口 + Rust N-API core 的渐进实现。
 
 ## 安装
 
@@ -66,7 +66,7 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 ./scripts/install.sh --tool codex --dry-run --yes
 ```
 
-当前 shell installer 安装完整 skill 目录，相当于 `full` profile。更细的安装 profile 预留给后续 CLI：
+当前 shell installer 安装完整 skill 目录，相当于 `full` profile。更细的安装 profile 由 `packages/cli` 提供：
 
 | Profile | 计划用途 |
 | --- | --- |
@@ -74,7 +74,13 @@ Claude Code 和 Codex 官方项目级技能可分别链接到 `.claude/skills/` 
 | `standard` | 分发 `SKILL.md`、小型 `references/` 和 `assets/`，适合大多数团队共享。 |
 | `full` | 分发完整 skill 目录，包括大型设计参考和 preview 资源；这是当前 `scripts/install.sh` 的行为。 |
 
-后续 CLI 会负责 profile 选择、路径映射、scope 解析和 alias 生成；当前脚本只负责稳定安装。
+CLI 当前负责 profile 选择、路径映射和知识库初始化；alias 生成仍是后续能力。当前 shell 脚本继续作为跨工具 full-directory 安装器。
+
+```bash
+pnpm cli validate
+pnpm cli install --tool codex --scope project --profile standard --mode copy
+pnpm cli knowledge init --project
+```
 
 ## 当前技能与触发方式
 

@@ -124,4 +124,27 @@ describe('danny-skill CLI', () => {
 
     expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'designs'))).toBe(true);
   });
+
+  test('packages the CLI as a Rust N-API npm package with JS fallback', () => {
+    const packageJsonPath = join(process.cwd(), 'packages', 'cli', 'package.json');
+    const cargoToml = readFileSync(join(process.cwd(), 'packages', 'cli', 'Cargo.toml'), 'utf8');
+    const rustLib = readFileSync(join(process.cwd(), 'packages', 'cli', 'src', 'lib.rs'), 'utf8');
+    const nativeLoader = readFileSync(join(process.cwd(), 'packages', 'cli', 'index.mjs'), 'utf8');
+    const binWrapper = readFileSync(join(process.cwd(), 'packages', 'cli', 'bin', 'danny-skill.mjs'), 'utf8');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+
+    expect(packageJson.name).toBe('@danny-skill/cli');
+    expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');
+    expect(packageJson.scripts.build).toContain('napi build');
+    expect(packageJson.devDependencies['@napi-rs/cli']).toEqual(expect.any(String));
+    expect(packageJson.napi.name).toBe('danny_skill_cli');
+    expect(cargoToml).toContain('crate-type = ["cdylib"]');
+    expect(cargoToml).toContain('napi');
+    expect(cargoToml).toContain('napi-derive');
+    expect(rustLib).toContain('#[napi]');
+    expect(rustLib).toContain('validate_skills');
+    expect(nativeLoader).toContain('loadNativeBinding');
+    expect(nativeLoader).toContain('validateSkillsNative');
+    expect(binWrapper).toContain("import '../danny-skill.mjs'");
+  });
 });
