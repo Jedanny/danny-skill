@@ -19,6 +19,8 @@ describe('GitHub Actions CI/CD', () => {
     expect(workflow).toContain('cargo check --manifest-path packages/cli/Cargo.toml');
     expect(workflow).toContain('pnpm install --frozen-lockfile --ignore-scripts');
     expect(workflow).toContain('npm run build');
+    expect(workflow).toContain('node danny-skill.mjs package --target-root . --profile standard');
+    expect(workflow).toContain('npm pack --dry-run');
   });
 
   test('release workflow builds native artifacts and publishes CLI package', () => {
@@ -28,6 +30,7 @@ describe('GitHub Actions CI/CD', () => {
     const workflow = readFileSync(workflowPath, 'utf8');
     expect(workflow).toContain('tags:');
     expect(workflow).toContain("'cli-v*'");
+    expect(workflow).toContain('workflow_dispatch:');
     expect(workflow).toContain('strategy:');
     expect(workflow).toContain('macos-latest');
     expect(workflow).toContain('ubuntu-latest');

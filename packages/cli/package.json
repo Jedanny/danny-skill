@@ -1,6 +1,6 @@
 {
   "name": "@dannyok/cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Rust N-API powered CLI for danny-skill",
   "type": "module",
   "repository": {
