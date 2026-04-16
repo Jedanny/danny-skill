@@ -4,6 +4,7 @@ import { dirname, join, resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import {
+  buildPackagePlanNative,
   generateAliasesNative,
   initProjectKnowledgeNative,
   syncPluginManifestsNative,
@@ -440,8 +441,18 @@ function commandPackage(args) {
   rmSync(distDir, { recursive: true, force: true });
   mkdirSync(distDir, { recursive: true });
 
-  for (const skillName of listSkillNames()) {
-    copyProfileSkill(skillName, join(distDir, 'skills', skillName), profile);
+  const nativePackagePlan = buildPackagePlanNative(repoRoot, profile);
+  if (nativePackagePlan) {
+    for (const { skillName, relativePath } of nativePackagePlan) {
+      const source = join(repoRoot, 'skills', skillName, relativePath);
+      const target = join(distDir, 'skills', skillName, relativePath);
+      mkdirSync(dirname(target), { recursive: true });
+      cpSync(source, target);
+    }
+  } else {
+    for (const skillName of listSkillNames()) {
+      copyProfileSkill(skillName, join(distDir, 'skills', skillName), profile);
+    }
   }
 
   copyDirectoryIfExists(join(repoRoot, 'commands'), join(distDir, 'commands'));

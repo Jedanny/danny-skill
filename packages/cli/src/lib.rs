@@ -10,6 +10,12 @@ pub struct ValidationResult {
     pub errors: Vec<String>,
 }
 
+#[napi(object)]
+pub struct PackagePlanEntry {
+    pub skill_name: String,
+    pub relative_path: String,
+}
+
 #[napi]
 pub fn validate_skills(root: String) -> Result<ValidationResult> {
     let skills_dir = Path::new(&root).join("skills");
@@ -282,6 +288,87 @@ pub fn generate_aliases(root: String, target_root: String, tool: String) -> Resu
     Ok(count)
 }
 
+fn collect_files(base: &Path, current: &Path, entries: &mut Vec<String>) -> Result<()> {
+    for item in fs::read_dir(current)
+        .map_err(|err| Error::from_reason(format!("failed to read {}: {err}", current.display())))?
+    {
+        let item = item.map_err(|err| Error::from_reason(format!("failed to read directory entry: {err}")))?;
+        let path = item.path();
+        if item
+            .file_type()
+            .map_err(|err| Error::from_reason(format!("failed to read directory entry type: {err}")))?
+            .is_dir()
+        {
+            collect_files(base, &path, entries)?;
+        } else {
+            let relative = path
+                .strip_prefix(base)
+                .map_err(|err| Error::from_reason(format!("failed to strip path prefix: {err}")))?;
+            entries.push(relative.to_string_lossy().replace('\\', "/"));
+        }
+    }
+    Ok(())
+}
+
+#[napi]
+pub fn build_package_plan(root: String, profile: String) -> Result<Vec<PackagePlanEntry>> {
+    if !["minimal", "standard", "full"].contains(&profile.as_str()) {
+        return Err(Error::from_reason(format!("unsupported package profile: {profile}")));
+    }
+
+    let skills_dir = Path::new(&root).join("skills");
+    let mut plan = Vec::new();
+    let entries = fs::read_dir(&skills_dir)
+        .map_err(|err| Error::from_reason(format!("failed to read skills directory: {err}")))?;
+
+    for entry in entries {
+        let entry = entry.map_err(|err| Error::from_reason(format!("failed to read skill entry: {err}")))?;
+        if !entry
+            .file_type()
+            .map_err(|err| Error::from_reason(format!("failed to read skill entry type: {err}")))?
+            .is_dir()
+        {
+            continue;
+        }
+
+        let skill_name = entry.file_name().to_string_lossy().to_string();
+        let skill_dir = entry.path();
+        let mut relative_files = Vec::new();
+
+        relative_files.push("SKILL.md".to_string());
+        if skill_dir.join("config.yaml").exists() {
+            relative_files.push("config.yaml".to_string());
+        }
+
+        if profile == "standard" || profile == "full" {
+            for child in ["references", "assets"] {
+                if profile == "standard" && skill_name == "design-style" && child == "references" {
+                    continue;
+                }
+                let child_path = skill_dir.join(child);
+                if child_path.exists() {
+                    collect_files(&skill_dir, &child_path, &mut relative_files)?;
+                }
+            }
+        }
+
+        if profile == "full" {
+            relative_files.clear();
+            collect_files(&skill_dir, &skill_dir, &mut relative_files)?;
+        }
+
+        relative_files.sort();
+        for relative_path in relative_files {
+            plan.push(PackagePlanEntry {
+                skill_name: skill_name.clone(),
+                relative_path,
+            });
+        }
+    }
+
+    Ok(plan)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -330,5 +417,11 @@ mod tests {
         let content = r#"{"version":"1.2.3","description":"hello"}"#;
         assert_eq!(json_string_field(content, "version").as_deref(), Some("1.2.3"));
         assert_eq!(json_string_field(content, "description").as_deref(), Some("hello"));
+    }
+
+    #[test]
+    fn package_plan_rejects_unknown_profile() {
+        let error = build_package_plan(".".to_string(), "unknown".to_string()).unwrap_err();
+        assert!(error.reason.contains("unsupported package profile"));
     }
 }

@@ -307,12 +307,14 @@ describe('danny-skill CLI', () => {
     expect(rustLib).toContain('init_project_knowledge');
     expect(rustLib).toContain('sync_plugin_manifests');
     expect(rustLib).toContain('generate_aliases');
+    expect(rustLib).toContain('build_package_plan');
     expect(nativeLoader).toContain('loadNativeBinding');
     expect(nativeLoader).toContain('validateSkillsNative');
     expect(nativeLoader).toContain('writeConfigPathsNative');
     expect(nativeLoader).toContain('initProjectKnowledgeNative');
     expect(nativeLoader).toContain('syncPluginManifestsNative');
     expect(nativeLoader).toContain('generateAliasesNative');
+    expect(nativeLoader).toContain('buildPackagePlanNative');
     expect(nativeLoader).toContain('nativeBindingCandidates');
     expect(nativeLoader).toContain('linux-x64-gnu');
     expect(nativeLoader).toContain('darwin-arm64');

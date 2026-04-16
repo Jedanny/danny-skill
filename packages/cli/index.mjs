@@ -87,3 +87,11 @@ export function generateAliasesNative(root, targetRoot, tool) {
   }
   return null;
 }
+
+export function buildPackagePlanNative(root, profile) {
+  const binding = loadNativeBinding();
+  if (binding?.buildPackagePlan) {
+    return binding.buildPackagePlan(root, profile);
+  }
+  return null;
+}
