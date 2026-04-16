@@ -129,6 +129,8 @@ inspiration-box
 
 同一个 skill 同时支持项目级和全局级知识，不拆成两套 skill。触发词表达动作，scope 表达存放位置。
 
+为方便单独分发 skill，`SKILL.md` 内部使用 `<project-knowledge-base>` 和 `<global-knowledge-base>` 占位符，不直接依赖本仓库的 `docs/` 或 `.danny-skill/` 路径。下面是本仓库推荐的默认映射。
+
 默认写入当前项目。下面使用项目别名表达动作；在 Claude Code / Codex 原生环境中，用上表对应的 skill 调用方式并带上同样参数即可。
 
 ```text

@@ -57,7 +57,7 @@ implementation proposal 未说明以下内容前，不开始编码：
 每个研究主题使用这个结构：
 
 ```text
-.danny-skill/knowledge-base/research/YYYY-MM-DD-topic/
+<project-knowledge-base>/research/YYYY-MM-DD-topic/
 ├── research-brief.md
 ├── paper-matrix.md
 ├── paper-notes/
@@ -67,9 +67,9 @@ implementation proposal 未说明以下内容前，不开始编码：
 └── decision.md
 ```
 
-仓库相关研究使用 `.danny-skill/knowledge-base/research/`。跨项目通用研究模式使用 `~/.danny-skill/knowledge-base/research/`。
+仓库相关研究使用 `<project-knowledge-base>/research/`。跨项目通用研究模式使用 `<global-knowledge-base>/research/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：research 目录是 workspace。这里保存 source notes、comparisons、business fit 和 decisions；不要放临时任务状态，除非已沉淀为 durable artifact。
+遵守所在项目定义的知识存储模型：research 目录是 workspace。这里保存 source notes、comparisons、business fit 和 decisions；不要放临时任务状态，除非已沉淀为 durable artifact。
 
 ## 模板
 

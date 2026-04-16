@@ -134,6 +134,38 @@ describe('skill library schema', () => {
     }
   });
 
+  test('skills do not hardcode repository documentation or knowledge paths', () => {
+    const forbiddenPathFragments = [
+      'docs/',
+      'docs/knowledge-base',
+      '.danny-skill/knowledge-base',
+      '~/.danny-skill',
+      'knowledge-base/storage-model',
+    ];
+    const skillFiles = readdirSync(skillsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .flatMap((entry) => {
+        const files = [join(skillsDir, entry.name, 'SKILL.md')];
+        const configPath = join(skillsDir, entry.name, 'config.yaml');
+        if (existsSync(configPath)) {
+          files.push(configPath);
+        }
+        return files;
+      });
+
+    for (const file of skillFiles) {
+      const content = readFileSync(file, 'utf8');
+
+      for (const fragment of forbiddenPathFragments) {
+        expect(content).not.toContain(fragment);
+      }
+    }
+
+    const reusableSkillText = readFileSync(join(skillsDir, 'knowledge-distill', 'SKILL.md'), 'utf8');
+    expect(reusableSkillText).toContain('<project-knowledge-base>');
+    expect(reusableSkillText).toContain('<global-knowledge-base>');
+  });
+
   test('autoresearch-loop documents the eval-driven optimization loop', () => {
     const autoresearchDir = join(skillsDir, 'autoresearch-loop');
     const skillFile = join(autoresearchDir, 'SKILL.md');

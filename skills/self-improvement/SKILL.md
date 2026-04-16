@@ -45,7 +45,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## 学习存储结构
 
 ```
-.danny-skill/knowledge-base/learnings/
+<project-knowledge-base>/learnings/
 ├── errors/              # 错误记录
 │   ├── {{timestamp}}-{{error-type}}.md
 ├── corrections/        # 纠正记录
@@ -57,9 +57,9 @@ supported_tools: [claude-code, codex, cursor, opencode]
 └── REVIEW.md          # 定期回顾
 ```
 
-仓库相关学习记录使用 `.danny-skill/knowledge-base/learnings/`。跨项目通用模式使用 `~/.danny-skill/knowledge-base/learnings/`。
+仓库相关学习记录使用 `<project-knowledge-base>/learnings/`。跨项目通用模式使用 `<global-knowledge-base>/learnings/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：learning records 属于 evidence。这里保存具体事件和预防说明，不保存本地日志或临时任务进度。
+遵守所在项目定义的知识存储模型：learning records 属于 evidence。这里保存具体事件和预防说明，不保存本地日志或临时任务进度。
 
 ## 学习条目格式
 
@@ -98,7 +98,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 ### 步骤 2：记录 (Record)
 
-自动或手动记录到 `.danny-skill/knowledge-base/learnings/` 目录：
+自动或手动记录到 `<project-knowledge-base>/learnings/` 目录：
 - 文件名格式：`{{时间戳}}-{{类型}}-{{简短描述}}.md`
 - 包含完整上下文和解决方案
 

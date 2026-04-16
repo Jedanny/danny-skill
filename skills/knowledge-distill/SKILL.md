@@ -88,7 +88,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - **教训**: 问题 + 原因 + 解决方案 + 预防措施
 
 ### 步骤 3：结构化存储
-- 保存到 `.danny-skill/knowledge-base/distilled/` 目录
+- 保存到 `<project-knowledge-base>/distilled/` 目录
 - 按领域/类型自动分类
 - 生成索引便于检索
 
@@ -100,16 +100,16 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## 知识存储结构
 
 ```
-.danny-skill/knowledge-base/distilled/
+<project-knowledge-base>/distilled/
 ├── concepts/           # 概念定义
 ├── best-practices/     # 最佳实践
 ├── decisions/          # 决策记录
 └── lessons/            # 教训总结
 ```
 
-仓库相关知识使用 `.danny-skill/knowledge-base/distilled/`。跨项目通用知识使用 `~/.danny-skill/knowledge-base/distilled/`。
+仓库相关知识使用 `<project-knowledge-base>/distilled/`。跨项目通用知识使用 `<global-knowledge-base>/distilled/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：蒸馏条目应链接回来源 workspace 或 evidence；临时任务状态未经审阅和重写，不要复制到这里。
+遵守所在项目定义的知识存储模型：蒸馏条目应链接回来源 workspace 或 evidence；临时任务状态未经审阅和重写，不要复制到这里。
 
 ## 可选衔接
 

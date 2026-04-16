@@ -89,7 +89,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 ## 灵感存储结构
 
 ```
-.danny-skill/knowledge-base/
+<project-knowledge-base>/
 ├── inbox/inspiration/  # 收件箱（新捕获）
 └── ideas/
     ├── feature/        # 功能点子
@@ -98,9 +98,9 @@ supported_tools: [claude-code, codex, cursor, opencode]
     └── exploration/    # 探索性尝试
 ```
 
-仓库相关想法使用 `.danny-skill/knowledge-base/`。跨项目通用想法使用 `~/.danny-skill/knowledge-base/`。
+仓库相关想法使用 `<project-knowledge-base>/`。跨项目通用想法使用 `<global-knowledge-base>/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：原始捕获先进入 `inbox/`，发展后的想法移动到 `ideas/`；临时任务笔记必须先重写，才能成为知识条目。
+遵守所在项目定义的知识存储模型：原始捕获先进入 `inbox/`，发展后的想法移动到 `ideas/`；临时任务笔记必须先重写，才能成为知识条目。
 
 ## 可选衔接
 

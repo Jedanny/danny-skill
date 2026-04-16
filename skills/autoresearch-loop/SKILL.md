@@ -82,12 +82,12 @@ supported_tools: [claude-code, codex]
 日志存放在：
 
 ```text
-.danny-skill/knowledge-base/experiments/autoresearch/<target-name>/
+<project-knowledge-base>/experiments/autoresearch/<target-name>/
 ├── results.tsv
 └── changelog.md
 ```
 
-遵守 `docs/knowledge-base/storage-model.md`：实验记录是 evidence，不是临时 agent 草稿；这里只写 baseline、metric、mutation 和 keep-or-revert 证据。
+遵守所在项目定义的知识存储模型：实验记录是 evidence，不是临时 agent 草稿；这里只写 baseline、metric、mutation 和 keep-or-revert 证据。
 
 `results.tsv` 字段：
 
