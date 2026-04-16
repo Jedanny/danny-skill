@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - architecture-skill-library-migration
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test JS and Rust CLI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: Install root dependencies
+        run: pnpm install --ignore-scripts
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+
+      - name: Validate CLI
+        run: pnpm cli validate
+
+      - name: Setup Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+
+      - name: Test Rust crate
+        run: cargo test --manifest-path packages/cli/Cargo.toml
+
+      - name: Install CLI package dependencies
+        working-directory: packages/cli
+        run: npm install
+
+      - name: Build N-API addon
+        working-directory: packages/cli
+        run: npm run build

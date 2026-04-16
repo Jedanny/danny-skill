@@ -12,6 +12,9 @@
     "index.mjs",
     "danny-skill.mjs",
     "*.node",
+    "Cargo.toml",
+    "Cargo.lock",
+    "src/",
     "README.md"
   ],
   "scripts": {

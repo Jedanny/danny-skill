@@ -145,6 +145,10 @@ describe('danny-skill CLI', () => {
     expect(rustLib).toContain('validate_skills');
     expect(nativeLoader).toContain('loadNativeBinding');
     expect(nativeLoader).toContain('validateSkillsNative');
+    expect(nativeLoader).toContain('nativeBindingCandidates');
+    expect(nativeLoader).toContain('linux-x64-gnu');
+    expect(nativeLoader).toContain('darwin-arm64');
+    expect(nativeLoader).toContain('win32-x64-msvc');
     expect(binWrapper).toContain("import '../danny-skill.mjs'");
   });
 });
