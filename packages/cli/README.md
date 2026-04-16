@@ -10,10 +10,9 @@ Implemented commands:
 - `danny-skill knowledge init`: initialize project knowledge directories
 - `danny-skill package`: generate tool-specific output under `dist/`
 - `danny-skill sync`: synchronize generated manifests from package metadata
+- `danny-skill alias generate`: generate tool-specific command wrappers where supported
 
 Future commands:
-
-- `danny-skill alias generate`: generate tool-specific command wrappers where supported
 
 ## Planned Install Profiles
 
@@ -36,10 +35,10 @@ The CLI turns current README conventions into executable behavior:
 - Initialize knowledge indexes such as `learnings/patterns/PATTERNS.md`.
 - Sync plugin manifests from root package metadata.
 - Generate distributable plugin artifacts under `dist/`.
+- Generate project alias wrappers such as `/danny-idea` where the target tool supports command files.
 
 Future CLI responsibilities:
 
-- Generate project alias wrappers such as `/danny-idea` where the target tool supports command files.
 - Extend install adapters for OpenCode.
 
 Proposed command surface:
@@ -51,6 +50,7 @@ danny-skill install --tool cursor --scope project --profile standard --mode copy
 danny-skill knowledge init --project
 danny-skill sync
 danny-skill package --profile standard
+danny-skill alias generate --tool claude-code
 danny-skill validate
 ```
 

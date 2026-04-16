@@ -213,6 +213,30 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, '.cursor', 'commands', 'list-designs.md'))).toBe(true);
   });
 
+  test('alias generate creates Claude Code command wrappers for trigger aliases', () => {
+    const root = tempRoot();
+
+    runCli(['alias', 'generate', '--tool', 'claude-code', '--target-root', root]);
+
+    const aliasPath = join(root, '.claude', 'commands', 'danny-idea.md');
+    expect(existsSync(aliasPath)).toBe(true);
+    expect(readFileSync(aliasPath, 'utf8')).toContain('/inspiration-box');
+    expect(readFileSync(aliasPath, 'utf8')).toContain('$ARGUMENTS');
+    expect(existsSync(join(root, '.claude', 'commands', 'danny-distill.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude', 'commands', 'danny-learn.md'))).toBe(true);
+  });
+
+  test('alias generate creates Cursor command wrappers for trigger aliases', () => {
+    const root = tempRoot();
+
+    runCli(['alias', 'generate', '--tool', 'cursor', '--target-root', root]);
+
+    const aliasPath = join(root, '.cursor', 'commands', 'danny-distill.md');
+    expect(existsSync(aliasPath)).toBe(true);
+    expect(readFileSync(aliasPath, 'utf8')).toContain('knowledge-distill');
+    expect(readFileSync(aliasPath, 'utf8')).toContain('$ARGUMENTS');
+  });
+
   test('sync updates plugin manifests from package metadata', () => {
     const root = tempRoot();
 

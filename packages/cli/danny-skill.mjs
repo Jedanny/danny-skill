@@ -68,6 +68,11 @@ function parseFrontmatter(content) {
   return metadata;
 }
 
+function skillMetadata(skillName) {
+  const skillPath = join(repoRoot, 'skills', skillName, 'SKILL.md');
+  return parseFrontmatter(readFileSync(skillPath, 'utf8'));
+}
+
 function commandValidate() {
   const nativeResult = validateSkillsNative(repoRoot);
   if (nativeResult) {
@@ -422,6 +427,63 @@ function commandPackage(args) {
   console.log(`packaged ${profile} profile to ${distDir}`);
 }
 
+function aliasTargetDir(tool, targetRoot) {
+  if (tool === 'claude-code') {
+    return join(targetRoot, '.claude', 'commands');
+  }
+  if (tool === 'cursor') {
+    return join(targetRoot, '.cursor', 'commands');
+  }
+  fail(`unsupported alias tool: ${tool}`);
+}
+
+function aliasContent(tool, trigger, skillName) {
+  if (tool === 'claude-code') {
+    return [
+      `# ${trigger}`,
+      '',
+      `Use the \`/${skillName}\` skill with the following input:`,
+      '',
+      '$ARGUMENTS',
+      '',
+    ].join('\n');
+  }
+
+  return [
+    `# ${trigger}`,
+    '',
+    `Use the \`${skillName}\` skill/rule with the following input:`,
+    '',
+    '$ARGUMENTS',
+    '',
+  ].join('\n');
+}
+
+function commandAlias(args) {
+  const { options, positionals } = parseOptions(args);
+  if (positionals[0] !== 'generate') {
+    fail('usage: danny-skill alias generate --tool <claude-code|cursor> [--target-root <path>]');
+  }
+
+  const tool = String(options.tool ?? '');
+  const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
+  const targetDir = aliasTargetDir(tool, targetRoot);
+  mkdirSync(targetDir, { recursive: true });
+
+  let count = 0;
+  for (const skillName of listSkillNames()) {
+    const metadata = skillMetadata(skillName);
+    if (typeof metadata.trigger !== 'string' || !metadata.trigger.startsWith('/')) {
+      continue;
+    }
+    const aliasName = `${metadata.trigger.slice(1)}.md`;
+    writeFileSync(join(targetDir, aliasName), aliasContent(tool, metadata.trigger, skillName));
+    count += 1;
+  }
+
+  console.log(`generated ${count} aliases for ${tool} at ${targetDir}`);
+}
+
 function main(argv) {
   const [command, ...rest] = argv;
 
@@ -449,8 +511,12 @@ function main(argv) {
     commandPackage(rest);
     return;
   }
+  if (command === 'alias') {
+    commandAlias(rest);
+    return;
+  }
 
-  fail('usage: danny-skill <validate|config|knowledge|install|sync|package> ...');
+  fail('usage: danny-skill <validate|config|knowledge|install|sync|package|alias> ...');
 }
 
 main(process.argv.slice(2));
