@@ -3,7 +3,7 @@ import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, symli
 import { dirname, join, resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { validateSkillsNative } from './index.mjs';
+import { initProjectKnowledgeNative, validateSkillsNative, writeConfigPathsNative } from './index.mjs';
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(cliDir, '..', '..');
@@ -138,6 +138,12 @@ function commandConfig(args) {
   }
 
   const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
+  const nativeConfigPath = writeConfigPathsNative(targetRoot, options.project, options.global);
+  if (nativeConfigPath) {
+    console.log(`wrote ${nativeConfigPath}`);
+    return;
+  }
+
   writeJson(join(targetRoot, '.danny-skill', 'config.json'), {
     knowledge_base: {
       project: options.project,
@@ -201,6 +207,12 @@ function commandKnowledge(args) {
 
   const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
   const projectKnowledgePath = readProjectKnowledgePath(targetRoot);
+  const nativeBasePath = initProjectKnowledgeNative(targetRoot, projectKnowledgePath);
+  if (nativeBasePath) {
+    console.log(`initialized ${nativeBasePath}`);
+    return;
+  }
+
   const basePath = resolve(targetRoot, projectKnowledgePath);
   ensureKnowledgeTree(basePath);
   console.log(`initialized ${basePath}`);

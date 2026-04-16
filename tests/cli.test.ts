@@ -283,8 +283,12 @@ describe('danny-skill CLI', () => {
     expect(cargoToml).toContain('napi-derive');
     expect(rustLib).toContain('#[napi]');
     expect(rustLib).toContain('validate_skills');
+    expect(rustLib).toContain('write_config_paths');
+    expect(rustLib).toContain('init_project_knowledge');
     expect(nativeLoader).toContain('loadNativeBinding');
     expect(nativeLoader).toContain('validateSkillsNative');
+    expect(nativeLoader).toContain('writeConfigPathsNative');
+    expect(nativeLoader).toContain('initProjectKnowledgeNative');
     expect(nativeLoader).toContain('nativeBindingCandidates');
     expect(nativeLoader).toContain('linux-x64-gnu');
     expect(nativeLoader).toContain('darwin-arm64');

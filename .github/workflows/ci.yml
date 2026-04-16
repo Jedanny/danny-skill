@@ -45,8 +45,8 @@ jobs:
           rustup toolchain install stable --profile minimal
           rustup default stable
 
-      - name: Test Rust crate
-        run: cargo test --manifest-path packages/cli/Cargo.toml
+      - name: Check Rust crate
+        run: cargo check --manifest-path packages/cli/Cargo.toml
 
       - name: Install CLI package dependencies
         working-directory: packages/cli

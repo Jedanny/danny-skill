@@ -55,3 +55,19 @@ export function validateSkillsNative(root) {
   }
   return null;
 }
+
+export function writeConfigPathsNative(root, projectPath, globalPath) {
+  const binding = loadNativeBinding();
+  if (binding?.writeConfigPaths) {
+    return binding.writeConfigPaths(root, projectPath, globalPath);
+  }
+  return null;
+}
+
+export function initProjectKnowledgeNative(root, projectPath) {
+  const binding = loadNativeBinding();
+  if (binding?.initProjectKnowledge) {
+    return binding.initProjectKnowledge(root, projectPath);
+  }
+  return null;
+}
