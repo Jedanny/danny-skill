@@ -17,7 +17,7 @@ describe('GitHub Actions CI/CD', () => {
     expect(workflow).toContain('pnpm exec tsc --noEmit');
     expect(workflow).toContain('pnpm cli validate');
     expect(workflow).toContain('cargo check --manifest-path packages/cli/Cargo.toml');
-    expect(workflow).toContain('pnpm install --ignore-scripts');
+    expect(workflow).toContain('pnpm install --frozen-lockfile --ignore-scripts');
     expect(workflow).toContain('npm run build');
   });
 
