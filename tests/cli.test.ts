@@ -247,6 +247,7 @@ describe('danny-skill CLI', () => {
     expect(readFileSync(aliasPath, 'utf8')).toContain('$ARGUMENTS');
     expect(existsSync(join(root, '.claude', 'commands', 'danny-distill.md'))).toBe(true);
     expect(existsSync(join(root, '.claude', 'commands', 'danny-learn.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude', 'commands', 'use-danny.md'))).toBe(true);
   });
 
   test('alias generate creates Cursor command wrappers for trigger aliases', () => {
@@ -303,7 +304,7 @@ describe('danny-skill CLI', () => {
       stdio: 'pipe',
     });
 
-    expect(output).toContain('valid: 7 skills');
+    expect(output).toContain('valid: 8 skills');
   });
 
   test('packages the CLI as a Rust N-API npm package with JS fallback', () => {

@@ -31,7 +31,7 @@ describe('skill library schema', () => {
 
       if (metadata.trigger !== undefined) {
         expect(metadata.trigger).toEqual(expect.any(String));
-        expect(metadata.trigger).toMatch(/^\/danny-/);
+        expect(metadata.trigger).toMatch(/^\/(?:danny-|use-danny$)/);
       }
 
       for (const tool of metadata.supported_tools as string[]) {
@@ -298,5 +298,29 @@ describe('skill library schema', () => {
     expect(examples.toLowerCase()).toContain('hidden assumptions');
     expect(examples.toLowerCase()).toContain('over-abstraction');
     expect(examples.toLowerCase()).toContain('drive-by refactor');
+  });
+
+  test('use-danny documents danny skill routing and onboarding', () => {
+    const skillDir = join(skillsDir, 'use-danny');
+    const content = readFileSync(join(skillDir, 'SKILL.md'), 'utf8');
+    const metadata = parseFrontmatter(content);
+
+    expect(metadata.name).toBe('use-danny');
+    expect(metadata.trigger).toBe('/use-danny');
+    expect(metadata.description).toMatch(/^Use when\b/);
+    expect(metadata.supported_tools).toEqual(['claude-code', 'codex', 'cursor', 'opencode']);
+
+    for (const requiredTerm of [
+      'Claude Code',
+      'Codex',
+      'Cursor',
+      '每个 skill 都可以独立使用',
+      '<project-knowledge-base>',
+      'inspiration-box',
+      'research-to-implementation',
+      'self-improvement',
+    ]) {
+      expect(content).toContain(requiredTerm);
+    }
   });
 });
