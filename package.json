@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Team AI Skills Hub - Cross-tool AI asset sharing platform",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jedanny/danny-skill.git"
+  },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "validate": "pnpm test",

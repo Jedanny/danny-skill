@@ -315,7 +315,9 @@ describe('danny-skill CLI', () => {
     const template = readFileSync(join(process.cwd(), 'packages', 'cli', 'templates', 'PATTERNS.md'), 'utf8');
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
-    expect(packageJson.name).toBe('@danny-skill/cli');
+    expect(packageJson.name).toBe('@dannyok/cli');
+    expect(packageJson.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
+    expect(packageJson.repository.directory).toBe('packages/cli');
     expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');
     expect(packageJson.files).toContain('dist/');
     expect(packageJson.files).toContain('templates/');

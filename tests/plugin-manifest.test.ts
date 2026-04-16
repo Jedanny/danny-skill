@@ -43,4 +43,14 @@ describe('plugin manifests', () => {
     expect(installDoc).toContain('.cursor/rules');
     expect(installDoc).toContain('.cursor/commands');
   });
+
+  test('root and CLI package metadata point to the public repository and npm org', () => {
+    const rootPackage = readJson('package.json');
+    const cliPackage = readJson('packages/cli/package.json');
+
+    expect(rootPackage.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
+    expect(cliPackage.name).toBe('@dannyok/cli');
+    expect(cliPackage.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
+    expect(cliPackage.repository.directory).toBe('packages/cli');
+  });
 });

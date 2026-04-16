@@ -1,8 +1,13 @@
 {
-  "name": "@danny-skill/cli",
+  "name": "@dannyok/cli",
   "version": "0.1.0",
   "description": "Rust N-API powered CLI for danny-skill",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jedanny/danny-skill.git",
+    "directory": "packages/cli"
+  },
   "bin": {
     "danny-skill": "bin/danny-skill.mjs"
   },
