@@ -13,13 +13,7 @@ supported_tools: [claude-code, codex]
 
 用 eval 驱动的研究循环优化 skill、prompt、workflow 或 agent 行为。这个 skill 面向可度量迭代，不用于普通笔记或开放式头脑风暴。
 
-流程参考 autoresearch 风格的 prompt 优化：先建立 baseline，运行 eval，只做一个 mutation，再复测，并基于证据 keep-or-revert。
-
-参考来源：
-
-- Karpathy autoresearch: https://github.com/karpathy/autoresearch
-- openclaw-autoresearch: https://github.com/zning1994/openclaw-autoresearch
-- 花叔方法论文章: https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w
+先建立 baseline，运行 eval，只做一个 mutation，再复测，并基于证据 keep-or-revert。
 
 ## 适用场景
 

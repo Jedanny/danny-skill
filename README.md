@@ -164,6 +164,8 @@ inspiration-box
 
 ## 参考来源
 
+外部参考来源集中维护在这里，`SKILL.md` 正文不重复列出来源说明，避免多处漂移。
+
 | Skill | 参考链接 |
 | --- | --- |
 | `design-style` | [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) |

@@ -7,8 +7,6 @@ tags: [design, design-systems, ui, style, frontend]
 supported_tools: [claude-code, codex, cursor, opencode]
 ---
 
-> **设计参考来源**：[awesome-design-md](https://github.com/VoltAgent/awesome-design-md) by [VoltAgent](https://github.com/VoltAgent)
-
 # Design Style Matcher
 
 ## 概览

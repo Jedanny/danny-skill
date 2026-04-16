@@ -110,6 +110,30 @@ describe('skill library schema', () => {
     }
   });
 
+  test('external reference sources are centralized in README', () => {
+    const readme = readFileSync(join(process.cwd(), 'README.md'), 'utf8');
+
+    expect(readme).toContain('## 参考来源');
+    expect(readme).toContain('外部参考来源集中维护在这里');
+    expect(readme).toContain('https://github.com/VoltAgent/awesome-design-md');
+    expect(readme).toContain('https://github.com/karpathy/autoresearch');
+    expect(readme).toContain('https://github.com/zning1994/openclaw-autoresearch');
+    expect(readme).toContain('https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w');
+    expect(readme).toContain('https://github.com/forrestchang/andrej-karpathy-skills');
+
+    for (const skillName of readdirSync(skillsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)) {
+      const content = readFileSync(join(skillsDir, skillName, 'SKILL.md'), 'utf8');
+
+      expect(content).not.toMatch(/https?:\/\//);
+      expect(content).not.toContain('参考来源');
+      expect(content).not.toContain('设计参考来源');
+      expect(content).not.toContain('方法论参考');
+      expect(content).not.toContain('Reference source');
+    }
+  });
+
   test('autoresearch-loop documents the eval-driven optimization loop', () => {
     const autoresearchDir = join(skillsDir, 'autoresearch-loop');
     const skillFile = join(autoresearchDir, 'SKILL.md');

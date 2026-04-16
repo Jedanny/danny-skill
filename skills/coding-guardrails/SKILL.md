@@ -13,10 +13,6 @@ supported_tools: [claude-code, codex, cursor]
 
 减少 coding agent 在实现、调试、重构和评审中的常见错误。这个 skill 是改代码前的紧凑行为护栏。
 
-参考来源：forrestchang/andrej-karpathy-skills, https://github.com/forrestchang/andrej-karpathy-skills
-
-改编示例和许可说明见 `references/examples.md`。
-
 ## 核心规则
 
 ### 1. 先想清楚再编码 (Think Before Coding)

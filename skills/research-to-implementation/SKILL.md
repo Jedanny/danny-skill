@@ -15,10 +15,6 @@ supported_tools: [claude-code, codex]
 
 当用户想判断某篇论文、算法、架构、模型、benchmark 或开源项目能否改进自己的产品、工作流或工程效率时，使用这个 skill。
 
-## 方法论说明
-
-方法论参考：花叔, https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w
-
 ## 流程
 
 1. **界定研究问题**：定义业务问题、指标、约束和非目标。
