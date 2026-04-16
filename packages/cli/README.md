@@ -8,11 +8,11 @@ Implemented commands:
 - `danny-skill install`: install skills for Claude Code, Codex, or Cursor project rules
 - `danny-skill config paths set`: write knowledge-base path mappings
 - `danny-skill knowledge init`: initialize project knowledge directories
+- `danny-skill package`: generate tool-specific output under `dist/`
+- `danny-skill sync`: synchronize generated manifests from package metadata
 
 Future commands:
 
-- `danny-skill package`: generate tool-specific output under `dist/`
-- `danny-skill sync`: synchronize indexes or generated manifests from canonical skills
 - `danny-skill alias generate`: generate tool-specific command wrappers where supported
 
 ## Planned Install Profiles
@@ -34,11 +34,12 @@ The CLI turns current README conventions into executable behavior:
 - Install by scope: `--scope user|project`.
 - Install by tool: `--tool claude-code|codex|cursor`.
 - Initialize knowledge indexes such as `learnings/patterns/PATTERNS.md`.
+- Sync plugin manifests from root package metadata.
+- Generate distributable plugin artifacts under `dist/`.
 
 Future CLI responsibilities:
 
 - Generate project alias wrappers such as `/danny-idea` where the target tool supports command files.
-- Package tool-specific output under `dist/`.
 - Extend install adapters for OpenCode.
 
 Proposed command surface:
@@ -48,6 +49,8 @@ danny-skill config paths set --project .danny-skill/knowledge-base --global ~/.d
 danny-skill install --tool codex --scope project --profile standard
 danny-skill install --tool cursor --scope project --profile standard --mode copy
 danny-skill knowledge init --project
+danny-skill sync
+danny-skill package --profile standard
 danny-skill validate
 ```
 

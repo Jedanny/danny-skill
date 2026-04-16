@@ -147,6 +147,7 @@ describe('danny-skill CLI', () => {
 
   test('install defaults user scope to HOME when target root is omitted', () => {
     const root = tempRoot();
+    const projectRoot = tempRoot();
 
     execFileSync(process.execPath, [
       cli,
@@ -160,14 +161,14 @@ describe('danny-skill CLI', () => {
       '--mode',
       'copy',
     ], {
-      cwd: process.cwd(),
+      cwd: projectRoot,
       env: { ...process.env, HOME: root },
       encoding: 'utf8',
       stdio: 'pipe',
     });
 
     expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
-    expect(existsSync(join(process.cwd(), '.agents', 'skills', 'design-style', 'SKILL.md'))).toBe(false);
+    expect(existsSync(join(projectRoot, '.agents', 'skills', 'design-style', 'SKILL.md'))).toBe(false);
   });
 
   test('install rejects link mode for filtered profiles', () => {
@@ -210,6 +211,34 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, '.cursor', 'rules', 'design-style.mdc'))).toBe(true);
     expect(readFileSync(join(root, '.cursor', 'rules', 'design-style.mdc'), 'utf8')).toContain('name: design-style');
     expect(existsSync(join(root, '.cursor', 'commands', 'list-designs.md'))).toBe(true);
+  });
+
+  test('sync updates plugin manifests from package metadata', () => {
+    const root = tempRoot();
+
+    runCli(['sync', '--target-root', root]);
+
+    const claudeManifest = JSON.parse(readFileSync(join(root, '.claude-plugin', 'plugin.json'), 'utf8'));
+    const cursorManifest = JSON.parse(readFileSync(join(root, '.cursor-plugin', 'plugin.json'), 'utf8'));
+    const marketplace = JSON.parse(readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'));
+
+    expect(claudeManifest.name).toBe('danny-skill');
+    expect(claudeManifest.version).toBe('1.0.0');
+    expect(cursorManifest.version).toBe('1.0.0');
+    expect(marketplace.plugins[0].version).toBe('1.0.0');
+  });
+
+  test('package writes distributable plugin artifacts', () => {
+    const root = tempRoot();
+
+    runCli(['package', '--target-root', root, '--profile', 'minimal']);
+
+    expect(existsSync(join(root, 'dist', 'claude-plugin', 'plugin.json'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'cursor-plugin', 'plugin.json'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'opencode', 'INSTALL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'assets', 'preview.html'))).toBe(false);
+    expect(existsSync(join(root, 'dist', 'commands', 'list-designs.md'))).toBe(true);
   });
 
   test('packages the CLI as a Rust N-API npm package with JS fallback', () => {

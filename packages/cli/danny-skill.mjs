@@ -109,6 +109,19 @@ function writeJson(path, value) {
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
 }
 
+function readJson(path) {
+  return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+function rootPackageMetadata() {
+  const packageJson = readJson(join(repoRoot, 'package.json'));
+  return {
+    name: packageJson.name,
+    version: packageJson.version,
+    description: packageJson.description,
+  };
+}
+
 function commandConfig(args) {
   const { options, positionals } = parseOptions(args);
   if (positionals.join(' ') !== 'paths set') {
@@ -233,6 +246,23 @@ function copyStandardSkill(skillName, targetDir) {
   }
 }
 
+function copyProfileSkill(skillName, targetDir, profile) {
+  rmSync(targetDir, { recursive: true, force: true });
+  if (profile === 'minimal') {
+    copyMinimalSkill(skillName, targetDir);
+    return;
+  }
+  if (profile === 'standard') {
+    copyStandardSkill(skillName, targetDir);
+    return;
+  }
+  if (profile === 'full') {
+    cpSync(join(repoRoot, 'skills', skillName), targetDir, { recursive: true });
+    return;
+  }
+  fail(`unsupported package profile: ${profile}`);
+}
+
 function installSkill(skillName, targetDir, mode, profile) {
   const sourceDir = join(repoRoot, 'skills', skillName);
   rmSync(targetDir, { recursive: true, force: true });
@@ -327,6 +357,71 @@ function installCursorProject(targetRoot, mode, profile) {
   }
 }
 
+function syncedPluginManifest(baseManifest, metadata) {
+  return {
+    ...baseManifest,
+    name: baseManifest.name ?? 'danny-skill',
+    description: metadata.description,
+    version: metadata.version,
+  };
+}
+
+function commandSync(args) {
+  const { options } = parseOptions(args);
+  const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
+  const metadata = rootPackageMetadata();
+
+  const claudeManifest = syncedPluginManifest(readJson(join(repoRoot, '.claude-plugin', 'plugin.json')), metadata);
+  const cursorManifest = syncedPluginManifest(readJson(join(repoRoot, '.cursor-plugin', 'plugin.json')), metadata);
+  const marketplace = readJson(join(repoRoot, '.claude-plugin', 'marketplace.json'));
+  marketplace.plugins = marketplace.plugins.map((plugin) => ({
+    ...plugin,
+    version: metadata.version,
+    description: metadata.description,
+  }));
+
+  writeJson(join(targetRoot, '.claude-plugin', 'plugin.json'), claudeManifest);
+  writeJson(join(targetRoot, '.cursor-plugin', 'plugin.json'), cursorManifest);
+  writeJson(join(targetRoot, '.claude-plugin', 'marketplace.json'), marketplace);
+
+  console.log(`synced plugin manifests to ${targetRoot}`);
+}
+
+function copyDirectoryIfExists(source, target) {
+  if (existsSync(source)) {
+    rmSync(target, { recursive: true, force: true });
+    cpSync(source, target, { recursive: true });
+  }
+}
+
+function commandPackage(args) {
+  const { options } = parseOptions(args);
+  const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
+  const profile = String(options.profile ?? 'full');
+  if (!['minimal', 'standard', 'full'].includes(profile)) {
+    fail(`unsupported package profile: ${profile}`);
+  }
+
+  const distDir = join(targetRoot, 'dist');
+  rmSync(distDir, { recursive: true, force: true });
+  mkdirSync(distDir, { recursive: true });
+
+  for (const skillName of listSkillNames()) {
+    copyProfileSkill(skillName, join(distDir, 'skills', skillName), profile);
+  }
+
+  copyDirectoryIfExists(join(repoRoot, 'commands'), join(distDir, 'commands'));
+  copyDirectoryIfExists(join(repoRoot, '.opencode'), join(distDir, 'opencode'));
+
+  commandSync(['--target-root', distDir]);
+  copyDirectoryIfExists(join(distDir, '.claude-plugin'), join(distDir, 'claude-plugin'));
+  copyDirectoryIfExists(join(distDir, '.cursor-plugin'), join(distDir, 'cursor-plugin'));
+  rmSync(join(distDir, '.claude-plugin'), { recursive: true, force: true });
+  rmSync(join(distDir, '.cursor-plugin'), { recursive: true, force: true });
+
+  console.log(`packaged ${profile} profile to ${distDir}`);
+}
+
 function main(argv) {
   const [command, ...rest] = argv;
 
@@ -346,8 +441,16 @@ function main(argv) {
     commandInstall(rest);
     return;
   }
+  if (command === 'sync') {
+    commandSync(rest);
+    return;
+  }
+  if (command === 'package') {
+    commandPackage(rest);
+    return;
+  }
 
-  fail('usage: danny-skill <validate|config|knowledge|install> ...');
+  fail('usage: danny-skill <validate|config|knowledge|install|sync|package> ...');
 }
 
 main(process.argv.slice(2));
