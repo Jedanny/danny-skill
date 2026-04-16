@@ -116,14 +116,14 @@ inspiration-box
 | Skill | 适合处理 | 不适合处理 | 主要产物 |
 | --- | --- | --- | --- |
 | [`inspiration-box`](skills/inspiration-box/SKILL.md) | 捕获产品点子、技术想法、流程改进和探索性灵感 | 已经需要严谨验证、代码实现或团队决策的事项 | `.danny-skill/knowledge-base/inbox/inspiration/` 和 `.danny-skill/knowledge-base/ideas/` 下的灵感与想法记录 |
-| [`knowledge-distill`](skills/knowledge-distill/SKILL.md) | 从讨论、决策、经验和 AI 交互中提炼可复用知识 | 原始随手记录、未经验证的想法、运行态日志直接归档 | `.danny-skill/knowledge-base/distilled/` 下的概念、最佳实践、决策和教训 |
+| [`knowledge-distill`](skills/knowledge-distill/SKILL.md) | 从讨论、决策、经验和 AI 交互中提炼可复用知识 | 原始随手记录、未经验证的想法、临时日志直接归档 | `.danny-skill/knowledge-base/distilled/` 下的概念、最佳实践、决策和教训 |
 | [`self-improvement`](skills/self-improvement/SKILL.md) | 记录错误、用户纠正、成功模式和重复问题 | 普通知识整理、产品创意收集或没有具体事件的泛泛总结 | `.danny-skill/knowledge-base/learnings/` 下的错误、纠正、成功和模式记录 |
 | [`design-style`](skills/design-style/SKILL.md) | 生成 UI/网站设计、匹配品牌风格、选择视觉系统 | 非视觉任务、后端逻辑、没有 UI 输出需求的纯文档任务 | 基于 `references/designs/` 设计令牌和 `assets/preview.html` 的风格选择或 UI 生成指导 |
 | [`autoresearch-loop`](skills/autoresearch-loop/SKILL.md) | 用 baseline、eval、单点 mutation 和 keep-or-revert 优化 skill、prompt 或 workflow | 没有稳定目标文件、没有可测 eval、只想做开放式头脑风暴的任务 | `.danny-skill/knowledge-base/experiments/autoresearch/` 下的实验结果和 changelog |
 | [`research-to-implementation`](skills/research-to-implementation/SKILL.md) | 将论文、技术报告、算法或开源项目转成业务适配和编码交接方案 | 只做论文摘要、只看 GitHub star、没有业务问题或验证指标的技术调研 | `.danny-skill/knowledge-base/research/YYYY-MM-DD-topic/` 下的研究矩阵、开源评估、业务适配和实施提案 |
 | [`coding-guardrails`](skills/coding-guardrails/SKILL.md) | 编码、修复、重构和评审时约束最小变更、验证和避免过度设计 | 替代具体实现技能、替代测试、替代需求澄清 | 实施前后的检查清单、风险约束和验证要求 |
 
-知识资产统一遵守 [`docs/knowledge-base/storage-model.md`](docs/knowledge-base/storage-model.md)：`capture -> workspace -> evidence -> distilled`。`.omx/` 只保存运行态、编排态和本地日志，不直接作为知识库内容提交。
+知识资产统一遵守 [`docs/knowledge-base/storage-model.md`](docs/knowledge-base/storage-model.md)：`capture -> workspace -> evidence -> distilled`。临时任务状态和本地日志不直接作为知识库内容提交。
 
 ## 知识存储 Scope
 
@@ -160,7 +160,7 @@ inspiration-box
 | “固化到全局”、“以后所有项目都用”、“个人知识库记一下”、“团队通用方法论” | `--global` |
 | “项目留一份，全局也沉淀”、“固化成方法论但保留项目记录” | `--both` |
 
-全局知识必须先去项目化：不要包含本地私有路径、一次性任务状态、仓库专有实现细节或 `.omx/` 运行日志。
+全局知识必须先去项目化：不要包含本地私有路径、一次性任务状态、仓库专有实现细节或本地运行日志。
 
 ## 参考来源
 
@@ -205,4 +205,4 @@ pnpm exec tsc --noEmit
 
 新增技能时，创建 `skills/<skill-name>/SKILL.md`，填写 `name`、`description`、`version`、`tags`、`supported_tools` 等 frontmatter，并运行 `pnpm test`。
 
-更多贡献规范见 `CONTRIBUTING.md`。Codex/oh-my-codex 项目运行约定见 `AGENTS.md`。
+更多贡献规范见 `CONTRIBUTING.md`。Codex 项目运行约定见 `AGENTS.md`。

@@ -69,7 +69,7 @@ implementation proposal 未说明以下内容前，不开始编码：
 
 仓库相关研究使用 `.danny-skill/knowledge-base/research/`。跨项目通用研究模式使用 `~/.danny-skill/knowledge-base/research/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：research 目录是 workspace。这里保存 source notes、comparisons、business fit 和 decisions；不要放临时 `.omx` 模式状态，除非已沉淀为 durable artifact。
+遵守 `docs/knowledge-base/storage-model.md`：research 目录是 workspace。这里保存 source notes、comparisons、business fit 和 decisions；不要放临时任务状态，除非已沉淀为 durable artifact。
 
 ## 模板
 

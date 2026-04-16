@@ -2,7 +2,7 @@
 
 This directory documents the knowledge storage model used by the skill system.
 
-See `storage-model.md` for the storage boundary and promotion rules inspired by oh-my-codex `.omx` storage.
+See `storage-model.md` for the storage boundary and promotion rules.
 
 ## Scopes
 
@@ -50,6 +50,6 @@ capture -> workspace -> evidence -> distilled
 
 In this repository, `inbox/` is capture, `ideas/` and `research/` are workspaces, `experiments/` and `learnings/` are evidence, and `distilled/` is stable reusable knowledge.
 
-Runtime state, active mode progress, local logs, and metrics belong in `.omx/`, not in the knowledge base.
+Temporary task state, local logs, and metrics do not belong in the knowledge base.
 
 `docs/knowledge-base/` is documentation only. Use it to explain the model, not as the default write target for project knowledge.

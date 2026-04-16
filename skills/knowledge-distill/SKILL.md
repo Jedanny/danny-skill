@@ -109,7 +109,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 仓库相关知识使用 `.danny-skill/knowledge-base/distilled/`。跨项目通用知识使用 `~/.danny-skill/knowledge-base/distilled/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：蒸馏条目应链接回来源 workspace 或 evidence；`.omx` 运行态内容未经审阅和重写，不要复制到这里。
+遵守 `docs/knowledge-base/storage-model.md`：蒸馏条目应链接回来源 workspace 或 evidence；临时任务状态未经审阅和重写，不要复制到这里。
 
 ## 可选衔接
 

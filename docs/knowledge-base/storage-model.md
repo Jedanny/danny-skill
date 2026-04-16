@@ -1,16 +1,16 @@
 # Knowledge Storage Model
 
-This model borrows the useful separation from oh-my-codex `.omx` storage without turning runtime state into repository knowledge.
+This model separates durable knowledge from temporary task state and local logs.
 
 ## Boundary
 
-`.omx/` is runtime and orchestration storage. It can hold active state, logs, local metrics, temporary notes, and mode-specific progress. Do not copy `.omx/` content into this directory as-is.
+Temporary task state, local logs, metrics, and scratch notes are not durable knowledge. Do not copy them into the knowledge base as-is.
 
 `.danny-skill/knowledge-base/` is the default project-local durable knowledge storage. It should hold material that is useful after the current agent run ends: decisions, research summaries, validated learnings, reusable patterns, and experiment conclusions. The dot-directory keeps skill-generated knowledge from occupying a host project's existing `docs/` tree.
 
 `docs/knowledge-base/` is documentation for this storage model, not the default project write target.
 
-Promote content from runtime storage only after it has been reviewed or distilled.
+Promote temporary notes only after they have been reviewed or distilled.
 
 ## Layer Model
 
@@ -35,12 +35,11 @@ capture -> workspace -> evidence -> distilled
 - Learnings keep concrete events and actionable prevention or reuse notes.
 - Distilled entries contain only stable conclusions with source links back to the workspace or evidence that produced them.
 
-## Runtime Rules
+## Temporary State Rules
 
-- Do not commit `.omx/` state, logs, metrics, or local mode files.
 - Do not store transient task progress in `.danny-skill/knowledge-base/`.
 - Do not use the knowledge base as an agent scratchpad.
-- If an `.omx` note becomes reusable, rewrite it as a project knowledge entry with source, date, scope, and status.
+- If a temporary note becomes reusable, rewrite it as a project knowledge entry with source, date, scope, and status.
 
 ## Global Scope
 

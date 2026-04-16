@@ -48,6 +48,7 @@ describe('repository layout', () => {
     const storageModel = readFileSync(join(process.cwd(), 'docs/knowledge-base/storage-model.md'), 'utf8');
     expect(storageModel).toContain('capture -> workspace -> evidence -> distilled');
     expect(storageModel).toContain('.danny-skill/knowledge-base/');
-    expect(storageModel).toContain('Do not commit `.omx/` state');
+    expect(storageModel).toContain('Temporary task state');
+    expect(storageModel).not.toContain('.omx');
   });
 });

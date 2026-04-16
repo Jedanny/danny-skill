@@ -100,7 +100,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 仓库相关想法使用 `.danny-skill/knowledge-base/`。跨项目通用想法使用 `~/.danny-skill/knowledge-base/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：原始捕获先进入 `inbox/`，发展后的想法移动到 `ideas/`；来自 `.omx/` 的运行态笔记必须先重写，才能成为知识条目。
+遵守 `docs/knowledge-base/storage-model.md`：原始捕获先进入 `inbox/`，发展后的想法移动到 `ideas/`；临时任务笔记必须先重写，才能成为知识条目。
 
 ## 可选衔接
 

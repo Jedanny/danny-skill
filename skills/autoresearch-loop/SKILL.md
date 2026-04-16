@@ -87,7 +87,7 @@ supported_tools: [claude-code, codex]
 └── changelog.md
 ```
 
-遵守 `docs/knowledge-base/storage-model.md`：实验记录是 evidence，不是临时 agent 草稿。运行态进度放在 `.omx/`；这里仅写 baseline、metric、mutation 和 keep-or-revert 证据。
+遵守 `docs/knowledge-base/storage-model.md`：实验记录是 evidence，不是临时 agent 草稿；这里只写 baseline、metric、mutation 和 keep-or-revert 证据。
 
 `results.tsv` 字段：
 

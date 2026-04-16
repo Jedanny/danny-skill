@@ -59,7 +59,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 仓库相关学习记录使用 `.danny-skill/knowledge-base/learnings/`。跨项目通用模式使用 `~/.danny-skill/knowledge-base/learnings/`。
 
-遵守 `docs/knowledge-base/storage-model.md`：learning records 属于 evidence。这里保存具体事件和预防说明，不保存原始 `.omx` 日志或临时任务进度。
+遵守 `docs/knowledge-base/storage-model.md`：learning records 属于 evidence。这里保存具体事件和预防说明，不保存本地日志或临时任务进度。
 
 ## 学习条目格式
 
