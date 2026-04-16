@@ -90,7 +90,7 @@ pnpm cli alias generate --tool claude-code
 
 | Skill | Claude Code standalone | Claude Code plugin | Codex | Project alias | Description |
 | --- | --- | --- | --- | --- | --- |
-| `use-danny` | `/use-danny` | `/danny-skill:use-danny` | `$use-danny` | `/use-danny` | danny-skill 入口、安装、选型和知识库映射 |
+| `using-danny` | `/using-danny` | `/danny-skill:using-danny` | `$using-danny` | `/using-danny` | danny-skill 入口、安装、选型和知识库映射 |
 | `inspiration-box` | `/inspiration-box` | `/danny-skill:inspiration-box` | `$inspiration-box` | `/danny-idea` | 灵感收集与管理 |
 | `knowledge-distill` | `/knowledge-distill` | `/danny-skill:knowledge-distill` | `$knowledge-distill` | `/danny-distill` | 团队知识蒸馏 |
 | `self-improvement` | `/self-improvement` | `/danny-skill:self-improvement` | `$self-improvement` | `/danny-learn` | 错误、反馈和经验记录 |
@@ -138,7 +138,7 @@ inspiration-box
 
 | Skill | 适合处理 | 不适合处理 | 主要产物 |
 | --- | --- | --- | --- |
-| [`use-danny`](skills/use-danny/SKILL.md) | 开始使用 danny-skill、选择 skill、理解安装/触发/知识库映射 | 代替具体业务 skill 执行任务 | skill 选择建议、安装命令、scope/知识库映射 |
+| [`using-danny`](skills/using-danny/SKILL.md) | 开始使用 danny-skill、选择 skill、理解安装/触发/知识库映射 | 代替具体业务 skill 执行任务 | skill 选择建议、安装命令、scope/知识库映射 |
 | [`inspiration-box`](skills/inspiration-box/SKILL.md) | 捕获产品点子、技术想法、流程改进和探索性灵感 | 已经需要严谨验证、代码实现或团队决策的事项 | `.danny-skill/knowledge-base/inbox/inspiration/` 和 `.danny-skill/knowledge-base/ideas/` 下的灵感与想法记录 |
 | [`knowledge-distill`](skills/knowledge-distill/SKILL.md) | 从讨论、决策、经验和 AI 交互中提炼可复用知识 | 原始随手记录、未经验证的想法、临时日志直接归档 | `.danny-skill/knowledge-base/distilled/` 下的概念、最佳实践、决策和教训 |
 | [`self-improvement`](skills/self-improvement/SKILL.md) | 记录错误、用户纠正、成功模式和重复问题 | 普通知识整理、产品创意收集或没有具体事件的泛泛总结 | `.danny-skill/knowledge-base/learnings/` 下的错误、纠正、成功和模式记录 |
@@ -198,7 +198,7 @@ inspiration-box
 | `autoresearch-loop` | [karpathy/autoresearch](https://github.com/karpathy/autoresearch), [zning1994/openclaw-autoresearch](https://github.com/zning1994/openclaw-autoresearch), [花叔方法论文章](https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w) |
 | `research-to-implementation` | [花叔方法论文章](https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w) |
 | `coding-guardrails` | [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills) |
-| `use-danny` | 项目自研入口工作流，见 [`skills/use-danny/SKILL.md`](skills/use-danny/SKILL.md) |
+| `using-danny` | 项目自研入口工作流，见 [`skills/using-danny/SKILL.md`](skills/using-danny/SKILL.md) |
 | `inspiration-box` | 项目自研工作流，见 [`skills/inspiration-box/SKILL.md`](skills/inspiration-box/SKILL.md) |
 | `knowledge-distill` | 项目自研工作流，见 [`skills/knowledge-distill/SKILL.md`](skills/knowledge-distill/SKILL.md) |
 | `self-improvement` | 项目自研工作流，见 [`skills/self-improvement/SKILL.md`](skills/self-improvement/SKILL.md) |

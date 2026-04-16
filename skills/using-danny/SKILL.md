@@ -1,14 +1,14 @@
 ---
-name: use-danny
+name: using-danny
 description: Use when starting work with danny-skill, choosing which danny skill to use, or installing and activating danny skills across Claude Code, Codex, Cursor, and OpenCode
-trigger: "/use-danny"
-triggers: [danny, use-danny, danny-skill, skill-selection, setup, install, onboarding]
+trigger: "/using-danny"
+triggers: [danny, using-danny, danny-skill, skill-selection, setup, install, onboarding]
 version: "1.0"
 tags: [danny-skill, onboarding, skill-routing, setup]
 supported_tools: [claude-code, codex, cursor, opencode]
 ---
 
-# Use Danny
+# Using Danny
 
 ## 用途
 
@@ -20,15 +20,15 @@ supported_tools: [claude-code, codex, cursor, opencode]
 
 | 工具 | 显式调用 |
 | --- | --- |
-| Claude Code standalone | `/use-danny` |
-| Claude Code plugin | `/danny-skill:use-danny` |
-| Codex | `$use-danny` |
-| Cursor | 通过 `.cursor/rules/use-danny.mdc` 适配 |
+| Claude Code standalone | `/using-danny` |
+| Claude Code plugin | `/danny-skill:using-danny` |
+| Codex | `$using-danny` |
+| Cursor | 通过 `.cursor/rules/using-danny.mdc` 适配 |
 
 项目 alias:
 
 ```text
-/use-danny
+/using-danny
 ```
 
 ## 选择哪个 skill

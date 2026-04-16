@@ -247,7 +247,7 @@ describe('danny-skill CLI', () => {
     expect(readFileSync(aliasPath, 'utf8')).toContain('$ARGUMENTS');
     expect(existsSync(join(root, '.claude', 'commands', 'danny-distill.md'))).toBe(true);
     expect(existsSync(join(root, '.claude', 'commands', 'danny-learn.md'))).toBe(true);
-    expect(existsSync(join(root, '.claude', 'commands', 'use-danny.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude', 'commands', 'using-danny.md'))).toBe(true);
   });
 
   test('alias generate creates Cursor command wrappers for trigger aliases', () => {
