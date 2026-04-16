@@ -3,7 +3,13 @@ import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, symli
 import { dirname, join, resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { initProjectKnowledgeNative, validateSkillsNative, writeConfigPathsNative } from './index.mjs';
+import {
+  generateAliasesNative,
+  initProjectKnowledgeNative,
+  syncPluginManifestsNative,
+  validateSkillsNative,
+  writeConfigPathsNative,
+} from './index.mjs';
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = resolve(cliDir, '..', '..');
@@ -391,6 +397,12 @@ function syncedPluginManifest(baseManifest, metadata) {
 function commandSync(args) {
   const { options } = parseOptions(args);
   const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
+  const nativeTarget = syncPluginManifestsNative(repoRoot, targetRoot);
+  if (nativeTarget) {
+    console.log(`synced plugin manifests to ${nativeTarget}`);
+    return;
+  }
+
   const metadata = rootPackageMetadata();
 
   const claudeManifest = syncedPluginManifest(readJson(join(repoRoot, '.claude-plugin', 'plugin.json')), metadata);
@@ -484,6 +496,13 @@ function commandAlias(args) {
 
   const tool = String(options.tool ?? '');
   const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
+  const nativeCount = generateAliasesNative(repoRoot, targetRoot, tool);
+  if (nativeCount !== null) {
+    const targetDir = aliasTargetDir(tool, targetRoot);
+    console.log(`generated ${nativeCount} aliases for ${tool} at ${targetDir}`);
+    return;
+  }
+
   const targetDir = aliasTargetDir(tool, targetRoot);
   mkdirSync(targetDir, { recursive: true });
 

@@ -1,7 +1,7 @@
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 #[napi(object)]
 pub struct ValidationResult {
@@ -122,6 +122,166 @@ pub fn init_project_knowledge(root: String, project_path: String) -> Result<Stri
     Ok(base_path.to_string_lossy().to_string())
 }
 
+fn read_file(path: &Path) -> Result<String> {
+    fs::read_to_string(path)
+        .map_err(|err| Error::from_reason(format!("failed to read {}: {err}", path.display())))
+}
+
+fn write_file(path: &Path, content: &str) -> Result<()> {
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|err| Error::from_reason(format!("failed to create {}: {err}", parent.display())))?;
+    }
+    fs::write(path, content)
+        .map_err(|err| Error::from_reason(format!("failed to write {}: {err}", path.display())))
+}
+
+fn json_string_field(content: &str, field: &str) -> Option<String> {
+    let marker = format!("\"{field}\"");
+    let field_start = content.find(&marker)?;
+    let after_field = &content[field_start + marker.len()..];
+    let colon = after_field.find(':')?;
+    let after_colon = after_field[colon + 1..].trim_start();
+    let after_quote = after_colon.strip_prefix('"')?;
+    let end_quote = after_quote.find('"')?;
+    Some(after_quote[..end_quote].to_string())
+}
+
+fn replace_json_string_field(content: String, field: &str, value: &str) -> String {
+    let marker = format!("\"{field}\"");
+    let Some(field_start) = content.find(&marker) else {
+        return content;
+    };
+    let after_field_start = field_start + marker.len();
+    let Some(colon_relative) = content[after_field_start..].find(':') else {
+        return content;
+    };
+    let value_search_start = after_field_start + colon_relative + 1;
+    let Some(open_quote_relative) = content[value_search_start..].find('"') else {
+        return content;
+    };
+    let value_start = value_search_start + open_quote_relative + 1;
+    let Some(close_quote_relative) = content[value_start..].find('"') else {
+        return content;
+    };
+    let value_end = value_start + close_quote_relative;
+
+    format!(
+        "{}{}{}",
+        &content[..value_start],
+        json_escape(value),
+        &content[value_end..]
+    )
+}
+
+#[napi]
+pub fn sync_plugin_manifests(root: String, target_root: String) -> Result<String> {
+    let root_path = Path::new(&root);
+    let target_path = Path::new(&target_root);
+    let package_json = read_file(&root_path.join("package.json"))?;
+    let version = json_string_field(&package_json, "version").unwrap_or_else(|| "0.0.0".to_string());
+    let description = json_string_field(&package_json, "description").unwrap_or_default();
+
+    let claude = replace_json_string_field(
+        replace_json_string_field(
+            read_file(&root_path.join(".claude-plugin/plugin.json"))?,
+            "description",
+            &description,
+        ),
+        "version",
+        &version,
+    );
+    let cursor = replace_json_string_field(
+        replace_json_string_field(
+            read_file(&root_path.join(".cursor-plugin/plugin.json"))?,
+            "description",
+            &description,
+        ),
+        "version",
+        &version,
+    );
+    let marketplace = replace_json_string_field(
+        replace_json_string_field(
+            read_file(&root_path.join(".claude-plugin/marketplace.json"))?,
+            "description",
+            &description,
+        ),
+        "version",
+        &version,
+    );
+
+    write_file(&target_path.join(".claude-plugin/plugin.json"), &claude)?;
+    write_file(&target_path.join(".cursor-plugin/plugin.json"), &cursor)?;
+    write_file(&target_path.join(".claude-plugin/marketplace.json"), &marketplace)?;
+
+    Ok(target_path.to_string_lossy().to_string())
+}
+
+fn frontmatter_string(content: &str, key: &str) -> Option<String> {
+    content.lines().find_map(|line| {
+        let prefix = format!("{key}:");
+        line.strip_prefix(&prefix)
+            .map(|value| value.trim().trim_matches('"').to_string())
+    })
+}
+
+fn alias_target_dir(tool: &str, target_root: &Path) -> Result<PathBuf> {
+    match tool {
+        "claude-code" => Ok(target_root.join(".claude/commands")),
+        "cursor" => Ok(target_root.join(".cursor/commands")),
+        _ => Err(Error::from_reason(format!("unsupported alias tool: {tool}"))),
+    }
+}
+
+fn alias_content(tool: &str, trigger: &str, skill_name: &str) -> String {
+    if tool == "claude-code" {
+        format!(
+            "# {trigger}\n\nUse the `/{skill_name}` skill with the following input:\n\n$ARGUMENTS\n"
+        )
+    } else {
+        format!(
+            "# {trigger}\n\nUse the `{skill_name}` skill/rule with the following input:\n\n$ARGUMENTS\n"
+        )
+    }
+}
+
+#[napi]
+pub fn generate_aliases(root: String, target_root: String, tool: String) -> Result<u32> {
+    let root_path = Path::new(&root);
+    let target_dir = alias_target_dir(&tool, Path::new(&target_root))?;
+    fs::create_dir_all(&target_dir)
+        .map_err(|err| Error::from_reason(format!("failed to create alias directory: {err}")))?;
+
+    let mut count = 0;
+    for entry in fs::read_dir(root_path.join("skills"))
+        .map_err(|err| Error::from_reason(format!("failed to read skills directory: {err}")))?
+    {
+        let entry = entry.map_err(|err| Error::from_reason(format!("failed to read skill entry: {err}")))?;
+        if !entry
+            .file_type()
+            .map_err(|err| Error::from_reason(format!("failed to read skill entry type: {err}")))?
+            .is_dir()
+        {
+            continue;
+        }
+
+        let skill_name = entry.file_name().to_string_lossy().to_string();
+        let content = read_file(&entry.path().join("SKILL.md"))?;
+        let Some(trigger) = frontmatter_string(&content, "trigger") else {
+            continue;
+        };
+        if !trigger.starts_with('/') {
+            continue;
+        }
+
+        let alias_name = format!("{}.md", trigger.trim_start_matches('/'));
+        write_file(&target_dir.join(alias_name), &alias_content(&tool, &trigger, &skill_name))?;
+        count += 1;
+    }
+
+    Ok(count)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -163,5 +323,12 @@ mod tests {
             .join("learnings/patterns/PATTERNS.md")
             .exists());
         fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
+    fn extracts_json_string_field() {
+        let content = r#"{"version":"1.2.3","description":"hello"}"#;
+        assert_eq!(json_string_field(content, "version").as_deref(), Some("1.2.3"));
+        assert_eq!(json_string_field(content, "description").as_deref(), Some("hello"));
     }
 }

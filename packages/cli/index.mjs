@@ -71,3 +71,19 @@ export function initProjectKnowledgeNative(root, projectPath) {
   }
   return null;
 }
+
+export function syncPluginManifestsNative(root, targetRoot) {
+  const binding = loadNativeBinding();
+  if (binding?.syncPluginManifests) {
+    return binding.syncPluginManifests(root, targetRoot);
+  }
+  return null;
+}
+
+export function generateAliasesNative(root, targetRoot, tool) {
+  const binding = loadNativeBinding();
+  if (binding?.generateAliases) {
+    return binding.generateAliases(root, targetRoot, tool);
+  }
+  return null;
+}
