@@ -320,7 +320,7 @@ describe('danny-skill CLI', () => {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
     expect(packageJson.name).toBe('@dannyok/cli');
-    expect(packageJson.version).toBe('1.0.0');
+    expect(packageJson.version).toBe('1.0.1');
     expect(packageJson.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(packageJson.repository.directory).toBe('packages/cli');
     expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');
