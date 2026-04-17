@@ -323,4 +323,21 @@ describe('skill library schema', () => {
       expect(content).toContain(requiredTerm);
     }
   });
+
+  test('using-danny is the only danny onboarding skill name', () => {
+    const searchableFiles = [
+      'README.md',
+      'skills/using-danny/SKILL.md',
+    ];
+
+    for (const file of searchableFiles) {
+      const content = readFileSync(join(process.cwd(), file), 'utf8');
+      expect(content).not.toContain('/use-danny');
+      expect(content).not.toContain('$use-danny');
+      expect(content).not.toContain('skills/use-danny');
+    }
+
+    expect(existsSync(join(skillsDir, 'use-danny'))).toBe(false);
+    expect(existsSync(join(skillsDir, 'using-danny', 'SKILL.md'))).toBe(true);
+  });
 });

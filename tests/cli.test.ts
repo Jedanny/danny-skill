@@ -248,6 +248,7 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, '.claude', 'commands', 'danny-distill.md'))).toBe(true);
     expect(existsSync(join(root, '.claude', 'commands', 'danny-learn.md'))).toBe(true);
     expect(existsSync(join(root, '.claude', 'commands', 'using-danny.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude', 'commands', 'use-danny.md'))).toBe(false);
   });
 
   test('alias generate creates Cursor command wrappers for trigger aliases', () => {
@@ -259,6 +260,8 @@ describe('danny-skill CLI', () => {
     expect(existsSync(aliasPath)).toBe(true);
     expect(readFileSync(aliasPath, 'utf8')).toContain('knowledge-distill');
     expect(readFileSync(aliasPath, 'utf8')).toContain('$ARGUMENTS');
+    expect(existsSync(join(root, '.cursor', 'commands', 'using-danny.md'))).toBe(true);
+    expect(existsSync(join(root, '.cursor', 'commands', 'use-danny.md'))).toBe(false);
   });
 
   test('sync updates plugin manifests from package metadata', () => {
