@@ -327,9 +327,21 @@ describe('danny-skill CLI', () => {
     expect(packageJson.files).toContain('dist/');
     expect(packageJson.files).toContain('templates/');
     expect(packageJson.scripts['prepare:package']).toContain('--target-root . --profile full');
-    expect(packageJson.scripts.build).toContain('napi build');
+    expect(packageJson.scripts.build).toContain('napi build --platform --release');
+    expect(packageJson.scripts['build:debug']).toContain('napi build --platform');
     expect(packageJson.devDependencies['@napi-rs/cli']).toEqual(expect.any(String));
-    expect(packageJson.napi.name).toBe('danny_skill_cli');
+    expect(packageJson.napi.binaryName).toBe('danny_skill_cli');
+    expect(packageJson.napi.name).toBeUndefined();
+    expect(packageJson.napi.triples).toBeUndefined();
+    expect(packageJson.napi.targets).toEqual(
+      expect.arrayContaining([
+        'x86_64-apple-darwin',
+        'aarch64-apple-darwin',
+        'x86_64-pc-windows-msvc',
+        'x86_64-unknown-linux-gnu',
+        'aarch64-unknown-linux-gnu',
+      ]),
+    );
     expect(cargoToml).toContain('crate-type = ["cdylib"]');
     expect(cargoToml).toContain('napi');
     expect(cargoToml).toContain('napi-derive');
