@@ -35,6 +35,10 @@ export function nativeBindingCandidates() {
 }
 
 export function loadNativeBinding() {
+  if (process.env.DANNY_SKILL_DISABLE_NATIVE === '1') {
+    return null;
+  }
+
   for (const candidate of nativeBindingCandidates()) {
     try {
       return require(candidate);
@@ -51,7 +55,17 @@ export function loadNativeBinding() {
 export function validateSkillsNative(root) {
   const binding = loadNativeBinding();
   if (binding?.validateSkills) {
-    return binding.validateSkills(root);
+    const result = binding.validateSkills(root);
+    if (!result || !Array.isArray(result.errorsByCategory)) {
+      return result;
+    }
+
+    return {
+      ...result,
+      errorsByCategory: Object.fromEntries(
+        result.errorsByCategory.map((group) => [group.category, group.errors]),
+      ),
+    };
   }
   return null;
 }

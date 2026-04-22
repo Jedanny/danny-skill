@@ -1,0 +1,73 @@
+version: 1
+
+runtime:
+  kind: "workflow"
+  profile_behavior:
+    minimal: "Use only SKILL.md plus user-provided brand and scene clues"
+    standard: "Use lightweight guides and assets, but not references/designs"
+    full: "Use full brand references plus lightweight guides and assets"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+      - "references/style-selection-guide.md"
+      - "references/scene-templates.md"
+      - "references/critique-guide.md"
+      - "assets/preview.html"
+      - "assets/output-checklist.md"
+      - "assets/test-prompts.json"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "references/style-selection-guide.md"
+    - "references/scene-templates.md"
+    - "references/critique-guide.md"
+    - "assets/output-checklist.md"
+    - "assets/test-prompts.json"
+  json_files:
+    - "assets/test-prompts.json"
+  markdown_contracts:
+    - path: "references/style-selection-guide.md"
+      must_contain:
+        - "## developer credibility"
+        - "## consumer warmth"
+        - "## premium minimalism"
+        - "## playful creativity"
+        - "## enterprise trust"
+    - path: "references/scene-templates.md"
+      must_contain:
+        - "## landing page"
+        - "## product page"
+        - "## dashboard"
+        - "## mobile app screen"
+        - "## presentation / one-pager"
+    - path: "references/critique-guide.md"
+      must_contain:
+        - "## 风格一致性"
+        - "## 视觉层级"
+        - "## 信息密度"
+        - "## 组件细节"
+        - "## 品牌辨识度"
+        - "## Verdict"
+
+docs:
+  summary: "UI 风格选择、场景模板、评审指引与配套 prompt 套件"
+  handles: "生成 UI/网站设计、匹配品牌风格、选择视觉系统"
+  not_for: "非视觉任务、后端逻辑、没有 UI 输出需求的纯文档任务"
+  artifacts:
+    - "references/designs/"
+    - "references/style-selection-guide.md"
+    - "references/scene-templates.md"
+    - "references/critique-guide.md"
+    - "assets/output-checklist.md"
+    - "assets/test-prompts.json"

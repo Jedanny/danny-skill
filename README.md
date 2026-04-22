@@ -88,15 +88,18 @@ pnpm cli alias generate --tool claude-code
 
 ## 当前技能与触发方式
 
+<!-- GENERATED:SKILL_TABLE:START -->
 | Skill | Claude Code standalone | Claude Code plugin | Codex | Project alias | Description |
 | --- | --- | --- | --- | --- | --- |
-| `inspiration-box` | `/inspiration-box` | `/danny-skill:inspiration-box` | `$inspiration-box` | `/danny-idea` | 灵感收集与管理 |
-| `knowledge-distill` | `/knowledge-distill` | `/danny-skill:knowledge-distill` | `$knowledge-distill` | `/danny-distill` | 团队知识蒸馏 |
-| `self-improvement` | `/self-improvement` | `/danny-skill:self-improvement` | `$self-improvement` | `/danny-learn` | 错误、反馈和经验记录 |
-| `design-style` | `/design-style` | `/danny-skill:design-style` | `$design-style` | 自动触发 | 参考 58 套网站设计系统生成 UI 风格 |
-| `autoresearch-loop` | `/autoresearch-loop` | `/danny-skill:autoresearch-loop` | `$autoresearch-loop` | 自动触发 | 用 eval 驱动的实验循环优化 skill、prompt 和 workflow |
-| `research-to-implementation` | `/research-to-implementation` | `/danny-skill:research-to-implementation` | `$research-to-implementation` | 自动触发 | 从论文/开源方案研究到业务适配和编码交接 |
-| `coding-guardrails` | `/coding-guardrails` | `/danny-skill:coding-guardrails` | `$coding-guardrails` | 自动触发 | 编码、修复、重构、评审时的简洁/验证/最小变更护栏 |
+| `using-danny` | /using-danny | /danny-skill:using-danny | $using-danny | /using-danny | danny-skill 入口、安装、选型和知识库映射 |
+| `inspiration-box` | /inspiration-box | /danny-skill:inspiration-box | $inspiration-box | /danny-idea | 灵感收集与管理 |
+| `knowledge-distill` | /knowledge-distill | /danny-skill:knowledge-distill | $knowledge-distill | /danny-distill | 团队知识蒸馏 |
+| `self-improvement` | /self-improvement | /danny-skill:self-improvement | $self-improvement | /danny-learn | 错误、反馈和经验记录 |
+| `design-style` | /design-style | /danny-skill:design-style | $design-style | 自动触发 | UI 风格选择、场景模板、评审指引与配套 prompt 套件 |
+| `autoresearch-loop` | /autoresearch-loop | /danny-skill:autoresearch-loop | $autoresearch-loop | 自动触发 | 用 eval 驱动的实验循环优化 skill、prompt 和 workflow |
+| `research-to-implementation` | /research-to-implementation | /danny-skill:research-to-implementation | $research-to-implementation | 自动触发 | 从论文/开源方案研究到业务适配和编码交接 |
+| `coding-guardrails` | /coding-guardrails | /danny-skill:coding-guardrails | $coding-guardrails | 自动触发 | 编码、修复、重构、评审时的简洁/验证/最小变更护栏 |
+<!-- GENERATED:SKILL_TABLE:END -->
 
 说明：
 
@@ -135,45 +138,50 @@ inspiration-box
 
 ## 技能能力边界
 
+<!-- GENERATED:SKILL_BOUNDARY_TABLE:START -->
 | Skill | 适合处理 | 不适合处理 | 主要产物 |
 | --- | --- | --- | --- |
-| [`inspiration-box`](skills/inspiration-box/SKILL.md) | 捕获产品点子、技术想法、流程改进和探索性灵感 | 已经需要严谨验证、代码实现或团队决策的事项 | `.danny-skill/knowledge-base/inbox/inspiration/` 和 `.danny-skill/knowledge-base/ideas/` 下的灵感与想法记录 |
-| [`knowledge-distill`](skills/knowledge-distill/SKILL.md) | 从讨论、决策、经验和 AI 交互中提炼可复用知识 | 原始随手记录、未经验证的想法、临时日志直接归档 | `.danny-skill/knowledge-base/distilled/` 下的概念、最佳实践、决策和教训 |
-| [`self-improvement`](skills/self-improvement/SKILL.md) | 记录错误、用户纠正、成功模式和重复问题 | 普通知识整理、产品创意收集或没有具体事件的泛泛总结 | `.danny-skill/knowledge-base/learnings/` 下的错误、纠正、成功和模式记录 |
-| [`design-style`](skills/design-style/SKILL.md) | 生成 UI/网站设计、匹配品牌风格、选择视觉系统 | 非视觉任务、后端逻辑、没有 UI 输出需求的纯文档任务 | 基于 `references/designs/` 设计令牌和 `assets/preview.html` 的风格选择或 UI 生成指导 |
-| [`autoresearch-loop`](skills/autoresearch-loop/SKILL.md) | 用 baseline、eval、单点 mutation 和 keep-or-revert 优化 skill、prompt 或 workflow | 没有稳定目标文件、没有可测 eval、只想做开放式头脑风暴的任务 | `.danny-skill/knowledge-base/experiments/autoresearch/` 下的实验结果和 changelog |
-| [`research-to-implementation`](skills/research-to-implementation/SKILL.md) | 将论文、技术报告、算法或开源项目转成业务适配和编码交接方案 | 只做论文摘要、只看 GitHub star、没有业务问题或验证指标的技术调研 | `.danny-skill/knowledge-base/research/YYYY-MM-DD-topic/` 下的研究矩阵、开源评估、业务适配和实施提案 |
-| [`coding-guardrails`](skills/coding-guardrails/SKILL.md) | 编码、修复、重构和评审时约束最小变更、验证和避免过度设计 | 替代具体实现技能、替代测试、替代需求澄清 | 实施前后的检查清单、风险约束和验证要求 |
+| [`using-danny`](skills/using-danny/SKILL.md) | 开始使用 danny-skill、选择 skill、理解安装/触发/知识库映射 | 代替具体业务 skill 执行任务 | skill 选择建议、安装命令、scope/知识库映射 |
+| [`inspiration-box`](skills/inspiration-box/SKILL.md) | 捕获产品点子、技术想法、流程改进和探索性灵感 | 已经需要严谨验证、代码实现或团队决策的事项 | .danny/knowledge-base/inbox/inspiration/、.danny/knowledge-base/ideas/、灵感与想法记录 |
+| [`knowledge-distill`](skills/knowledge-distill/SKILL.md) | 从讨论、决策、经验和 AI 交互中提炼可复用知识 | 原始随手记录、未经验证的想法、临时日志直接归档 | .danny/knowledge-base/distilled/、概念、最佳实践、决策、教训 |
+| [`self-improvement`](skills/self-improvement/SKILL.md) | 记录错误、用户纠正、成功模式和重复问题 | 普通知识整理、产品创意收集或没有具体事件的泛泛总结 | .danny/knowledge-base/learnings/、错误、纠正、成功、模式记录 |
+| [`design-style`](skills/design-style/SKILL.md) | 生成 UI/网站设计、匹配品牌风格、选择视觉系统 | 非视觉任务、后端逻辑、没有 UI 输出需求的纯文档任务 | references/designs/、references/style-selection-guide.md、references/scene-templates.md、references/critique-guide.md、assets/output-checklist.md、assets/test-prompts.json |
+| [`autoresearch-loop`](skills/autoresearch-loop/SKILL.md) | 用 baseline、eval、单点 mutation 和 keep-or-revert 优化 skill、prompt 或 workflow | 没有稳定目标文件、没有可测 eval、只想做开放式头脑风暴的任务 | .danny/knowledge-base/experiments/autoresearch/、实验结果、changelog |
+| [`research-to-implementation`](skills/research-to-implementation/SKILL.md) | 将论文、技术报告、算法或开源项目转成业务适配和编码交接方案 | 只做论文摘要、只看 GitHub star、没有业务问题或验证指标的技术调研 | .danny/knowledge-base/research/YYYY-MM-DD-topic/、研究矩阵、开源评估、业务适配、实施提案 |
+| [`coding-guardrails`](skills/coding-guardrails/SKILL.md) | 编码、修复、重构和评审时约束最小变更、验证和避免过度设计 | 替代具体实现技能、替代测试、替代需求澄清 | 实施前后的检查清单、风险约束、验证要求 |
+<!-- GENERATED:SKILL_BOUNDARY_TABLE:END -->
 
 知识资产统一遵守 [`docs/knowledge-base/storage-model.md`](docs/knowledge-base/storage-model.md)：`capture -> workspace -> evidence -> distilled`。临时任务状态和本地日志不直接作为知识库内容提交。
 
 ## 知识存储 Scope
 
-同一个 skill 同时支持项目级和全局级知识，不拆成两套 skill。触发词表达动作，scope 表达存放位置。
+同一个 skill 同时支持项目级和系统级/全局级知识，不拆成两套 skill。触发词表达动作，scope 表达存放位置。
 
-为方便单独分发 skill，`SKILL.md` 内部使用 `<project-knowledge-base>` 和 `<global-knowledge-base>` 占位符，不直接依赖本仓库的 `docs/` 或 `.danny-skill/` 路径。下面是本仓库推荐的默认映射。
+为方便单独分发 skill，`SKILL.md` 内部使用 `<project-knowledge-base>` 和 `<global-knowledge-base>` 占位符，不直接依赖本仓库的 `docs/` 或 `.danny/` 路径。下面是本仓库推荐的默认映射。
+
+`.danny` 是 danny-skill 的统一隐藏目录，可以像 `.omx` 一样集中管理项目级配置和知识资产；不要复用 `.omx` 存放 skill 知识，`.omx` 只用于 OMX 的运行状态、计划和日志。系统级/全局级知识使用用户级 `~/.danny/knowledge-base/`，避免写入具体仓库。
 
 默认写入当前项目。下面使用项目别名表达动作；在 Claude Code / Codex 原生环境中，用上表对应的 skill 调用方式并带上同样参数即可。
 
 ```text
-/danny-idea ...      -> .danny-skill/knowledge-base/...
-/danny-distill ...   -> .danny-skill/knowledge-base/...
-/danny-learn ...     -> .danny-skill/knowledge-base/...
+/danny-idea ...      -> .danny/knowledge-base/...
+/danny-distill ...   -> .danny/knowledge-base/...
+/danny-learn ...     -> .danny/knowledge-base/...
 ```
 
-显式写入全局或双写：
+显式写入系统级/全局级或双写：
 
 ```text
-/danny-idea --global ...
-/danny-distill --global ...
-/danny-learn --global ...
+/danny-idea --system ...
+/danny-distill --system ...
+/danny-learn --system ...
 /danny-distill --both ...
 ```
 
 | Scope | 存储位置 | 适用内容 |
 | --- | --- | --- |
-| `--project` | `.danny-skill/knowledge-base/` | 和本仓库代码、目录、安装脚本、skill 组成、项目决策有关的内容。默认值。 |
-| `--global` | `~/.danny-skill/knowledge-base/` | 脱离当前仓库也成立、可复用于其他项目或团队工作流的内容。 |
+| `--project` | `.danny/knowledge-base/` | 和本仓库代码、目录、安装脚本、skill 组成、项目决策有关的内容。默认值。 |
+| `--global` / `--system` | `~/.danny/knowledge-base/` | 脱离当前仓库也成立、可复用于其他项目或团队工作流的系统级知识。 |
 | `--both` | 两边都写 | 项目里保留本仓库决策或事实，全局里存去项目化后的通用原则。 |
 
 自然语言也可以触发 scope 判断：
@@ -181,7 +189,7 @@ inspiration-box
 | 用户说法 | Scope |
 | --- | --- |
 | “记录到当前项目”、“这个项目里记一下”、“本仓库适用” | `--project` |
-| “固化到全局”、“以后所有项目都用”、“个人知识库记一下”、“团队通用方法论” | `--global` |
+| “固化到系统级/全局”、“以后所有项目都用”、“个人知识库记一下”、“团队通用方法论” | `--system` / `--global` |
 | “项目留一份，全局也沉淀”、“固化成方法论但保留项目记录” | `--both` |
 
 全局知识必须先去项目化：不要包含本地私有路径、一次性任务状态、仓库专有实现细节或本地运行日志。
@@ -192,10 +200,11 @@ inspiration-box
 
 | Skill | 参考链接 |
 | --- | --- |
-| `design-style` | [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) |
+| `design-style` | [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md)；[alchaincyf/huashu-skills/tree/master/huashu-design](https://github.com/alchaincyf/huashu-skills/tree/master/huashu-design) 作为工作流演进与设计流程打包方式的补充参考 |
 | `autoresearch-loop` | [karpathy/autoresearch](https://github.com/karpathy/autoresearch), [zning1994/openclaw-autoresearch](https://github.com/zning1994/openclaw-autoresearch), [花叔方法论文章](https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w) |
 | `research-to-implementation` | [花叔方法论文章](https://mp.weixin.qq.com/s/4ICQJGwa2MD616_oFmJb4w) |
 | `coding-guardrails` | [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills) |
+| `using-danny` | 项目自研入口工作流，见 [`skills/using-danny/SKILL.md`](skills/using-danny/SKILL.md) |
 | `inspiration-box` | 项目自研工作流，见 [`skills/inspiration-box/SKILL.md`](skills/inspiration-box/SKILL.md) |
 | `knowledge-distill` | 项目自研工作流，见 [`skills/knowledge-distill/SKILL.md`](skills/knowledge-distill/SKILL.md) |
 | `self-improvement` | 项目自研工作流，见 [`skills/self-improvement/SKILL.md`](skills/self-improvement/SKILL.md) |
@@ -213,7 +222,7 @@ danny-skill/
 ├── .cursor-plugin/     # Cursor plugin metadata
 ├── .opencode/          # OpenCode 安装说明
 ├── docs/               # 设计、计划和知识存储模型说明
-├── .danny-skill/       # 项目级 skill 知识资产
+├── .danny/            # 项目级 skill 知识资产
 ├── tests/              # Jest 结构和安装测试
 ├── tools/              # 预留轻量工具脚本
 └── packages/cli/       # 预留 CLI 包

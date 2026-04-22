@@ -1,6 +1,6 @@
 {
   "name": "@dannyok/cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Rust N-API powered CLI for danny-skill",
   "type": "module",
   "repository": {
@@ -16,6 +16,7 @@
     "bin/",
     "index.mjs",
     "danny-skill.mjs",
+    "manifest.mjs",
     "dist/",
     "*.node",
     "Cargo.toml",
@@ -26,16 +27,20 @@
   ],
   "scripts": {
     "prepare:package": "node danny-skill.mjs package --target-root . --profile full",
-    "build": "napi build --release",
-    "build:debug": "napi build",
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
     "artifacts": "napi artifacts",
     "prepublishOnly": "napi prepublish -t npm"
   },
   "napi": {
-    "name": "danny_skill_cli",
-    "triples": {
-      "defaults": true
-    }
+    "binaryName": "danny_skill_cli",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-pc-windows-msvc",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu"
+    ]
   },
   "devDependencies": {
     "@napi-rs/cli": "^3.0.0"

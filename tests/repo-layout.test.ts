@@ -1,4 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
+import { execFileSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -31,26 +32,26 @@ describe('repository layout', () => {
     for (const requiredPath of [
       'docs/knowledge-base/README.md',
       'docs/knowledge-base/storage-model.md',
-      '.danny-skill/knowledge-base/README.md',
-      '.danny-skill/knowledge-base/inbox/inspiration',
-      '.danny-skill/knowledge-base/ideas',
-      '.danny-skill/knowledge-base/learnings/errors',
-      '.danny-skill/knowledge-base/learnings/corrections',
-      '.danny-skill/knowledge-base/learnings/successes',
-      '.danny-skill/knowledge-base/learnings/patterns/PATTERNS.md',
-      '.danny-skill/knowledge-base/distilled/concepts',
-      '.danny-skill/knowledge-base/distilled/best-practices',
-      '.danny-skill/knowledge-base/distilled/decisions',
-      '.danny-skill/knowledge-base/distilled/lessons',
-      '.danny-skill/knowledge-base/experiments/autoresearch',
-      '.danny-skill/knowledge-base/research',
+      '.danny/knowledge-base/README.md',
+      '.danny/knowledge-base/inbox/inspiration',
+      '.danny/knowledge-base/ideas',
+      '.danny/knowledge-base/learnings/errors',
+      '.danny/knowledge-base/learnings/corrections',
+      '.danny/knowledge-base/learnings/successes',
+      '.danny/knowledge-base/learnings/patterns/PATTERNS.md',
+      '.danny/knowledge-base/distilled/concepts',
+      '.danny/knowledge-base/distilled/best-practices',
+      '.danny/knowledge-base/distilled/decisions',
+      '.danny/knowledge-base/distilled/lessons',
+      '.danny/knowledge-base/experiments/autoresearch',
+      '.danny/knowledge-base/research',
     ]) {
       expect(existsSync(join(process.cwd(), requiredPath))).toBe(true);
     }
 
     const storageModel = readFileSync(join(process.cwd(), 'docs/knowledge-base/storage-model.md'), 'utf8');
     expect(storageModel).toContain('capture -> workspace -> evidence -> distilled');
-    expect(storageModel).toContain('.danny-skill/knowledge-base/');
+    expect(storageModel).toContain('.danny/knowledge-base/');
     expect(storageModel).toContain('Temporary task state');
     expect(storageModel).not.toContain('.omx');
   });
@@ -71,5 +72,19 @@ describe('repository layout', () => {
     expect(cliReadme).toContain('Rust N-API Layout');
     expect(cliReadme).toContain('validate_skills');
     expect(cliReadme).toContain('JavaScript implementation remains the compatibility fallback');
+  });
+
+  test('generated README skill table is up to date', () => {
+    const output = execFileSync(
+      process.execPath,
+      [join(process.cwd(), 'tools', 'generate-readme-skill-table.mjs'), '--check'],
+      {
+        cwd: process.cwd(),
+        encoding: 'utf8',
+        stdio: 'pipe',
+      },
+    );
+
+    expect(output).toContain('README skill table is up to date');
   });
 });

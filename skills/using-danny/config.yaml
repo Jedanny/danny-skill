@@ -1,0 +1,44 @@
+version: 1
+
+runtime:
+  kind: "router"
+  profile_behavior:
+    minimal: "Use SKILL.md and config-driven routing/onboarding guidance only"
+    standard: "Use the same routing and onboarding workflow as minimal"
+    full: "Use the complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "config.yaml"
+  markdown_contracts:
+    - path: "SKILL.md"
+      must_contain:
+        - "## 快速入口"
+        - "## 选择哪个 skill"
+        - "## 安装和激活"
+        - "## 知识库占位符"
+        - "## 使用原则"
+        - "## 常见组合"
+
+docs:
+  summary: "danny-skill 入口、安装、选型和知识库映射"
+  handles: "开始使用 danny-skill、选择 skill、理解安装/触发/知识库映射"
+  not_for: "代替具体业务 skill 执行任务"
+  artifacts:
+    - "skill 选择建议"
+    - "安装命令"
+    - "scope/知识库映射"
