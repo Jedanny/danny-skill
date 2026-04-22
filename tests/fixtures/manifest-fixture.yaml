@@ -1,0 +1,41 @@
+version: 1
+
+runtime:
+  kind: "workflow"
+  profile_behavior:
+    minimal: "Use SKILL.md only"
+    standard: "Use lightweight guides/assets"
+    full: "Use complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+      - "references/example.md"
+      - "assets/example.json"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "references/example.md"
+  json_files:
+    - "assets/example.json"
+  markdown_contracts:
+    - path: "references/example.md"
+      must_contain:
+        - "## Section A"
+        - "## Section B"
+
+docs:
+  summary: "Fixture summary"
+  artifacts:
+    - "references/example.md"
+    - "assets/example.json"

@@ -81,17 +81,17 @@ danny-skill install --tool codex --scope project --profile full --mode link
 <global-knowledge-base>
 ```
 
-本仓库推荐映射：
+宿主项目负责把占位符映射到实际路径。初始化时用实际项目级和系统级/全局级知识目录替换下面两个参数：
 
 ```text
-<project-knowledge-base> -> <project-knowledge-base>
-<global-knowledge-base>  -> ~/<project-knowledge-base>
+<project-knowledge-base> -> 项目级知识目录
+<global-knowledge-base>  -> 系统级/全局级知识目录
 ```
 
 初始化项目知识库：
 
 ```bash
-danny-skill config paths set --project <project-knowledge-base> --global ~/<project-knowledge-base>
+danny-skill config paths set --project <project-knowledge-base> --system <global-knowledge-base>
 danny-skill knowledge init --project
 ```
 

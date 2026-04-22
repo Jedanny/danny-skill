@@ -11,11 +11,15 @@ import {
   validateSkillsNative,
   writeConfigPathsNative,
 } from './index.mjs';
+import { parsePackagingIncludeList as parsePackagingIncludeListShared, parseValidationSpec as parseValidationSpecShared } from './manifest.mjs';
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
 const workspaceRoot = resolve(cliDir, '..', '..');
 const packageDistRoot = join(cliDir, 'dist');
 const repoRoot = existsSync(join(packageDistRoot, 'skills')) ? packageDistRoot : workspaceRoot;
+const configDirectory = '.danny';
+const legacyConfigDirectory = '.danny-skill';
+const defaultProjectKnowledgePath = '.danny/knowledge-base';
 
 function fail(message) {
   console.error(message);
@@ -45,12 +49,12 @@ Options:
   --mode copy|link              minimal/standard require copy; full supports copy or link
   --target-root <path>          Override HOME/user root or project root
 `,
-    config: `Usage: danny-skill config paths set --project <path> --global <path> [--target-root <path>]`,
+    config: `Usage: danny-skill config paths set --project <path> (--global <path>|--system <path>) [--target-root <path>]`,
     knowledge: `Usage: danny-skill knowledge init --project [--target-root <path>]`,
     alias: `Usage: danny-skill alias generate --tool <claude-code|cursor> [--target-root <path>]`,
     package: `Usage: danny-skill package [--profile minimal|standard|full] [--target-root <path>]`,
     sync: `Usage: danny-skill sync [--target-root <path>]`,
-    validate: `Usage: danny-skill validate`,
+    validate: `Usage: danny-skill validate [--json]`,
   };
 
   console.log(help[command] ?? help['']);
@@ -116,11 +120,105 @@ function skillMetadata(skillName) {
   return parseFrontmatter(readFileSync(skillPath, 'utf8'));
 }
 
+function skillPackagingIncludeList(skillName, profile) {
+  const configPath = join(repoRoot, 'skills', skillName, 'config.yaml');
+  if (!existsSync(configPath)) {
+    return null;
+  }
+
+  return parsePackagingIncludeListShared(readFileSync(configPath, 'utf8'), profile);
+}
+
+function pushValidationFailure(failures, skillName, category, message) {
+  failures.push(`${skillName}: [${category}] ${message}`);
+}
+
+function groupValidationErrors(errors) {
+  const grouped = {};
+
+  for (const error of errors) {
+    const match = error.match(/^\s*[^:]+:\s+\[([^\]]+)\]\s+/);
+    const category = match?.[1] ?? 'unknown';
+    if (!grouped[category]) {
+      grouped[category] = [];
+    }
+    grouped[category].push(error);
+  }
+
+  return grouped;
+}
+
+function validationJsonPayload(skillCount, errors) {
+  return {
+    ok: errors.length === 0,
+    skillCount,
+    errorCount: errors.length,
+    errors,
+    errorsByCategory: groupValidationErrors(errors),
+  };
+}
+
+function copyManifestSkill(skillName, targetDir, profile) {
+  const sourceDir = join(repoRoot, 'skills', skillName);
+  const includeList = skillPackagingIncludeList(skillName, profile);
+  if (!includeList) {
+    return false;
+  }
+
+  mkdirSync(targetDir, { recursive: true });
+
+  for (const includePath of includeList) {
+    if (includePath === '**') {
+      cpSync(sourceDir, targetDir, { recursive: true });
+      continue;
+    }
+
+    const normalizedPath = includePath.replace(/\/$/, '');
+    const sourcePath = join(sourceDir, normalizedPath);
+    const targetPath = join(targetDir, normalizedPath);
+    if (!existsSync(sourcePath)) {
+      continue;
+    }
+
+    mkdirSync(dirname(targetPath), { recursive: true });
+    cpSync(sourcePath, targetPath, { recursive: true });
+  }
+
+  return true;
+}
+
 function commandValidate() {
+  const { options } = parseOptions(process.argv.slice(2));
+  const jsonOutput = options.json === true;
+  const packagedValidation = repoRoot === packageDistRoot;
   const nativeResult = validateSkillsNative(repoRoot);
   if (nativeResult) {
     if (!nativeResult.ok) {
+      if (jsonOutput) {
+        console.error(`${JSON.stringify(
+          {
+            ok: false,
+            skillCount: nativeResult.skillCount,
+            errorCount: nativeResult.errorCount ?? nativeResult.errors.length,
+            errors: nativeResult.errors,
+            errorsByCategory: nativeResult.errorsByCategory ?? groupValidationErrors(nativeResult.errors),
+          },
+          null,
+          2,
+        )}\n`);
+        process.exit(1);
+      }
       fail(`invalid skills:\n${nativeResult.errors.join('\n')}`);
+    }
+    if (jsonOutput) {
+      console.log(JSON.stringify({
+        ok: true,
+        skillCount: nativeResult.skillCount,
+        errorCount: nativeResult.errorCount ?? 0,
+        errors: [],
+        errorsByCategory: nativeResult.errorsByCategory ?? {},
+      }, null, 2));
+      return;
     }
     console.log(`valid: ${nativeResult.skillCount} skills`);
     return;
@@ -130,23 +228,87 @@ function commandValidate() {
   const failures = [];
 
   for (const skillName of skillNames) {
-    const skillPath = join(repoRoot, 'skills', skillName, 'SKILL.md');
+    const skillDir = join(repoRoot, 'skills', skillName);
+    const skillPath = join(skillDir, 'SKILL.md');
     if (!existsSync(skillPath)) {
-      failures.push(`${skillName}: missing SKILL.md`);
+      pushValidationFailure(failures, skillName, 'structure', 'missing SKILL.md');
       continue;
     }
 
     const metadata = parseFrontmatter(readFileSync(skillPath, 'utf8'));
     if (metadata.name !== skillName) {
-      failures.push(`${skillName}: frontmatter name must match directory`);
+      pushValidationFailure(failures, skillName, 'frontmatter', 'frontmatter name must match directory');
     }
     if (!metadata.description?.startsWith('Use when')) {
-      failures.push(`${skillName}: description must start with "Use when"`);
+      pushValidationFailure(failures, skillName, 'frontmatter', 'description must start with "Use when"');
+    }
+
+    const configPath = join(skillDir, 'config.yaml');
+    if (!existsSync(configPath)) {
+      continue;
+    }
+
+    const validation = parseValidationSpecShared(readFileSync(configPath, 'utf8'));
+    for (const relativePath of validation.requiredFiles) {
+      if (!existsSync(join(skillDir, relativePath)) && !packagedValidation) {
+        pushValidationFailure(failures, skillName, 'required_files', `missing required file ${relativePath}`);
+      }
+    }
+
+    for (const relativePath of validation.jsonFiles) {
+      const jsonPath = join(skillDir, relativePath);
+      if (!existsSync(jsonPath)) {
+        if (!packagedValidation) {
+          pushValidationFailure(failures, skillName, 'json_files', `missing json file ${relativePath}`);
+        }
+        continue;
+      }
+
+      try {
+        JSON.parse(readFileSync(jsonPath, 'utf8'));
+      } catch {
+        pushValidationFailure(failures, skillName, 'json_files', `invalid json file ${relativePath}`);
+      }
+    }
+
+    for (const contract of validation.markdownContracts) {
+      const markdownPath = join(skillDir, contract.path);
+      if (!existsSync(markdownPath)) {
+        if (!packagedValidation) {
+          pushValidationFailure(failures, skillName, 'markdown_contracts', `missing markdown contract file ${contract.path}`);
+        }
+        continue;
+      }
+
+      const markdown = readFileSync(markdownPath, 'utf8');
+      for (const needle of contract.mustContain) {
+        if (!markdown.includes(needle)) {
+          pushValidationFailure(
+            failures,
+            skillName,
+            'markdown_contracts',
+            `markdown contract ${contract.path} missing "${needle}"`,
+          );
+        }
+      }
     }
   }
 
   if (failures.length > 0) {
+    if (jsonOutput) {
+      console.error(`${JSON.stringify(
+        validationJsonPayload(skillNames.length, failures),
+        null,
+        2,
+      )}\n`);
+      process.exit(1);
+    }
     fail(`invalid skills:\n${failures.join('\n')}`);
+  }
+
+  if (jsonOutput) {
+    console.log(JSON.stringify(validationJsonPayload(skillNames.length, []), null, 2));
+    return;
   }
 
   console.log(`valid: ${skillNames.length} skills`);
@@ -176,39 +338,51 @@ function rootPackageMetadata() {
 function commandConfig(args) {
   const { options, positionals } = parseOptions(args);
   if (positionals.join(' ') !== 'paths set') {
-    fail('usage: danny-skill config paths set --project <path> --global <path> [--target-root <path>]');
+    fail('usage: danny-skill config paths set --project <path> (--global <path>|--system <path>) [--target-root <path>]');
   }
 
-  if (typeof options.project !== 'string' || typeof options.global !== 'string') {
-    fail('config paths set requires --project and --global');
+  const globalPath = typeof options.global === 'string' ? options.global : options.system;
+
+  if (typeof options.project !== 'string' || typeof globalPath !== 'string') {
+    fail('config paths set requires --project and --global or --system');
   }
 
   const targetRoot = resolve(String(options['target-root'] ?? process.cwd()));
-  const nativeConfigPath = writeConfigPathsNative(targetRoot, options.project, options.global);
+  const nativeConfigPath = writeConfigPathsNative(targetRoot, options.project, globalPath);
   if (nativeConfigPath) {
     console.log(`wrote ${nativeConfigPath}`);
     return;
   }
 
-  writeJson(join(targetRoot, '.danny-skill', 'config.json'), {
+  const configPath = join(targetRoot, configDirectory, 'config.json');
+  writeJson(configPath, {
     knowledge_base: {
       project: options.project,
-      global: options.global,
+      global: globalPath,
     },
   });
 
-  console.log(`wrote ${join(targetRoot, '.danny-skill', 'config.json')}`);
+  console.log(`wrote ${configPath}`);
 }
 
 function readProjectKnowledgePath(targetRoot) {
-  const configPath = join(targetRoot, '.danny-skill', 'config.json');
-  if (existsSync(configPath)) {
+  const configPaths = [
+    join(targetRoot, configDirectory, 'config.json'),
+    join(targetRoot, legacyConfigDirectory, 'config.json'),
+  ];
+
+  for (const configPath of configPaths) {
+    if (!existsSync(configPath)) {
+      continue;
+    }
+
     const config = JSON.parse(readFileSync(configPath, 'utf8'));
     if (typeof config?.knowledge_base?.project === 'string') {
       return config.knowledge_base.project;
     }
   }
-  return '.danny-skill/knowledge-base';
+
+  return defaultProjectKnowledgePath;
 }
 
 function ensureKnowledgeTree(basePath) {
@@ -281,6 +455,10 @@ function destinationFor(tool, scope, targetRoot) {
 }
 
 function copyMinimalSkill(skillName, targetDir) {
+  if (copyManifestSkill(skillName, targetDir, 'minimal')) {
+    return;
+  }
+
   const sourceDir = join(repoRoot, 'skills', skillName);
   mkdirSync(targetDir, { recursive: true });
   cpSync(join(sourceDir, 'SKILL.md'), join(targetDir, 'SKILL.md'));
@@ -292,6 +470,10 @@ function copyMinimalSkill(skillName, targetDir) {
 }
 
 function copyStandardSkill(skillName, targetDir) {
+  if (copyManifestSkill(skillName, targetDir, 'standard')) {
+    return;
+  }
+
   const sourceDir = join(repoRoot, 'skills', skillName);
   copyMinimalSkill(skillName, targetDir);
 
@@ -300,11 +482,6 @@ function copyStandardSkill(skillName, targetDir) {
     if (!existsSync(childPath)) {
       continue;
     }
-
-    if (skillName === 'design-style' && childName === 'references') {
-      continue;
-    }
-
     cpSync(childPath, join(targetDir, childName), { recursive: true });
   }
 }
@@ -320,7 +497,9 @@ function copyProfileSkill(skillName, targetDir, profile) {
     return;
   }
   if (profile === 'full') {
-    cpSync(join(repoRoot, 'skills', skillName), targetDir, { recursive: true });
+    if (!copyManifestSkill(skillName, targetDir, 'full')) {
+      cpSync(join(repoRoot, 'skills', skillName), targetDir, { recursive: true });
+    }
     return;
   }
   fail(`unsupported package profile: ${profile}`);

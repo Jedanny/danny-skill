@@ -1,0 +1,53 @@
+version: 1
+
+runtime:
+  kind: "guardrail"
+  profile_behavior:
+    minimal: "Use SKILL.md and config-driven coding constraints only"
+    standard: "Use SKILL.md, config, and reference examples"
+    full: "Use the complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+      - "references/examples.md"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "config.yaml"
+    - "references/examples.md"
+  markdown_contracts:
+    - path: "SKILL.md"
+      must_contain:
+        - "### 1. 先想清楚再编码"
+        - "### 2. 简单优先"
+        - "### 3. 外科手术式修改"
+        - "### 4. 目标驱动执行"
+        - "## 何时提问"
+        - "## 检查清单"
+    - path: "references/examples.md"
+      must_contain:
+        - "# Coding Guardrails Examples"
+        - "## Hidden assumptions"
+        - "## Over-abstraction"
+        - "## Drive-by refactor"
+        - "## Vague goal vs verifiable goal"
+
+docs:
+  summary: "编码、修复、重构、评审时的简洁/验证/最小变更护栏"
+  handles: "编码、修复、重构和评审时约束最小变更、验证和避免过度设计"
+  not_for: "替代具体实现技能、替代测试、替代需求澄清"
+  artifacts:
+    - "实施前后的检查清单"
+    - "风险约束"
+    - "验证要求"

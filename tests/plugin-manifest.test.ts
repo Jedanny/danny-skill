@@ -50,7 +50,7 @@ describe('plugin manifests', () => {
 
     expect(rootPackage.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(cliPackage.name).toBe('@dannyok/cli');
-    expect(cliPackage.version).toBe('1.0.1');
+    expect(cliPackage.version).toBe('1.1.0');
     expect(cliPackage.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(cliPackage.repository.directory).toBe('packages/cli');
   });

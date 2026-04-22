@@ -1,0 +1,47 @@
+version: 1
+
+runtime:
+  kind: "capture"
+  profile_behavior:
+    minimal: "Use SKILL.md and config-driven capture workflow only"
+    standard: "Use the same capture and workspace workflow as minimal"
+    full: "Use the complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "config.yaml"
+  markdown_contracts:
+    - path: "SKILL.md"
+      must_contain:
+        - "### 1. 灵感生命周期"
+        - "### 2. 灵感状态"
+        - "<project-knowledge-base>/"
+        - "├── inbox/inspiration/"
+        - "└── ideas/"
+        - "├── feature/"
+        - "├── tech/"
+        - "├── process/"
+        - "└── exploration/"
+
+docs:
+  summary: "灵感收集与管理"
+  handles: "捕获产品点子、技术想法、流程改进和探索性灵感"
+  not_for: "已经需要严谨验证、代码实现或团队决策的事项"
+  artifacts:
+    - ".danny/knowledge-base/inbox/inspiration/"
+    - ".danny/knowledge-base/ideas/"
+    - "灵感与想法记录"

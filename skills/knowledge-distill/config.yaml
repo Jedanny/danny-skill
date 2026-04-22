@@ -1,0 +1,49 @@
+version: 1
+
+runtime:
+  kind: "distill"
+  profile_behavior:
+    minimal: "Use SKILL.md and config-driven distillation categories only"
+    standard: "Use the same distillation workflow and storage contracts as minimal"
+    full: "Use the complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "config.yaml"
+  markdown_contracts:
+    - path: "SKILL.md"
+      must_contain:
+        - "### 1. 概念与定义 (Concepts)"
+        - "### 2. 最佳实践 (Best Practices)"
+        - "### 3. 决策记录 (Decisions)"
+        - "### 4. 教训与坑点 (Lessons Learned)"
+        - "<project-knowledge-base>/distilled/"
+        - "├── concepts/"
+        - "├── best-practices/"
+        - "├── decisions/"
+        - "└── lessons/"
+
+docs:
+  summary: "团队知识蒸馏"
+  handles: "从讨论、决策、经验和 AI 交互中提炼可复用知识"
+  not_for: "原始随手记录、未经验证的想法、临时日志直接归档"
+  artifacts:
+    - ".danny/knowledge-base/distilled/"
+    - "概念"
+    - "最佳实践"
+    - "决策"
+    - "教训"

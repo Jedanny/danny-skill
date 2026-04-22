@@ -1,3 +1,49 @@
+version: 1
+
+runtime:
+  kind: "capture"
+  profile_behavior:
+    minimal: "Use SKILL.md and config-driven learning rules only"
+    standard: "Use SKILL.md, config, and the bundled PATTERNS reference"
+    full: "Use the complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+      - "references/PATTERNS.md"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "config.yaml"
+    - "references/PATTERNS.md"
+  markdown_contracts:
+    - path: "references/PATTERNS.md"
+      must_contain:
+        - "# Pattern Index"
+        - "## Command Patterns"
+        - "## Error Patterns"
+
+docs:
+  summary: "错误、反馈和经验记录"
+  handles: "记录错误、用户纠正、成功模式和重复问题"
+  not_for: "普通知识整理、产品创意收集或没有具体事件的泛泛总结"
+  artifacts:
+    - ".danny/knowledge-base/learnings/"
+    - "错误"
+    - "纠正"
+    - "成功"
+    - "模式记录"
+
 learning:
   enabled: true
   auto_capture: false

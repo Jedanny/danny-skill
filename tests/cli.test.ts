@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { execFileSync } from 'child_process';
-import { cpSync, existsSync, mkdtempSync, readFileSync, lstatSync } from 'fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, lstatSync, mkdirSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
@@ -49,6 +49,19 @@ describe('danny-skill CLI', () => {
     expect(output).toContain('skills');
   });
 
+  test('validate supports machine-readable JSON output on success', () => {
+    const output = runCli(['validate', '--json']);
+    const result = JSON.parse(output);
+
+    expect(result).toEqual(expect.objectContaining({
+      ok: true,
+      skillCount: expect.any(Number),
+      errorCount: 0,
+      errors: [],
+      errorsByCategory: {},
+    }));
+  });
+
   test('config paths set writes project and global knowledge-base paths', () => {
     const root = tempRoot();
 
@@ -64,7 +77,7 @@ describe('danny-skill CLI', () => {
       '~/custom-knowledge',
     ]);
 
-    const configPath = join(root, '.danny-skill', 'config.json');
+    const configPath = join(root, '.danny', 'config.json');
     expect(existsSync(configPath)).toBe(true);
 
     const config = JSON.parse(readFileSync(configPath, 'utf8'));
@@ -72,15 +85,51 @@ describe('danny-skill CLI', () => {
     expect(config.knowledge_base.global).toBe('~/custom-knowledge');
   });
 
+  test('config paths set accepts --system as the system-level knowledge-base alias', () => {
+    const root = tempRoot();
+
+    runCli([
+      'config',
+      'paths',
+      'set',
+      '--target-root',
+      root,
+      '--project',
+      '.danny/knowledge-base',
+      '--system',
+      '~/.danny/knowledge-base',
+    ]);
+
+    const config = JSON.parse(readFileSync(join(root, '.danny', 'config.json'), 'utf8'));
+    expect(config.knowledge_base.project).toBe('.danny/knowledge-base');
+    expect(config.knowledge_base.global).toBe('~/.danny/knowledge-base');
+  });
+
   test('knowledge init creates project knowledge directories and patterns index', () => {
     const root = tempRoot();
 
     runCli(['knowledge', 'init', '--project', '--target-root', root]);
 
-    expect(existsSync(join(root, '.danny-skill', 'knowledge-base', 'inbox', 'inspiration'))).toBe(true);
-    expect(existsSync(join(root, '.danny-skill', 'knowledge-base', 'ideas'))).toBe(true);
-    expect(existsSync(join(root, '.danny-skill', 'knowledge-base', 'learnings', 'patterns', 'PATTERNS.md'))).toBe(true);
-    expect(readFileSync(join(root, '.danny-skill', 'knowledge-base', 'learnings', 'patterns', 'PATTERNS.md'), 'utf8')).toContain('Agent 使用入口');
+    expect(existsSync(join(root, '.danny', 'knowledge-base', 'inbox', 'inspiration'))).toBe(true);
+    expect(existsSync(join(root, '.danny', 'knowledge-base', 'ideas'))).toBe(true);
+    expect(existsSync(join(root, '.danny', 'knowledge-base', 'learnings', 'patterns', 'PATTERNS.md'))).toBe(true);
+    expect(readFileSync(join(root, '.danny', 'knowledge-base', 'learnings', 'patterns', 'PATTERNS.md'), 'utf8')).toContain('Agent 使用入口');
+  });
+
+  test('knowledge init reads legacy .danny-skill config as a migration fallback', () => {
+    const root = tempRoot();
+    const legacyConfigDir = join(root, '.danny-skill');
+    mkdirSync(legacyConfigDir, { recursive: true });
+    writeFileSync(join(legacyConfigDir, 'config.json'), JSON.stringify({
+      knowledge_base: {
+        project: '.legacy/knowledge-base',
+        global: '~/legacy-knowledge-base',
+      },
+    }));
+
+    runCli(['knowledge', 'init', '--project', '--target-root', root]);
+
+    expect(existsSync(join(root, '.legacy', 'knowledge-base', 'learnings', 'patterns', 'PATTERNS.md'))).toBe(true);
   });
 
   test('install supports minimal profile for Codex project scope', () => {
@@ -103,7 +152,43 @@ describe('danny-skill CLI', () => {
     const skillDir = join(root, '.agents', 'skills', 'design-style');
     expect(existsSync(join(skillDir, 'SKILL.md'))).toBe(true);
     expect(existsSync(join(skillDir, 'assets', 'preview.html'))).toBe(false);
+    expect(existsSync(join(skillDir, 'assets', 'test-prompts.json'))).toBe(false);
+    expect(existsSync(join(skillDir, 'references', 'scene-templates.md'))).toBe(false);
     expect(lstatSync(skillDir).isSymbolicLink()).toBe(false);
+
+    const autoresearchDir = join(root, '.agents', 'skills', 'autoresearch-loop');
+    expect(existsSync(join(autoresearchDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'assets', 'eval.example.json'))).toBe(false);
+    expect(existsSync(join(autoresearchDir, 'references', 'eval-format.md'))).toBe(false);
+
+    const researchDir = join(root, '.agents', 'skills', 'research-to-implementation');
+    expect(existsSync(join(researchDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(researchDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(researchDir, 'assets', 'research-workspace.example.md'))).toBe(false);
+    expect(existsSync(join(researchDir, 'references', 'paper-analysis-template.md'))).toBe(false);
+
+    const selfImprovementDir = join(root, '.agents', 'skills', 'self-improvement');
+    expect(existsSync(join(selfImprovementDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(selfImprovementDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(selfImprovementDir, 'references', 'PATTERNS.md'))).toBe(false);
+
+    const knowledgeDistillDir = join(root, '.agents', 'skills', 'knowledge-distill');
+    expect(existsSync(join(knowledgeDistillDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(knowledgeDistillDir, 'config.yaml'))).toBe(true);
+
+    const inspirationDir = join(root, '.agents', 'skills', 'inspiration-box');
+    expect(existsSync(join(inspirationDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(inspirationDir, 'config.yaml'))).toBe(true);
+
+    const codingGuardrailsDir = join(root, '.agents', 'skills', 'coding-guardrails');
+    expect(existsSync(join(codingGuardrailsDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(codingGuardrailsDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(codingGuardrailsDir, 'references', 'examples.md'))).toBe(false);
+
+    const usingDannyDir = join(root, '.agents', 'skills', 'using-danny');
+    expect(existsSync(join(usingDannyDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(usingDannyDir, 'config.yaml'))).toBe(true);
   });
 
   test('install supports standard profile without large design reference bundle', () => {
@@ -123,9 +208,55 @@ describe('danny-skill CLI', () => {
       'copy',
     ]);
 
+    expect(existsSync(join(root, '.agents', 'skills', 'coding-guardrails', 'config.yaml'))).toBe(true);
     expect(existsSync(join(root, '.agents', 'skills', 'coding-guardrails', 'references', 'examples.md'))).toBe(true);
     expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'assets', 'preview.html'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'style-selection-guide.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'scene-templates.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'critique-guide.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'assets', 'output-checklist.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'assets', 'test-prompts.json'))).toBe(true);
     expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'designs'))).toBe(false);
+
+    const autoresearchDir = join(root, '.agents', 'skills', 'autoresearch-loop');
+    expect(existsSync(join(autoresearchDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'assets', 'eval.example.json'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'references', 'eval-format.md'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'references', 'evaluator-protocol.md'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'references', 'hitl-review-template.md'))).toBe(true);
+    expect(existsSync(join(autoresearchDir, 'references', 'skill-quality-rubric.md'))).toBe(true);
+
+    const researchDir = join(root, '.agents', 'skills', 'research-to-implementation');
+    expect(existsSync(join(researchDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(researchDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(researchDir, 'assets', 'research-workspace.example.md'))).toBe(true);
+    expect(existsSync(join(researchDir, 'references', 'paper-analysis-template.md'))).toBe(true);
+    expect(existsSync(join(researchDir, 'references', 'open-source-evaluation-template.md'))).toBe(true);
+    expect(existsSync(join(researchDir, 'references', 'business-fit-template.md'))).toBe(true);
+    expect(existsSync(join(researchDir, 'references', 'implementation-proposal-template.md'))).toBe(true);
+
+    const selfImprovementDir = join(root, '.agents', 'skills', 'self-improvement');
+    expect(existsSync(join(selfImprovementDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(selfImprovementDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(selfImprovementDir, 'references', 'PATTERNS.md'))).toBe(true);
+
+    const knowledgeDistillDir = join(root, '.agents', 'skills', 'knowledge-distill');
+    expect(existsSync(join(knowledgeDistillDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(knowledgeDistillDir, 'config.yaml'))).toBe(true);
+
+    const inspirationDir = join(root, '.agents', 'skills', 'inspiration-box');
+    expect(existsSync(join(inspirationDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(inspirationDir, 'config.yaml'))).toBe(true);
+
+    const codingGuardrailsDir = join(root, '.agents', 'skills', 'coding-guardrails');
+    expect(existsSync(join(codingGuardrailsDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(codingGuardrailsDir, 'config.yaml'))).toBe(true);
+    expect(existsSync(join(codingGuardrailsDir, 'references', 'examples.md'))).toBe(true);
+
+    const usingDannyDir = join(root, '.agents', 'skills', 'using-danny');
+    expect(existsSync(join(usingDannyDir, 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(usingDannyDir, 'config.yaml'))).toBe(true);
   });
 
   test('install supports full profile with complete skill assets', () => {
@@ -145,6 +276,11 @@ describe('danny-skill CLI', () => {
       'copy',
     ]);
 
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'style-selection-guide.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'scene-templates.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'critique-guide.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'assets', 'output-checklist.md'))).toBe(true);
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'assets', 'test-prompts.json'))).toBe(true);
     expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'references', 'designs'))).toBe(true);
   });
 
@@ -274,9 +410,9 @@ describe('danny-skill CLI', () => {
     const marketplace = JSON.parse(readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'));
 
     expect(claudeManifest.name).toBe('danny-skill');
-    expect(claudeManifest.version).toBe('1.0.0');
-    expect(cursorManifest.version).toBe('1.0.0');
-    expect(marketplace.plugins[0].version).toBe('1.0.0');
+    expect(claudeManifest.version).toBe('1.1.0');
+    expect(cursorManifest.version).toBe('1.1.0');
+    expect(marketplace.plugins[0].version).toBe('1.1.0');
   });
 
   test('package writes distributable plugin artifacts', () => {
@@ -292,6 +428,54 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, 'dist', 'commands', 'list-designs.md'))).toBe(true);
   });
 
+  test('package standard profile keeps lightweight design-style references without the large bundle', () => {
+    const root = tempRoot();
+
+    runCli(['package', '--target-root', root, '--profile', 'standard']);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'config.yaml'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'references', 'style-selection-guide.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'references', 'scene-templates.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'references', 'critique-guide.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'assets', 'output-checklist.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'assets', 'test-prompts.json'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'design-style', 'references', 'designs'))).toBe(false);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'autoresearch-loop', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'autoresearch-loop', 'config.yaml'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'autoresearch-loop', 'assets', 'eval.example.json'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'autoresearch-loop', 'references', 'eval-format.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'autoresearch-loop', 'references', 'evaluator-protocol.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'autoresearch-loop', 'references', 'hitl-review-template.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'autoresearch-loop', 'references', 'skill-quality-rubric.md'))).toBe(true);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'research-to-implementation', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'research-to-implementation', 'config.yaml'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'research-to-implementation', 'assets', 'research-workspace.example.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'research-to-implementation', 'references', 'paper-analysis-template.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'research-to-implementation', 'references', 'open-source-evaluation-template.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'research-to-implementation', 'references', 'business-fit-template.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'research-to-implementation', 'references', 'implementation-proposal-template.md'))).toBe(true);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'self-improvement', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'self-improvement', 'config.yaml'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'self-improvement', 'references', 'PATTERNS.md'))).toBe(true);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'knowledge-distill', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'knowledge-distill', 'config.yaml'))).toBe(true);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'inspiration-box', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'inspiration-box', 'config.yaml'))).toBe(true);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'coding-guardrails', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'coding-guardrails', 'config.yaml'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'coding-guardrails', 'references', 'examples.md'))).toBe(true);
+
+    expect(existsSync(join(root, 'dist', 'skills', 'using-danny', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, 'dist', 'skills', 'using-danny', 'config.yaml'))).toBe(true);
+  });
+
   test('packaged CLI can run directly from bundled dist skills', () => {
     const root = tempRoot();
     const packageRoot = join(root, 'package');
@@ -299,6 +483,7 @@ describe('danny-skill CLI', () => {
     runCli(['package', '--target-root', packageRoot, '--profile', 'minimal']);
     cpSync(join(process.cwd(), 'packages', 'cli', 'danny-skill.mjs'), join(packageRoot, 'danny-skill.mjs'));
     cpSync(join(process.cwd(), 'packages', 'cli', 'index.mjs'), join(packageRoot, 'index.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'manifest.mjs'), join(packageRoot, 'manifest.mjs'));
     cpSync(join(process.cwd(), 'packages', 'cli', 'package.json'), join(packageRoot, 'package.json'));
 
     const output = execFileSync(process.execPath, [join(packageRoot, 'danny-skill.mjs'), 'validate'], {
@@ -308,6 +493,67 @@ describe('danny-skill CLI', () => {
     });
 
     expect(output).toContain('valid: 8 skills');
+  });
+
+  test('validate fails when a manifest-declared JSON asset is invalid', () => {
+    const root = tempRoot();
+    const packageRoot = join(root, 'package');
+
+    runCli(['package', '--target-root', packageRoot, '--profile', 'standard']);
+    cpSync(join(process.cwd(), 'packages', 'cli', 'danny-skill.mjs'), join(packageRoot, 'danny-skill.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'index.mjs'), join(packageRoot, 'index.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'manifest.mjs'), join(packageRoot, 'manifest.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'package.json'), join(packageRoot, 'package.json'));
+
+    writeFileSync(
+      join(packageRoot, 'dist', 'skills', 'autoresearch-loop', 'assets', 'eval.example.json'),
+      '{\n',
+    );
+
+    expect(() => execFileSync(process.execPath, [join(packageRoot, 'danny-skill.mjs'), 'validate'], {
+      cwd: root,
+      encoding: 'utf8',
+      stdio: 'pipe',
+    })).toThrow(/\[json_files\] invalid json file assets\/eval\.example\.json/);
+  });
+
+  test('validate supports machine-readable JSON output on failure', () => {
+    const root = tempRoot();
+    const packageRoot = join(root, 'package');
+
+    runCli(['package', '--target-root', packageRoot, '--profile', 'standard']);
+    cpSync(join(process.cwd(), 'packages', 'cli', 'danny-skill.mjs'), join(packageRoot, 'danny-skill.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'index.mjs'), join(packageRoot, 'index.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'manifest.mjs'), join(packageRoot, 'manifest.mjs'));
+    cpSync(join(process.cwd(), 'packages', 'cli', 'package.json'), join(packageRoot, 'package.json'));
+
+    writeFileSync(
+      join(packageRoot, 'dist', 'skills', 'autoresearch-loop', 'assets', 'eval.example.json'),
+      '{\n',
+    );
+
+    try {
+      execFileSync(process.execPath, [join(packageRoot, 'danny-skill.mjs'), 'validate', '--json'], {
+        cwd: root,
+        encoding: 'utf8',
+        stdio: 'pipe',
+      });
+      throw new Error('validate --json was expected to fail');
+    } catch (error) {
+      const stderr = String((error as { stderr?: string }).stderr ?? '');
+      const result = JSON.parse(stderr);
+
+      expect(result.ok).toBe(false);
+      expect(result.skillCount).toBe(8);
+      expect(result.errorCount).toBeGreaterThan(0);
+      expect(Array.isArray(result.errors)).toBe(true);
+      expect(result.errors).toContain('autoresearch-loop: [json_files] invalid json file assets/eval.example.json');
+      expect(result.errorsByCategory).toEqual(expect.objectContaining({
+        json_files: expect.arrayContaining([
+          'autoresearch-loop: [json_files] invalid json file assets/eval.example.json',
+        ]),
+      }));
+    }
   });
 
   test('packages the CLI as a Rust N-API npm package with JS fallback', () => {
@@ -320,10 +566,11 @@ describe('danny-skill CLI', () => {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
     expect(packageJson.name).toBe('@dannyok/cli');
-    expect(packageJson.version).toBe('1.0.1');
+    expect(packageJson.version).toBe('1.1.0');
     expect(packageJson.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(packageJson.repository.directory).toBe('packages/cli');
     expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');
+    expect(packageJson.files).toContain('manifest.mjs');
     expect(packageJson.files).toContain('dist/');
     expect(packageJson.files).toContain('templates/');
     expect(packageJson.scripts['prepare:package']).toContain('--target-root . --profile full');

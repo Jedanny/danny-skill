@@ -1,0 +1,81 @@
+version: 1
+
+runtime:
+  kind: "workflow"
+  profile_behavior:
+    minimal: "Use SKILL.md only"
+    standard: "Use the four research templates and workspace example"
+    full: "Use the complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+      - "references/paper-analysis-template.md"
+      - "references/open-source-evaluation-template.md"
+      - "references/business-fit-template.md"
+      - "references/implementation-proposal-template.md"
+      - "assets/research-workspace.example.md"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "references/paper-analysis-template.md"
+    - "references/open-source-evaluation-template.md"
+    - "references/business-fit-template.md"
+    - "references/implementation-proposal-template.md"
+    - "assets/research-workspace.example.md"
+  markdown_contracts:
+    - path: "references/paper-analysis-template.md"
+      must_contain:
+        - "# Paper Analysis:"
+        - "## Bibliography"
+        - "## Problem"
+        - "## Method"
+        - "## Evidence"
+        - "## Engineering Translation"
+        - "## Fit Notes"
+    - path: "references/open-source-evaluation-template.md"
+      must_contain:
+        - "# Open Source Candidate:"
+        - "## Identity"
+        - "## Health"
+        - "## Technical Fit"
+        - "## Risk"
+        - "## Decision"
+    - path: "references/business-fit-template.md"
+      must_contain:
+        - "# Business Fit:"
+        - "## Current Workflow"
+        - "## Opportunity"
+        - "## Brainstormed Use Cases"
+        - "## Constraints"
+        - "## Decision"
+    - path: "references/implementation-proposal-template.md"
+      must_contain:
+        - "# Implementation Proposal:"
+        - "## Goal"
+        - "## MVP Scope"
+        - "## Architecture"
+        - "## Validation"
+        - "## Risks"
+        - "## Coding Handoff"
+
+docs:
+  summary: "从论文/开源方案研究到业务适配和编码交接"
+  handles: "将论文、技术报告、算法或开源项目转成业务适配和编码交接方案"
+  not_for: "只做论文摘要、只看 GitHub star、没有业务问题或验证指标的技术调研"
+  artifacts:
+    - ".danny/knowledge-base/research/YYYY-MM-DD-topic/"
+    - "研究矩阵"
+    - "开源评估"
+    - "业务适配"
+    - "实施提案"

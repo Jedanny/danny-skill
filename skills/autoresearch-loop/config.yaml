@@ -1,0 +1,63 @@
+version: 1
+
+runtime:
+  kind: "eval"
+  profile_behavior:
+    minimal: "Use SKILL.md only"
+    standard: "Use eval format, evaluator protocol, rubric, and example eval"
+    full: "Use the complete skill directory"
+
+packaging:
+  minimal:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+  standard:
+    include:
+      - "SKILL.md"
+      - "config.yaml"
+      - "references/eval-format.md"
+      - "references/evaluator-protocol.md"
+      - "references/hitl-review-template.md"
+      - "references/skill-quality-rubric.md"
+      - "assets/eval.example.json"
+  full:
+    include:
+      - "**"
+
+validation:
+  required_files:
+    - "SKILL.md"
+    - "references/eval-format.md"
+    - "references/evaluator-protocol.md"
+    - "references/hitl-review-template.md"
+    - "references/skill-quality-rubric.md"
+    - "assets/eval.example.json"
+  json_files:
+    - "assets/eval.example.json"
+  markdown_contracts:
+    - path: "references/eval-format.md"
+      must_contain:
+        - "## Top-Level Fields"
+        - "## Rule Eval"
+        - "## LLM Eval"
+        - "## Decision Rule"
+    - path: "references/evaluator-protocol.md"
+      must_contain:
+        - "## Inputs"
+        - "## Required Output"
+        - "## Independence Rules"
+    - path: "references/skill-quality-rubric.md"
+      must_contain:
+        - "## Structure Score"
+        - "## Effect Score"
+        - "## Decision Rule"
+
+docs:
+  summary: "用 eval 驱动的实验循环优化 skill、prompt 和 workflow"
+  handles: "用 baseline、eval、单点 mutation 和 keep-or-revert 优化 skill、prompt 或 workflow"
+  not_for: "没有稳定目标文件、没有可测 eval、只想做开放式头脑风暴的任务"
+  artifacts:
+    - ".danny/knowledge-base/experiments/autoresearch/"
+    - "实验结果"
+    - "changelog"

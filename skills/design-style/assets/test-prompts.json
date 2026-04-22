@@ -1,0 +1,108 @@
+{
+  "prompts": [
+    {
+      "id": "landing-vercel-devtools",
+      "category": "brand-plus-scene",
+      "prompt": "Create a developer tools landing page with a Vercel-like style.",
+      "expected_scene": "landing page",
+      "expected_bucket": "developer credibility",
+      "checks": ["uses scene template", "keeps developer-focused hierarchy", "avoids consumer-style warmth"]
+    },
+    {
+      "id": "product-stripe-billing",
+      "category": "brand-plus-scene",
+      "prompt": "Design a billing product page in a Stripe-like style for a B2B SaaS platform.",
+      "expected_scene": "product page",
+      "expected_bucket": "developer credibility",
+      "checks": ["uses product page structure", "keeps pricing and features scannable", "preserves developer credibility"]
+    },
+    {
+      "id": "dashboard-linear-ops",
+      "category": "brand-plus-scene",
+      "prompt": "Make an operations dashboard with a Linear-like visual language.",
+      "expected_scene": "dashboard",
+      "expected_bucket": "developer credibility",
+      "checks": ["uses dashboard template", "prioritizes status and tasks", "does not overuse hero-style spacing"]
+    },
+    {
+      "id": "mobile-superhuman-inbox",
+      "category": "brand-plus-scene",
+      "prompt": "Create a mobile email triage screen inspired by Superhuman.",
+      "expected_scene": "mobile app screen",
+      "expected_bucket": "premium minimalism",
+      "checks": ["uses mobile app screen template", "keeps one primary task per screen", "maintains consistent action emphasis"]
+    },
+    {
+      "id": "premium-ai-launch",
+      "category": "style-only",
+      "prompt": "做一个 AI 产品发布页，风格要 premium minimalism，但不要冷漠。",
+      "expected_scene": "landing page",
+      "expected_bucket": "premium minimalism",
+      "checks": ["maps request to premium minimalism", "chooses one primary reference family", "keeps the page emotionally controlled"]
+    },
+    {
+      "id": "warm-consumer-finance",
+      "category": "style-only",
+      "prompt": "设计一个面向普通家庭的理财产品首页，要有 consumer warmth。",
+      "expected_scene": "landing page",
+      "expected_bucket": "consumer warmth",
+      "checks": ["maps request to consumer warmth", "avoids enterprise stiffness", "keeps CTA friendly and consistent"]
+    },
+    {
+      "id": "onepager-enterprise-trust",
+      "category": "scene-specific",
+      "prompt": "Create a presentation / one-pager for a security platform launch with strong enterprise trust.",
+      "expected_scene": "presentation / one-pager",
+      "expected_bucket": "enterprise trust",
+      "checks": ["uses presentation / one-pager template", "keeps one main takeaway per section", "does not turn into a full website"]
+    },
+    {
+      "id": "dashboard-enterprise-risk",
+      "category": "scene-specific",
+      "prompt": "设计一个风险监控 dashboard，强调 enterprise trust 和高可读性。",
+      "expected_scene": "dashboard",
+      "expected_bucket": "enterprise trust",
+      "checks": ["uses dashboard template", "prioritizes data readability", "avoids decorative gradients that reduce clarity"]
+    },
+    {
+      "id": "mobile-playful-creator",
+      "category": "scene-specific",
+      "prompt": "Create a mobile app screen for a creator tool with playful creativity.",
+      "expected_scene": "mobile app screen",
+      "expected_bucket": "playful creativity",
+      "checks": ["uses mobile app screen template", "keeps playful elements bounded", "does not import desktop card density"]
+    },
+    {
+      "id": "ambiguous-b2b-homepage",
+      "category": "ambiguous-selection",
+      "prompt": "Make a homepage for our new workflow platform. It should feel modern and trustworthy. First map this vague request onto one supported scene template, explain why that template fits better than the alternatives, then choose the style direction.",
+      "expected_scene": "landing page",
+      "expected_bucket": "enterprise trust",
+      "checks": ["maps the vague homepage request onto a supported scene template before generating", "explains why the chosen scene template fits better than the alternatives", "selects a style bucket before generating", "explains why the chosen bucket fits", "keeps reference set minimal"]
+    },
+    {
+      "id": "ambiguous-ai-assistant",
+      "category": "ambiguous-selection",
+      "prompt": "帮我做一个 AI 助手产品页面，要有品牌感，但我还没想好像谁。",
+      "expected_scene": "product page",
+      "expected_bucket": "developer credibility",
+      "checks": ["chooses likely scene template", "maps intent to one or two candidate style buckets", "avoids loading many brand signals at once"]
+    },
+    {
+      "id": "anti-mix-three-brands",
+      "category": "anti-mix",
+      "prompt": "Create a landing page that feels like Vercel, Airbnb, and Ferrari all at the same time.",
+      "expected_scene": "landing page",
+      "must_reject_mix": true,
+      "checks": ["rejects over-mixing", "chooses one dominant direction", "documents what references were kept versus dropped"]
+    },
+    {
+      "id": "anti-mix-premium-playful-enterprise",
+      "category": "anti-mix",
+      "prompt": "做一个官网，同时要 premium minimalism、playful creativity、enterprise trust，而且每一屏都要不一样。",
+      "expected_scene": "landing page",
+      "must_reject_mix": true,
+      "checks": ["pushes back on conflicting signals", "keeps one dominant system", "prevents section-by-section style drift"]
+    }
+  ]
+}

@@ -41,7 +41,7 @@ checksum = "a7ab264ea985f1bd27887d7b21ea2bb046728e05d11909ca138d700c494730db"
 
 [[package]]
 name = "danny-skill-cli"
-version = "1.0.1"
+version = "1.1.0"
 dependencies = [
  "napi",
  "napi-build",

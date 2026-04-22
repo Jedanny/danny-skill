@@ -44,7 +44,7 @@ Future CLI responsibilities:
 Proposed command surface:
 
 ```bash
-danny-skill config paths set --project .danny-skill/knowledge-base --global ~/.danny-skill/knowledge-base
+danny-skill config paths set --project .danny/knowledge-base --system ~/.danny/knowledge-base
 danny-skill install --tool codex --scope project --profile standard
 danny-skill install --tool cursor --scope project --profile standard --mode copy
 danny-skill knowledge init --project
@@ -91,8 +91,8 @@ CI builds the N-API addon, packages `dist/`, and runs `npm pack --dry-run` to ve
 npm publishing is gated to the `Release CLI` workflow. It runs when pushing a tag that matches `cli-v*`, or when started manually with `workflow_dispatch` from GitHub Actions.
 
 ```bash
-git tag cli-v1.0.1
-git push origin cli-v1.0.1
+git tag cli-v1.1.0
+git push origin cli-v1.1.0
 ```
 
 Publishing requires the repository secret `NPM_TOKEN` unless the package is moved to npm Trusted Publishing.
