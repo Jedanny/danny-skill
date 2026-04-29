@@ -16,6 +16,8 @@ describe('repository layout', () => {
     expect(existsSync(join(process.cwd(), 'packages', 'cli', 'README.md'))).toBe(true);
     expect(existsSync(join(process.cwd(), 'packages', 'cli', 'package.json'))).toBe(true);
     expect(existsSync(join(process.cwd(), 'packages', 'cli', 'Cargo.toml'))).toBe(true);
+    expect(existsSync(join(process.cwd(), 'skills', 'socratic-learning', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(process.cwd(), 'skills', 'retrieval-and-spacing', 'SKILL.md'))).toBe(true);
   });
 
   test('uses a unified project knowledge-base path', () => {
@@ -66,6 +68,10 @@ describe('repository layout', () => {
     }
 
     expect(readme).toContain('当前 shell installer 安装完整 skill 目录');
+    expect(readme).toContain('学习与知识闭环');
+    expect(readme).toContain('capture：记录原始想法、问题、材料和直觉');
+    expect(readme).toContain('socratic-learning');
+    expect(readme).toContain('retrieval-and-spacing');
     expect(cliReadme).toContain('Resolve `<project-knowledge-base>` and `<global-knowledge-base>` from config');
     expect(cliReadme).toContain('Generate project alias wrappers');
     expect(cliReadme).toContain('danny-skill install --tool codex --scope project --profile standard');

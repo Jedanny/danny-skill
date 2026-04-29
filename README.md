@@ -88,15 +88,39 @@ pnpm cli alias generate --tool claude-code
 
 `minimal` 和 `standard` profile 会筛选文件，因此只支持 `--mode copy`。`full` profile 支持 `--mode copy` 或 `--mode link`。
 
+## 学习与知识闭环
+
+danny-skill 不把“总结”视为学习终点，而把知识学习拆成六步：
+
+1. capture：记录原始想法、问题、材料和直觉
+2. interrogate：通过追问、定义测试和反例检查确认是否真正理解
+3. stabilize：把通过压力测试的内容蒸馏成稳定知识
+4. retain：通过检索练习和间隔复现提高保留率
+5. correct：通过错误、反例和用户纠正修正规则边界
+6. re-distill：把经验证的修正规则重新沉淀为稳定知识
+
+推荐闭环链路：
+
+```text
+inspiration-box
+-> socratic-learning
+-> knowledge-distill
+-> retrieval-and-spacing
+-> self-improvement
+-> knowledge-distill
+```
+
 ## 当前技能与触发方式
 
 <!-- GENERATED:SKILL_TABLE:START -->
 | Skill | Claude Code standalone | Claude Code plugin | Codex | Project alias | Description |
 | --- | --- | --- | --- | --- | --- |
 | `using-danny` | /using-danny | /danny-skill:using-danny | $using-danny | /using-danny | danny-skill 入口、安装、选型和知识库映射 |
-| `inspiration-box` | /inspiration-box | /danny-skill:inspiration-box | $inspiration-box | /danny-idea | 灵感收集与管理 |
-| `knowledge-distill` | /knowledge-distill | /danny-skill:knowledge-distill | $knowledge-distill | /danny-distill | 团队知识蒸馏 |
-| `self-improvement` | /self-improvement | /danny-skill:self-improvement | $self-improvement | /danny-learn | 错误、反馈和经验记录 |
+| `inspiration-box` | /inspiration-box | /danny-skill:inspiration-box | $inspiration-box | /danny-idea | 灵感收集、分类与假设提升 |
+| `socratic-learning` | /socratic-learning | /danny-skill:socratic-learning | $socratic-learning | /danny-understand | 概念理解压测 |
+| `knowledge-distill` | /knowledge-distill | /danny-skill:knowledge-distill | $knowledge-distill | /danny-distill | 经过压力测试的知识蒸馏 |
+| `retrieval-and-spacing` | /retrieval-and-spacing | /danny-skill:retrieval-and-spacing | $retrieval-and-spacing | /danny-review | 检索练习与间隔复习 |
+| `self-improvement` | /self-improvement | /danny-skill:self-improvement | $self-improvement | /danny-learn | 错误、反馈和规则修正记录 |
 | `design-style` | /design-style | /danny-skill:design-style | $design-style | 自动触发 | UI 风格选择、场景模板、评审指引与配套 prompt 套件 |
 | `autoresearch-loop` | /autoresearch-loop | /danny-skill:autoresearch-loop | $autoresearch-loop | 自动触发 | 用 eval 驱动的实验循环优化 skill、prompt 和 workflow |
 | `research-to-implementation` | /research-to-implementation | /danny-skill:research-to-implementation | $research-to-implementation | 自动触发 | 从论文/开源方案研究到业务适配和编码交接 |
@@ -144,9 +168,11 @@ inspiration-box
 | Skill | 适合处理 | 不适合处理 | 主要产物 |
 | --- | --- | --- | --- |
 | [`using-danny`](skills/using-danny/SKILL.md) | 开始使用 danny-skill、选择 skill、理解安装/触发/知识库映射 | 代替具体业务 skill 执行任务 | skill 选择建议、安装命令、scope/知识库映射 |
-| [`inspiration-box`](skills/inspiration-box/SKILL.md) | 捕获产品点子、技术想法、流程改进和探索性灵感 | 已经需要严谨验证、代码实现或团队决策的事项 | .danny/knowledge-base/inbox/inspiration/、.danny/knowledge-base/ideas/、灵感与想法记录 |
-| [`knowledge-distill`](skills/knowledge-distill/SKILL.md) | 从讨论、决策、经验和 AI 交互中提炼可复用知识 | 原始随手记录、未经验证的想法、临时日志直接归档 | .danny/knowledge-base/distilled/、概念、最佳实践、决策、教训 |
-| [`self-improvement`](skills/self-improvement/SKILL.md) | 记录错误、用户纠正、成功模式和重复问题 | 普通知识整理、产品创意收集或没有具体事件的泛泛总结 | .danny/knowledge-base/learnings/、错误、纠正、成功、模式记录 |
+| [`inspiration-box`](skills/inspiration-box/SKILL.md) | 捕获产品点子、技术想法、流程改进、探索性灵感和可验证假设 | 已经需要严谨验证、代码实现或团队决策的事项 | .danny/knowledge-base/inbox/inspiration/、.danny/knowledge-base/ideas/、灵感与想法记录 |
+| [`socratic-learning`](skills/socratic-learning/SKILL.md) | 学懂概念、框架、文章、方法 | 直接替代长期知识归档或研究报告 | 定义、边界、反例、原因链、后续跳转建议 |
+| [`knowledge-distill`](skills/knowledge-distill/SKILL.md) | 从讨论、学习和研究中提炼经过压力测试的可复用知识 | 原始随手记录、未经验证的想法、没有边界和证据的临时判断 | .danny/knowledge-base/distilled/、概念、最佳实践、决策、教训 |
+| [`retrieval-and-spacing`](skills/retrieval-and-spacing/SKILL.md) | 把已蒸馏知识转成 review cards 和复习提示 | 原始材料总结、知识真实性判断 | review cards、review prompts、复习节奏 |
+| [`self-improvement`](skills/self-improvement/SKILL.md) | 记录错误、用户纠正、成功模式、重复问题和规则边界修正 | 普通知识整理、产品创意收集或没有具体事件的泛泛总结 | .danny/knowledge-base/learnings/、错误、纠正、成功、模式记录 |
 | [`design-style`](skills/design-style/SKILL.md) | 生成 UI/网站设计、匹配品牌风格、选择视觉系统 | 非视觉任务、后端逻辑、没有 UI 输出需求的纯文档任务 | references/designs/、references/style-selection-guide.md、references/scene-templates.md、references/critique-guide.md、assets/output-checklist.md、assets/test-prompts.json |
 | [`autoresearch-loop`](skills/autoresearch-loop/SKILL.md) | 用 baseline、eval、单点 mutation 和 keep-or-revert 优化 skill、prompt 或 workflow | 没有稳定目标文件、没有可测 eval、只想做开放式头脑风暴的任务 | .danny/knowledge-base/experiments/autoresearch/、实验结果、changelog |
 | [`research-to-implementation`](skills/research-to-implementation/SKILL.md) | 将论文、技术报告、算法或开源项目转成业务适配和编码交接方案 | 只做论文摘要、只看 GitHub star、没有业务问题或验证指标的技术调研 | .danny/knowledge-base/research/YYYY-MM-DD-topic/、研究矩阵、开源评估、业务适配、实施提案 |

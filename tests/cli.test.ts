@@ -1,10 +1,13 @@
 import { describe, expect, test } from '@jest/globals';
 import { execFileSync } from 'child_process';
-import { cpSync, existsSync, mkdtempSync, readFileSync, lstatSync, mkdirSync, writeFileSync } from 'fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, lstatSync, mkdirSync, readdirSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
 const cli = join(process.cwd(), 'packages', 'cli', 'danny-skill.mjs');
+const skillCount = readdirSync(join(process.cwd(), 'skills'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .length;
 
 function tempRoot() {
   return mkdtempSync(join(tmpdir(), 'danny-skill-cli-'));
@@ -512,7 +515,7 @@ describe('danny-skill CLI', () => {
       stdio: 'pipe',
     });
 
-    expect(output).toContain('valid: 8 skills');
+    expect(output).toContain(`valid: ${skillCount} skills`);
   });
 
   test('validate fails when a manifest-declared JSON asset is invalid', () => {
@@ -564,7 +567,7 @@ describe('danny-skill CLI', () => {
       const result = JSON.parse(stderr);
 
       expect(result.ok).toBe(false);
-      expect(result.skillCount).toBe(8);
+      expect(result.skillCount).toBe(skillCount);
       expect(result.errorCount).toBeGreaterThan(0);
       expect(Array.isArray(result.errors)).toBe(true);
       expect(result.errors).toContain('autoresearch-loop: [json_files] invalid json file assets/eval.example.json');

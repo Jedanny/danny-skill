@@ -38,6 +38,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 |------|------|
 | raw | 刚捕获的原始想法 |
 | tagged | 已分类打标 |
+| hypothesis | 已形成可验证假设 |
 | developed | 已发展完善 |
 | archived | 已归档或转化 |
 
@@ -78,6 +79,23 @@ supported_tools: [claude-code, codex, cursor, opencode]
 3. 评估资源和风险
 4. 识别依赖和前置条件
 
+如果灵感已经值得被进一步验证，先提升为 hypothesis，而不是直接假设它正确：
+
+```markdown
+### Hypothesis
+如果我们做 X，在 Y 场景下，可能改善 Z。
+
+### Why this may be true
+<目前为什么觉得它成立>
+
+### Alternative explanations
+- 解释 A
+- 解释 B
+
+### Smallest useful test
+<最小验证方式>
+```
+
 ### 步骤 4：转化行动 (Transform)
 
 根据灵感价值选择转化方式：
@@ -85,6 +103,8 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - **→ Skill**: 发展为团队技能
 - **→ Doc**: 沉淀为文档
 - **→ Archive**: 暂时归档
+
+如果 hypothesis 需要被问透，可以转给 `socratic-learning`。如果 hypothesis 已经进入论文、开源或可行性验证阶段，可以转给 `research-to-implementation`。
 
 ## 灵感存储结构
 
@@ -121,6 +141,7 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - [ ] 核心想法清晰，一句话能说清
 - [ ] 至少 1 个标签分类
 - [ ] 有来源记录便于追溯
+- [ ] 需要验证时已明确进入 `hypothesis`
 - [ ] 定期回顾整理（建议每周）
 
 ## 快速命令
