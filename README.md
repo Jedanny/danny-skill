@@ -1,5 +1,7 @@
 # danny-skill
 
+[中文](README.md) | [English](README.en.md)
+
 danny-skill 是一个跨 AI 编码工具的团队技能库。仓库优先维护可分享、可复用的 `SKILL.md` 技能资产，并为后续 CLI 安装、校验、打包和同步预留扩展点。
 
 ## 支持工具
@@ -110,6 +112,9 @@ inspiration-box
 -> knowledge-distill
 ```
 
+English overview:
+- [`docs/learning-closed-loop.md`](docs/learning-closed-loop.md)
+
 ## 当前技能与触发方式
 
 <!-- GENERATED:SKILL_TABLE:START -->
@@ -149,11 +154,24 @@ inspiration-box
   -> knowledge-distill
 ```
 
+学习型任务也可以走完整闭环：
+
+```text
+inspiration-box
+  -> socratic-learning
+  -> knowledge-distill
+  -> retrieval-and-spacing
+  -> self-improvement
+  -> knowledge-distill
+```
+
 使用建议：
 
 | 阶段 | 使用方式 |
 | --- | --- |
 | 有想法但还不确定价值 | 可用 `inspiration-box` 放入 `inbox/` 或 `ideas/`。 |
+| 需要真正学懂一个概念或框架 | 用 `socratic-learning` 做定义、边界和反例压力测试。 |
+| 已有稳定知识，需要提高保留率 | 用 `retrieval-and-spacing` 生成 review cards 和复习提示。 |
 | 需要验证论文、开源项目或方案价值 | 用 `research-to-implementation` 形成研究矩阵、业务适配和实施提案。 |
 | 已进入编码、修复、重构或评审 | 用 `coding-guardrails` 限制范围、明确验证方式。 |
 | 要优化 skill、prompt 或 workflow | 用 `autoresearch-loop` 建 baseline、跑 eval、做 keep-or-revert。 |
@@ -195,7 +213,17 @@ inspiration-box
 /danny-idea ...      -> .danny/knowledge-base/...
 /danny-distill ...   -> .danny/knowledge-base/...
 /danny-learn ...     -> .danny/knowledge-base/...
+/danny-understand ... -> 读取材料，并按结果衔接到 .danny/knowledge-base/distilled/ 或 .danny/knowledge-base/learnings/
+/danny-review ...     -> 读取 .danny/knowledge-base/distilled/ 与 .danny/knowledge-base/learnings/ 生成复习提示
 ```
+
+说明：
+
+- `inspiration-box` 主要写入 `inbox/` 和 `ideas/`
+- `knowledge-distill` 主要写入 `distilled/`
+- `self-improvement` 主要写入 `learnings/`
+- `socratic-learning` 默认不直接沉淀长期知识，而是读取输入材料后决定衔接到 `knowledge-distill` 或 `self-improvement`
+- `retrieval-and-spacing` 默认从 `distilled/` 和 `learnings/` 读取知识，再产出 review cards / review prompts
 
 显式写入系统级/全局级或双写：
 

@@ -98,9 +98,9 @@ supported_tools: [claude-code, codex, cursor, opencode]
 - 高风险误用:
 
 ### 下一步
-- [ ] distill
-- [ ] learn
-- [ ] retrieval
+- [ ] knowledge-distill
+- [ ] self-improvement
+- [ ] retrieval-and-spacing
 ```
 
 ## 护栏
