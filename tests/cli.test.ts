@@ -437,9 +437,9 @@ describe('danny-skill CLI', () => {
     const marketplace = JSON.parse(readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'));
 
     expect(claudeManifest.name).toBe('danny-skill');
-    expect(claudeManifest.version).toBe('1.1.0');
-    expect(cursorManifest.version).toBe('1.1.0');
-    expect(marketplace.plugins[0].version).toBe('1.1.0');
+    expect(claudeManifest.version).toBe('1.1.1');
+    expect(cursorManifest.version).toBe('1.1.1');
+    expect(marketplace.plugins[0].version).toBe('1.1.1');
   });
 
   test('package writes distributable plugin artifacts', () => {
@@ -593,7 +593,7 @@ describe('danny-skill CLI', () => {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
     expect(packageJson.name).toBe('@dannyok/cli');
-    expect(packageJson.version).toBe('1.1.0');
+    expect(packageJson.version).toBe('1.1.1');
     expect(packageJson.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(packageJson.repository.directory).toBe('packages/cli');
     expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');
