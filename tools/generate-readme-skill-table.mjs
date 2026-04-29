@@ -17,7 +17,9 @@ const boundaryTableEndMarker = '<!-- GENERATED:SKILL_BOUNDARY_TABLE:END -->';
 const preferredOrder = [
   'using-danny',
   'inspiration-box',
+  'socratic-learning',
   'knowledge-distill',
+  'retrieval-and-spacing',
   'self-improvement',
   'design-style',
   'autoresearch-loop',

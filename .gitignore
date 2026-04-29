@@ -2,6 +2,8 @@ node_modules/
 dist/
 target/
 .omx/
+.danny/
+.danny-skill/
 .agents/skills/
 .claude/skills/
 .codex/skills/

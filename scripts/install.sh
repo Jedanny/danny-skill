@@ -24,7 +24,7 @@ Options:
   --mode <link|copy>                Install by symlink/junction or copy (default: link)
   --copy                            Shortcut for --mode copy
   --replace                         Replace existing skill paths before installing
-  --scope <user|project>            Install to user scope or official Claude/Codex project scope (default: user)
+  --scope <user|project>            Install to user scope, or to official project paths where supported (default: user)
   --tool <claude-code|codex|cursor|opencode|all>
                                      Install for one tool or every supported tool
   --target-root <path>              Use this root instead of $HOME
@@ -132,10 +132,11 @@ destination_for_tool() {
             ;;
         cursor)
             if [ "$INSTALL_SCOPE" = "project" ]; then
-                echo "Project scope is only supported for claude-code and codex" >&2
+                echo "$PROJECT_ROOT/.cursor"
+            else
+                echo "Cursor install requires --scope project and writes to .cursor/rules plus .cursor/commands" >&2
                 exit 1
             fi
-            echo "$TARGET_ROOT/.cursor/skills"
             ;;
         opencode)
             if [ "$INSTALL_SCOPE" = "project" ]; then
@@ -236,7 +237,12 @@ install_skills_to() {
 install_tool() {
     local tool="$1"
 
-    if [ "$tool" = "cursor" ] && [ "$INSTALL_SCOPE" = "project" ]; then
+    if [ "$tool" = "cursor" ]; then
+        if [ "$INSTALL_SCOPE" != "project" ]; then
+            echo "Cursor install requires --scope project and writes to .cursor/rules plus .cursor/commands" >&2
+            exit 1
+        fi
+
         install_cursor_project
         return 0
     fi
@@ -361,6 +367,10 @@ case "$TARGET_TOOL" in
             exit 1
         fi
         for tool in claude-code codex cursor opencode; do
+            if [ "$tool" = "cursor" ]; then
+                echo "Skipping cursor: Cursor install requires --tool cursor --scope project"
+                continue
+            fi
             install_tool "$tool"
         done
         ;;
@@ -370,6 +380,10 @@ case "$TARGET_TOOL" in
     detected)
         for tool in claude-code codex cursor opencode; do
             if tool_detected "$tool"; then
+                if [ "$tool" = "cursor" ]; then
+                    echo "Skipping cursor: Cursor requires explicit --tool cursor --scope project"
+                    continue
+                fi
                 echo "$tool detected"
                 if confirm_install "$tool"; then
                     install_tool "$tool"

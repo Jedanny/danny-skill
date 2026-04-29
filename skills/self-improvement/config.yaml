@@ -27,6 +27,14 @@ validation:
     - "config.yaml"
     - "references/PATTERNS.md"
   markdown_contracts:
+    - path: "SKILL.md"
+      must_contain:
+        - "### 3. Falsification Loop"
+        - "### Prior Rule"
+        - "### Disconfirming Evidence"
+        - "### Revised Rule"
+        - "### Boundary"
+        - "### Verification Plan"
     - path: "references/PATTERNS.md"
       must_contain:
         - "# Pattern Index"
@@ -34,8 +42,8 @@ validation:
         - "## Error Patterns"
 
 docs:
-  summary: "错误、反馈和经验记录"
-  handles: "记录错误、用户纠正、成功模式和重复问题"
+  summary: "错误、反馈和规则修正记录"
+  handles: "记录错误、用户纠正、成功模式、重复问题和规则边界修正"
   not_for: "普通知识整理、产品创意收集或没有具体事件的泛泛总结"
   artifacts:
     - ".danny/knowledge-base/learnings/"

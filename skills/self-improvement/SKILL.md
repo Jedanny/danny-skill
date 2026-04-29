@@ -42,6 +42,15 @@ supported_tools: [claude-code, codex, cursor, opencode]
 | success | 有效方案 | 成功模式、可复用经验 |
 | pattern | 重复问题 | 模式识别、预防措施 |
 
+### 3. Falsification Loop
+
+每次记录都尽量识别：
+- 我原来默认相信什么？
+- 什么证据和这个默认规则冲突？
+- 旧规则是完全失效，还是边界失效？
+- 修正后的规则是什么？
+- 下次最该优先验证什么？
+
 ## 学习存储结构
 
 ```
@@ -60,6 +69,8 @@ supported_tools: [claude-code, codex, cursor, opencode]
 仓库相关学习记录使用 `<project-knowledge-base>/learnings/`。跨项目通用模式使用 `<global-knowledge-base>/learnings/`。
 
 遵守所在项目定义的知识存储模型：learning records 属于 evidence。这里保存具体事件和预防说明，不保存本地日志或临时任务进度。
+
+这里的记录默认是 evidence 级修正，不是稳定真理。只有重复出现、经过验证、并能明确边界的规则，才适合后续回流到 `knowledge-distill`。
 
 ## Agent 应用协议
 
@@ -130,6 +141,21 @@ last_verified: YYYY-MM-DD
 - **默认动作**: {{Agent 下次应该怎么做}}
 - **例外情况**: {{什么时候不要套用}}
 
+### Prior Rule
+{{之前默认规则}}
+
+### Disconfirming Evidence
+{{冲突证据}}
+
+### Revised Rule
+{{修正规则}}
+
+### Boundary
+{{适用边界}}
+
+### Verification Plan
+{{下次如何更早发现或验证}}
+
 ### 下次行动
 - [ ] {{行动项}}
 ```
@@ -155,7 +181,8 @@ last_verified: YYYY-MM-DD
 定期（月/周）回顾学习记录：
 1. 识别重复模式
 2. 提取可复用模式到 `patterns/PATTERNS.md`
-3. 更新最佳实践
+3. 区分“旧规则失效”和“新边界成立”
+4. 更新最佳实践
 
 ### 步骤 4：应用 (Apply)
 
@@ -163,6 +190,7 @@ last_verified: YYYY-MM-DD
 1. 执行任务前按“检索顺序”检查相关学习。
 2. 遇到类似问题时引用已有学习，并说明采用了哪条规则。
 3. 验证学习有效性；如果不适用，更新或废弃对应记录。
+4. 对重复成立的修正规则，考虑回流到 `knowledge-distill`。
 
 ## 可选衔接
 
@@ -180,6 +208,8 @@ last_verified: YYYY-MM-DD
 - [ ] 原因分析清晰
 - [ ] 有明确的行动项
 - [ ] 包含 Agent 应用规则：触发条件、默认动作、例外情况
+- [ ] 明确了 `Prior Rule`、`Disconfirming Evidence` 和 `Revised Rule`
+- [ ] 区分“完全失效”和“边界失效”
 - [ ] 定期回顾和更新
 - [ ] 模式被正确识别
 

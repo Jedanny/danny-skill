@@ -36,6 +36,8 @@ supported_tools: [claude-code, codex, cursor, opencode]
 | 用户目标 | 可用 skill |
 | --- | --- |
 | 捕获灵感、产品点子、技术想法 | `inspiration-box` |
+| 学懂概念、文章、框架或方法 | `socratic-learning` |
+| 把已学知识转成检索练习和复习节奏 | `retrieval-and-spacing` |
 | 从论文、技术报告、开源项目走到实施方案 | `research-to-implementation` |
 | 编码、修复、重构、评审前约束范围和验证 | `coding-guardrails` |
 | 用 eval 优化 skill、prompt、workflow | `autoresearch-loop` |
@@ -84,8 +86,8 @@ danny-skill install --tool codex --scope project --profile full --mode link
 宿主项目负责把占位符映射到实际路径。初始化时用实际项目级和系统级/全局级知识目录替换下面两个参数：
 
 ```text
-<project-knowledge-base> -> 项目级知识目录
-<global-knowledge-base>  -> 系统级/全局级知识目录
+<project-knowledge-base> -> 项目级知识目录（使用仓库当前默认映射）
+<global-knowledge-base>  -> 系统级/全局级知识目录（使用仓库当前默认映射）
 ```
 
 初始化项目知识库：
@@ -101,6 +103,8 @@ danny-skill knowledge init --project
 - 不确定是否需要复杂流程时，优先用单个 skill。
 - 只有任务确实跨越多个阶段时，才组合多个 skill。
 - 记录型 skill 写入 `<project-knowledge-base>` 或 `<global-knowledge-base>` 前，先判断 scope。
+- `socratic-learning` 默认不直接持久化长期知识，而是把结果交给 `knowledge-distill` 或 `self-improvement`。
+- `retrieval-and-spacing` 默认从 `<project-knowledge-base>/distilled/` 与 `<project-knowledge-base>/learnings/` 读取知识，再生成 review cards / review prompts。
 - 需要让后续 Agent 复用经验时，优先更新 `self-improvement` 的 `PATTERNS.md` 索引。
 
 ## 常见组合
@@ -109,6 +113,12 @@ danny-skill knowledge init --project
 
 ```text
 research-to-implementation -> coding-guardrails
+```
+
+学习闭环：
+
+```text
+inspiration-box -> socratic-learning -> knowledge-distill -> retrieval-and-spacing -> self-improvement -> knowledge-distill
 ```
 
 错误到改进：

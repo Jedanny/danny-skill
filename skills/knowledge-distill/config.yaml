@@ -31,6 +31,13 @@ validation:
         - "### 2. 最佳实践 (Best Practices)"
         - "### 3. 决策记录 (Decisions)"
         - "### 4. 教训与坑点 (Lessons Learned)"
+        - "## Distillation Gates"
+        - "### Concept Gate"
+        - "### Practice Gate"
+        - "### Decision Gate"
+        - "**强度**: tentative | tested | stable"
+        - "### 它不是什么"
+        - "### 反例 / 失败条件"
         - "<project-knowledge-base>/distilled/"
         - "├── concepts/"
         - "├── best-practices/"
@@ -38,9 +45,9 @@ validation:
         - "└── lessons/"
 
 docs:
-  summary: "团队知识蒸馏"
-  handles: "从讨论、决策、经验和 AI 交互中提炼可复用知识"
-  not_for: "原始随手记录、未经验证的想法、临时日志直接归档"
+  summary: "经过压力测试的知识蒸馏"
+  handles: "从讨论、学习和研究中提炼经过压力测试的可复用知识"
+  not_for: "原始随手记录、未经验证的想法、没有边界和证据的临时判断"
   artifacts:
     - ".danny/knowledge-base/distilled/"
     - "概念"

@@ -1,10 +1,13 @@
 import { describe, expect, test } from '@jest/globals';
 import { execFileSync } from 'child_process';
-import { cpSync, existsSync, mkdtempSync, readFileSync, lstatSync, mkdirSync, writeFileSync } from 'fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, lstatSync, mkdirSync, readdirSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
 const cli = join(process.cwd(), 'packages', 'cli', 'danny-skill.mjs');
+const skillCount = readdirSync(join(process.cwd(), 'skills'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .length;
 
 function tempRoot() {
   return mkdtempSync(join(tmpdir(), 'danny-skill-cli-'));
@@ -372,6 +375,26 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, '.cursor', 'commands', 'list-designs.md'))).toBe(true);
   });
 
+  test('install rejects Cursor user scope because rules and commands are project-scoped', () => {
+    const root = tempRoot();
+
+    expect(() =>
+      runCli([
+        'install',
+        '--tool',
+        'cursor',
+        '--scope',
+        'user',
+        '--profile',
+        'standard',
+        '--target-root',
+        root,
+        '--mode',
+        'copy',
+      ]),
+    ).toThrow(/cursor install currently requires --scope project/i);
+  });
+
   test('alias generate creates Claude Code command wrappers for trigger aliases', () => {
     const root = tempRoot();
 
@@ -383,6 +406,8 @@ describe('danny-skill CLI', () => {
     expect(readFileSync(aliasPath, 'utf8')).toContain('$ARGUMENTS');
     expect(existsSync(join(root, '.claude', 'commands', 'danny-distill.md'))).toBe(true);
     expect(existsSync(join(root, '.claude', 'commands', 'danny-learn.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude', 'commands', 'danny-understand.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude', 'commands', 'danny-review.md'))).toBe(true);
     expect(existsSync(join(root, '.claude', 'commands', 'using-danny.md'))).toBe(true);
     expect(existsSync(join(root, '.claude', 'commands', 'use-danny.md'))).toBe(false);
   });
@@ -396,6 +421,8 @@ describe('danny-skill CLI', () => {
     expect(existsSync(aliasPath)).toBe(true);
     expect(readFileSync(aliasPath, 'utf8')).toContain('knowledge-distill');
     expect(readFileSync(aliasPath, 'utf8')).toContain('$ARGUMENTS');
+    expect(existsSync(join(root, '.cursor', 'commands', 'danny-understand.md'))).toBe(true);
+    expect(existsSync(join(root, '.cursor', 'commands', 'danny-review.md'))).toBe(true);
     expect(existsSync(join(root, '.cursor', 'commands', 'using-danny.md'))).toBe(true);
     expect(existsSync(join(root, '.cursor', 'commands', 'use-danny.md'))).toBe(false);
   });
@@ -410,9 +437,9 @@ describe('danny-skill CLI', () => {
     const marketplace = JSON.parse(readFileSync(join(root, '.claude-plugin', 'marketplace.json'), 'utf8'));
 
     expect(claudeManifest.name).toBe('danny-skill');
-    expect(claudeManifest.version).toBe('1.1.0');
-    expect(cursorManifest.version).toBe('1.1.0');
-    expect(marketplace.plugins[0].version).toBe('1.1.0');
+    expect(claudeManifest.version).toBe('1.1.1');
+    expect(cursorManifest.version).toBe('1.1.1');
+    expect(marketplace.plugins[0].version).toBe('1.1.1');
   });
 
   test('package writes distributable plugin artifacts', () => {
@@ -492,7 +519,7 @@ describe('danny-skill CLI', () => {
       stdio: 'pipe',
     });
 
-    expect(output).toContain('valid: 8 skills');
+    expect(output).toContain(`valid: ${skillCount} skills`);
   });
 
   test('validate fails when a manifest-declared JSON asset is invalid', () => {
@@ -544,7 +571,7 @@ describe('danny-skill CLI', () => {
       const result = JSON.parse(stderr);
 
       expect(result.ok).toBe(false);
-      expect(result.skillCount).toBe(8);
+      expect(result.skillCount).toBe(skillCount);
       expect(result.errorCount).toBeGreaterThan(0);
       expect(Array.isArray(result.errors)).toBe(true);
       expect(result.errors).toContain('autoresearch-loop: [json_files] invalid json file assets/eval.example.json');
@@ -566,7 +593,7 @@ describe('danny-skill CLI', () => {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
     expect(packageJson.name).toBe('@dannyok/cli');
-    expect(packageJson.version).toBe('1.1.0');
+    expect(packageJson.version).toBe('1.1.1');
     expect(packageJson.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(packageJson.repository.directory).toBe('packages/cli');
     expect(packageJson.bin['danny-skill']).toBe('bin/danny-skill.mjs');

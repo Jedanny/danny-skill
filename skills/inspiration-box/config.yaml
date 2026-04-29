@@ -29,6 +29,11 @@ validation:
       must_contain:
         - "### 1. 灵感生命周期"
         - "### 2. 灵感状态"
+        - "| hypothesis | 已形成可验证假设 |"
+        - "### Hypothesis"
+        - "### Why this may be true"
+        - "### Alternative explanations"
+        - "### Smallest useful test"
         - "<project-knowledge-base>/"
         - "├── inbox/inspiration/"
         - "└── ideas/"
@@ -38,8 +43,8 @@ validation:
         - "└── exploration/"
 
 docs:
-  summary: "灵感收集与管理"
-  handles: "捕获产品点子、技术想法、流程改进和探索性灵感"
+  summary: "灵感收集、分类与假设提升"
+  handles: "捕获产品点子、技术想法、流程改进、探索性灵感和可验证假设"
   not_for: "已经需要严谨验证、代码实现或团队决策的事项"
   artifacts:
     - ".danny/knowledge-base/inbox/inspiration/"

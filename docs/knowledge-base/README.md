@@ -8,7 +8,7 @@ See `storage-model.md` for the storage boundary and promotion rules.
 
 ### Project Scope
 
-Use `.danny-skill/knowledge-base/` for knowledge that belongs to a repository and should travel with it. This avoids occupying a host project's own `docs/` tree.
+Use `.danny/knowledge-base/` for knowledge that belongs to a repository and should travel with it. This avoids occupying a host project's own `docs/` tree.
 
 Examples:
 
@@ -17,22 +17,22 @@ Examples:
 - project implementation lessons
 - experiments that affect this repository
 
-### Global Scope
+### System / Global Scope
 
-Use a user-level knowledge base for reusable personal or team knowledge that should apply across repositories.
+Use a user-level system knowledge base for reusable personal or team knowledge that should apply across repositories.
 
-Recommended global path:
+Recommended system/global path:
 
 ```text
-~/.danny-skill/knowledge-base/
+~/.danny/knowledge-base/
 ```
 
-Do not commit global knowledge directly into this repository. If a project needs a global note, link to it or distill a project-specific summary under `.danny-skill/knowledge-base/`.
+Do not commit system/global knowledge directly into this repository. If a project needs a system/global note, link to it or distill a project-specific summary under `.danny/knowledge-base/`.
 
 ## Project Layout
 
 ```text
-.danny-skill/knowledge-base/
+.danny/knowledge-base/
 ├── inbox/
 │   └── inspiration/
 ├── ideas/

@@ -42,6 +42,7 @@ describe('plugin manifests', () => {
 
     expect(installDoc).toContain('.cursor/rules');
     expect(installDoc).toContain('.cursor/commands');
+    expect(installDoc).not.toContain('~/.cursor/skills');
   });
 
   test('root and CLI package metadata point to the public repository and npm org', () => {
@@ -50,7 +51,7 @@ describe('plugin manifests', () => {
 
     expect(rootPackage.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(cliPackage.name).toBe('@dannyok/cli');
-    expect(cliPackage.version).toBe('1.1.0');
+    expect(cliPackage.version).toBe('1.1.1');
     expect(cliPackage.repository.url).toBe('git+https://github.com/Jedanny/danny-skill.git');
     expect(cliPackage.repository.directory).toBe('packages/cli');
   });
