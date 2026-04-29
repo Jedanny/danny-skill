@@ -86,8 +86,8 @@ danny-skill install --tool codex --scope project --profile full --mode link
 宿主项目负责把占位符映射到实际路径。初始化时用实际项目级和系统级/全局级知识目录替换下面两个参数：
 
 ```text
-<project-knowledge-base> -> `.danny/knowledge-base/`（本仓库默认映射）
-<global-knowledge-base>  -> `~/.danny/knowledge-base/`（本仓库默认映射）
+<project-knowledge-base> -> 项目级知识目录（使用仓库当前默认映射）
+<global-knowledge-base>  -> 系统级/全局级知识目录（使用仓库当前默认映射）
 ```
 
 初始化项目知识库：
