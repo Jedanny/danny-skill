@@ -553,6 +553,9 @@ function commandInstall(args) {
   const targetRoot = resolve(String(options['target-root'] ?? defaultTargetRoot));
 
   if (tool === 'cursor') {
+    if (scope !== 'project') {
+      fail('cursor install currently requires --scope project');
+    }
     installCursorProject(targetRoot, mode, profile);
     console.log(`installed ${profile} profile for cursor at ${join(targetRoot, '.cursor')}`);
     return;

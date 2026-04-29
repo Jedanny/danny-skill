@@ -42,6 +42,7 @@ describe('plugin manifests', () => {
 
     expect(installDoc).toContain('.cursor/rules');
     expect(installDoc).toContain('.cursor/commands');
+    expect(installDoc).not.toContain('~/.cursor/skills');
   });
 
   test('root and CLI package metadata point to the public repository and npm org', () => {

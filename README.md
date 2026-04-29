@@ -36,7 +36,7 @@ pnpm test
 ```bash
 ./scripts/install.sh --tool claude-code --yes
 ./scripts/install.sh --tool codex --yes
-./scripts/install.sh --tool cursor --yes
+./scripts/install.sh --tool cursor --scope project --yes
 ./scripts/install.sh --tool opencode --yes
 ```
 
@@ -45,6 +45,8 @@ pnpm test
 ```bash
 ./scripts/install.sh --tool all --replace --yes
 ```
+
+`--tool all` 只覆盖支持 user-scope 安装的目标；Cursor 需要显式使用 `--tool cursor --scope project`，因为官方共享入口是项目内 `.cursor/rules/` 和 `.cursor/commands/`。
 
 如果目标环境不支持软链接，可显式使用复制模式：
 

@@ -372,6 +372,26 @@ describe('danny-skill CLI', () => {
     expect(existsSync(join(root, '.cursor', 'commands', 'list-designs.md'))).toBe(true);
   });
 
+  test('install rejects Cursor user scope because rules and commands are project-scoped', () => {
+    const root = tempRoot();
+
+    expect(() =>
+      runCli([
+        'install',
+        '--tool',
+        'cursor',
+        '--scope',
+        'user',
+        '--profile',
+        'standard',
+        '--target-root',
+        root,
+        '--mode',
+        'copy',
+      ]),
+    ).toThrow(/cursor install currently requires --scope project/i);
+  });
+
   test('alias generate creates Claude Code command wrappers for trigger aliases', () => {
     const root = tempRoot();
 

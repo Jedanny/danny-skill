@@ -1,11 +1,19 @@
 import { describe, expect, test } from '@jest/globals';
 import { execFileSync } from 'child_process';
-import { existsSync, lstatSync, mkdtempSync, readlinkSync } from 'fs';
+import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readlinkSync, realpathSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
 function tempRoot() {
   return mkdtempSync(join(tmpdir(), 'danny-skill-'));
+}
+
+function installFixtureRoot() {
+  const root = tempRoot();
+  for (const entry of ['scripts', 'skills', 'commands']) {
+    cpSync(join(process.cwd(), entry), join(root, entry), { recursive: true });
+  }
+  return root;
 }
 
 describe('install script', () => {
@@ -39,39 +47,54 @@ describe('install script', () => {
   });
 
   test('links Codex project-scope skills under .agents/skills', () => {
+    const root = installFixtureRoot();
+
     execFileSync('./scripts/install.sh', ['--yes', '--tool', 'codex', '--scope', 'project', '--replace'], {
-      cwd: process.cwd(),
+      cwd: root,
       stdio: 'pipe',
     });
 
-    const linkedSkill = join(process.cwd(), '.agents', 'skills', 'design-style');
+    const linkedSkill = join(root, '.agents', 'skills', 'design-style');
     expect(lstatSync(linkedSkill).isSymbolicLink()).toBe(true);
-    expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'design-style'));
+    expect(realpathSync(linkedSkill)).toBe(realpathSync(join(root, 'skills', 'design-style')));
   });
 
   test('links Claude Code project-scope skills under .claude/skills', () => {
+    const root = installFixtureRoot();
+
     execFileSync('./scripts/install.sh', ['--yes', '--tool', 'claude-code', '--scope', 'project', '--replace'], {
-      cwd: process.cwd(),
+      cwd: root,
       stdio: 'pipe',
     });
 
-    const linkedSkill = join(process.cwd(), '.claude', 'skills', 'design-style');
+    const linkedSkill = join(root, '.claude', 'skills', 'design-style');
     expect(lstatSync(linkedSkill).isSymbolicLink()).toBe(true);
-    expect(readlinkSync(linkedSkill)).toBe(join(process.cwd(), 'skills', 'design-style'));
+    expect(realpathSync(linkedSkill)).toBe(realpathSync(join(root, 'skills', 'design-style')));
   });
 
   test('links Cursor project-scope rules and commands using official directories', () => {
+    const root = installFixtureRoot();
+
     execFileSync('./scripts/install.sh', ['--yes', '--tool', 'cursor', '--scope', 'project', '--replace'], {
-      cwd: process.cwd(),
+      cwd: root,
       stdio: 'pipe',
     });
 
-    const linkedRule = join(process.cwd(), '.cursor', 'rules', 'design-style.mdc');
-    const linkedCommand = join(process.cwd(), '.cursor', 'commands', 'list-designs.md');
+    const linkedRule = join(root, '.cursor', 'rules', 'design-style.mdc');
+    const linkedCommand = join(root, '.cursor', 'commands', 'list-designs.md');
     expect(lstatSync(linkedRule).isSymbolicLink()).toBe(true);
-    expect(readlinkSync(linkedRule)).toBe(join(process.cwd(), 'skills', 'design-style', 'SKILL.md'));
+    expect(realpathSync(linkedRule)).toBe(realpathSync(join(root, 'skills', 'design-style', 'SKILL.md')));
     expect(lstatSync(linkedCommand).isSymbolicLink()).toBe(true);
-    expect(readlinkSync(linkedCommand)).toBe(join(process.cwd(), 'commands', 'list-designs.md'));
+    expect(realpathSync(linkedCommand)).toBe(realpathSync(join(root, 'commands', 'list-designs.md')));
+  });
+
+  test('rejects Cursor user-scope installs because no portable official path exists', () => {
+    expect(() =>
+      execFileSync('./scripts/install.sh', ['--yes', '--tool', 'cursor', '--target-root', tempRoot()], {
+        cwd: process.cwd(),
+        stdio: 'pipe',
+      }),
+    ).toThrow(/Cursor install requires --scope project/);
   });
 
   test('rejects project scope for tools without official project skill paths', () => {
@@ -81,6 +104,36 @@ describe('install script', () => {
         stdio: 'pipe',
       }),
     ).toThrow();
+  });
+
+  test('all user-scope installs skip Cursor because it is project-scoped', () => {
+    const root = tempRoot();
+    const output = execFileSync('./scripts/install.sh', ['--yes', '--tool', 'all', '--target-root', root], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+
+    expect(output).toContain('Skipping cursor');
+    expect(existsSync(join(root, '.agents', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, '.claude', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
+    expect(existsSync(join(root, '.cursor'))).toBe(false);
+  });
+
+  test('detected mode skips Cursor instead of failing through user-scope install', () => {
+    const root = tempRoot();
+    mkdirSync(join(root, '.cursor'), { recursive: true });
+    mkdirSync(join(root, '.claude'), { recursive: true });
+
+    const output = execFileSync('./scripts/install.sh', ['--yes', '--target-root', root], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+
+    expect(output).toContain('Skipping cursor');
+    expect(output).toContain('claude-code detected');
+    expect(existsSync(join(root, '.claude', 'skills', 'design-style', 'SKILL.md'))).toBe(true);
   });
 
   test('dry-run reports planned writes without copying skills', () => {

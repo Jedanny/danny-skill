@@ -31,6 +31,6 @@ Generated `.cursor/rules/` and `.cursor/commands/` links are ignored by git. Kee
 ./scripts/install.sh --tool cursor --scope project --mode copy --yes
 ```
 
-## Legacy User Install
+## Scope Boundary
 
-Cursor user rules are configured in Cursor Settings, not through a portable filesystem path. The installer still supports the historical best-effort path `~/.cursor/skills/`, but project rules are the official sharing path.
+Cursor installs are project-scoped in this repository. The installer rejects user-scope Cursor installs so the shared path stays aligned with the official `.cursor/rules/` and `.cursor/commands/` workflow.
